@@ -26,7 +26,7 @@ class AccountScreen extends ConsumerWidget {
           IconButton(
             tooltip: 'Add account',
             onPressed: () {
-              context.push('/accounts/new');
+              context.push('/me/accounts/new');
             },
             icon: const Icon(Icons.add),
           ),
@@ -81,7 +81,7 @@ class AccountScreen extends ConsumerWidget {
                         item: item,
                         onTap: () {
                           context.push(
-                            '/accounts/${item.account.id}/edit',
+                            '/me/accounts/${item.account.id}/edit',
                           );
                         },
                         onArchive: () {

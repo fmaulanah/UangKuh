@@ -1,9 +1,10 @@
 import 'package:go_router/go_router.dart';
 
-import '../features/account/presentation/account_screen.dart';
 import '../features/account/presentation/account_form_screen.dart';
-
+import '../features/account/presentation/account_screen.dart';
+import '../features/category/presentation/category_screen.dart';
 import '../features/dashboard/presentation/dashboard_screen.dart';
+import '../features/profile/presentation/profile_screen.dart';
 import '../features/recurring/presentation/recurring_screen.dart';
 import '../features/transaction/presentation/transaction_history_screen.dart';
 import 'app_shell.dart';
@@ -30,7 +31,9 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: dashboardPath,
-                builder: (context, state) => const DashboardScreen(),
+                builder: (context, state) {
+                  return const DashboardScreen();
+                },
               ),
             ],
           ),
@@ -38,7 +41,9 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: historyPath,
-                builder: (context, state) => const TransactionHistoryScreen(),
+                builder: (context, state) {
+                  return const TransactionHistoryScreen();
+                },
               ),
             ],
           ),
@@ -46,33 +51,51 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: planPath,
-                builder: (context, state) => const RecurringScreen(),
+                builder: (context, state) {
+                  return const RecurringScreen();
+                },
               ),
             ],
           ),
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/accounts',
+                path: profilePath,
                 builder: (context, state) {
-                  return const AccountScreen();
+                  return const ProfileScreen();
                 },
-              ),
-              GoRoute(
-                path: '/accounts/new',
-                builder: (context, state) {
-                  return const AccountFormScreen();
-                },
-              ),
-              GoRoute(
-                path: '/accounts/:accountId/edit',
-                builder: (context, state) {
-                  final accountId = state.pathParameters['accountId']!;
+                routes: [
+                  GoRoute(
+                    path: 'accounts',
+                    builder: (context, state) {
+                      return const AccountScreen();
+                    },
+                    routes: [
+                      GoRoute(
+                        path: 'new',
+                        builder: (context, state) {
+                          return const AccountFormScreen();
+                        },
+                      ),
+                      GoRoute(
+                        path: ':accountId/edit',
+                        builder: (context, state) {
+                          final accountId = state.pathParameters['accountId']!;
 
-                  return AccountFormScreen(
-                    accountId: accountId,
-                  );
-                },
+                          return AccountFormScreen(
+                            accountId: accountId,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  GoRoute(
+                    path: 'categories',
+                    builder: (context, state) {
+                      return const CategoryScreen();
+                    },
+                  ),
+                ],
               ),
             ],
           ),
