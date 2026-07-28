@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'theme.dart';
 
 class UangKuhApp extends StatelessWidget {
   const UangKuhApp({super.key});
@@ -8,6 +9,7 @@ class UangKuhApp extends StatelessWidget {
     return MaterialApp(
       title: 'UangKuh',
       debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme,
       home: Scaffold(
         appBar: AppBar(
           title: const Text('UangKuh'),
