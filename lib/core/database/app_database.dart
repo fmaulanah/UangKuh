@@ -21,10 +21,19 @@ import '../../features/recurring/data/recurring_expenses_table.dart';
 import '../../features/recurring/data/recurring_payments_table.dart';
 import '../../features/recurring/domain/recurring_payment_status.dart';
 
+import '../../features/auth/data/users_table.dart';
+
+import '../../features/household/data/household_members_table.dart';
+import '../../features/household/data/households_table.dart';
+import '../../features/household/domain/household_role.dart';
+
 part 'app_database.g.dart';
 
 @DriftDatabase(
   tables: [
+    Users,
+    Households,
+    HouseholdMembers,
     Accounts,
     Categories,
     Transactions,
