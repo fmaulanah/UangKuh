@@ -5,9 +5,18 @@ import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import '../../features/account/domain/account_purpose.dart';
+import '../../features/account/domain/account_type.dart';
+
+import '../../features/account/data/accounts_table.dart';
+
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: [])
+@DriftDatabase(
+  tables: [
+    Accounts,
+  ],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
