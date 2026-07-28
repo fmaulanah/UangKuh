@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+class RecurringScreen extends StatelessWidget {
+  const RecurringScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text('Dashboard'),
+      child: Text('Plan'),
     );
   }
 }
