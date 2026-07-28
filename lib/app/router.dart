@@ -1,7 +1,9 @@
 import 'package:go_router/go_router.dart';
 
+import '../features/account/presentation/account_screen.dart';
+import '../features/account/presentation/account_form_screen.dart';
+
 import '../features/dashboard/presentation/dashboard_screen.dart';
-import '../features/profile/presentation/profile_screen.dart';
 import '../features/recurring/presentation/recurring_screen.dart';
 import '../features/transaction/presentation/transaction_history_screen.dart';
 import 'app_shell.dart';
@@ -51,8 +53,26 @@ class AppRouter {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: profilePath,
-                builder: (context, state) => const ProfileScreen(),
+                path: '/accounts',
+                builder: (context, state) {
+                  return const AccountScreen();
+                },
+              ),
+              GoRoute(
+                path: '/accounts/new',
+                builder: (context, state) {
+                  return const AccountFormScreen();
+                },
+              ),
+              GoRoute(
+                path: '/accounts/:accountId/edit',
+                builder: (context, state) {
+                  final accountId = state.pathParameters['accountId']!;
+
+                  return AccountFormScreen(
+                    accountId: accountId,
+                  );
+                },
               ),
             ],
           ),
