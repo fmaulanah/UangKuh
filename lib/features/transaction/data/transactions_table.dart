@@ -4,10 +4,14 @@ import '../domain/expense_type.dart';
 import '../domain/sync_status.dart';
 import '../domain/transaction_type.dart';
 
+import '../../account/data/accounts_table.dart';
+import '../../category/data/categories_table.dart';
+import '../../household/data/households_table.dart';
+
 class Transactions extends Table {
   TextColumn get id => text()();
 
-  TextColumn get householdId => text()();
+  TextColumn get householdId => text().references(Households, #id)();
 
   TextColumn get type => textEnum<TransactionType>()();
 
@@ -15,11 +19,13 @@ class Transactions extends Table {
 
   IntColumn get amount => integer()();
 
-  TextColumn get sourceAccountId => text().nullable()();
+  TextColumn get sourceAccountId =>
+      text().nullable().references(Accounts, #id)();
 
-  TextColumn get destinationAccountId => text().nullable()();
+  TextColumn get destinationAccountId =>
+      text().nullable().references(Accounts, #id)();
 
-  TextColumn get categoryId => text().nullable()();
+  TextColumn get categoryId => text().nullable().references(Categories, #id)();
 
   TextColumn get description => text().nullable()();
 

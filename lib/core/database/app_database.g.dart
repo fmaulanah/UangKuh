@@ -680,14 +680,18 @@ class $HouseholdMembersTable extends HouseholdMembers
   @override
   late final GeneratedColumn<String> householdId = GeneratedColumn<String>(
       'household_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES households (id)'));
   static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
   @override
   late final GeneratedColumn<String> userId = GeneratedColumn<String>(
       'user_id', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('UNIQUE REFERENCES users (id)'));
   static const VerificationMeta _roleMeta = const VerificationMeta('role');
   @override
   late final GeneratedColumnWithTypeConverter<HouseholdRole, String> role =
@@ -997,7 +1001,10 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   @override
   late final GeneratedColumn<String> householdId = GeneratedColumn<String>(
       'household_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES households (id)'));
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -1558,7 +1565,10 @@ class $CategoriesTable extends Categories
   @override
   late final GeneratedColumn<String> householdId = GeneratedColumn<String>(
       'household_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES households (id)'));
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -2112,7 +2122,10 @@ class $TransactionsTable extends Transactions
   @override
   late final GeneratedColumn<String> householdId = GeneratedColumn<String>(
       'household_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES households (id)'));
   static const VerificationMeta _typeMeta = const VerificationMeta('type');
   @override
   late final GeneratedColumnWithTypeConverter<TransactionType, String> type =
@@ -2137,19 +2150,29 @@ class $TransactionsTable extends Transactions
   @override
   late final GeneratedColumn<String> sourceAccountId = GeneratedColumn<String>(
       'source_account_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES accounts (id)'));
   static const VerificationMeta _destinationAccountIdMeta =
       const VerificationMeta('destinationAccountId');
   @override
   late final GeneratedColumn<String> destinationAccountId =
-      GeneratedColumn<String>('destination_account_id', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
+      GeneratedColumn<String>(
+          'destination_account_id', aliasedName, true,
+          type: DriftSqlType.string,
+          requiredDuringInsert: false,
+          defaultConstraints:
+              GeneratedColumn.constraintIsAlways('REFERENCES accounts (id)'));
   static const VerificationMeta _categoryIdMeta =
       const VerificationMeta('categoryId');
   @override
   late final GeneratedColumn<String> categoryId = GeneratedColumn<String>(
       'category_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES categories (id)'));
   static const VerificationMeta _descriptionMeta =
       const VerificationMeta('description');
   @override
@@ -2915,7 +2938,10 @@ class $RecurringExpensesTable extends RecurringExpenses
   @override
   late final GeneratedColumn<String> householdId = GeneratedColumn<String>(
       'household_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES households (id)'));
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -2932,13 +2958,19 @@ class $RecurringExpensesTable extends RecurringExpenses
   @override
   late final GeneratedColumn<String> categoryId = GeneratedColumn<String>(
       'category_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES categories (id)'));
   static const VerificationMeta _defaultAccountIdMeta =
       const VerificationMeta('defaultAccountId');
   @override
   late final GeneratedColumn<String> defaultAccountId = GeneratedColumn<String>(
       'default_account_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES accounts (id)'));
   static const VerificationMeta _dueDayMeta = const VerificationMeta('dueDay');
   @override
   late final GeneratedColumn<int> dueDay = GeneratedColumn<int>(
@@ -3524,13 +3556,19 @@ class $RecurringPaymentsTable extends RecurringPayments
   @override
   late final GeneratedColumn<String> householdId = GeneratedColumn<String>(
       'household_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES households (id)'));
   static const VerificationMeta _recurringExpenseIdMeta =
       const VerificationMeta('recurringExpenseId');
   @override
   late final GeneratedColumn<String> recurringExpenseId =
       GeneratedColumn<String>('recurring_expense_id', aliasedName, false,
-          type: DriftSqlType.string, requiredDuringInsert: true);
+          type: DriftSqlType.string,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintIsAlways(
+              'REFERENCES recurring_expenses (id)'));
   static const VerificationMeta _periodYearMeta =
       const VerificationMeta('periodYear');
   @override
@@ -3555,7 +3593,10 @@ class $RecurringPaymentsTable extends RecurringPayments
   @override
   late final GeneratedColumn<String> transactionId = GeneratedColumn<String>(
       'transaction_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES transactions (id)'));
   static const VerificationMeta _createdAtMeta =
       const VerificationMeta('createdAt');
   @override
@@ -4141,6 +4182,28 @@ typedef $$UsersTableUpdateCompanionBuilder = UsersCompanion Function({
   Value<int> rowid,
 });
 
+final class $$UsersTableReferences
+    extends BaseReferences<_$AppDatabase, $UsersTable, User> {
+  $$UsersTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$HouseholdMembersTable, List<HouseholdMember>>
+      _householdMembersRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.householdMembers,
+              aliasName: $_aliasNameGenerator(
+                  db.users.id, db.householdMembers.userId));
+
+  $$HouseholdMembersTableProcessedTableManager get householdMembersRefs {
+    final manager =
+        $$HouseholdMembersTableTableManager($_db, $_db.householdMembers)
+            .filter((f) => f.userId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_householdMembersRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
 class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
   $$UsersTableFilterComposer({
     required super.$db,
@@ -4163,6 +4226,27 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
 
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+
+  Expression<bool> householdMembersRefs(
+      Expression<bool> Function($$HouseholdMembersTableFilterComposer f) f) {
+    final $$HouseholdMembersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.householdMembers,
+        getReferencedColumn: (t) => t.userId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdMembersTableFilterComposer(
+              $db: $db,
+              $table: $db.householdMembers,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$UsersTableOrderingComposer
@@ -4213,6 +4297,27 @@ class $$UsersTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  Expression<T> householdMembersRefs<T extends Object>(
+      Expression<T> Function($$HouseholdMembersTableAnnotationComposer a) f) {
+    final $$HouseholdMembersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.householdMembers,
+        getReferencedColumn: (t) => t.userId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdMembersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.householdMembers,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$UsersTableTableManager extends RootTableManager<
@@ -4224,9 +4329,9 @@ class $$UsersTableTableManager extends RootTableManager<
     $$UsersTableAnnotationComposer,
     $$UsersTableCreateCompanionBuilder,
     $$UsersTableUpdateCompanionBuilder,
-    (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
+    (User, $$UsersTableReferences),
     User,
-    PrefetchHooks Function()> {
+    PrefetchHooks Function({bool householdMembersRefs})> {
   $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
       : super(TableManagerState(
           db: db,
@@ -4270,9 +4375,34 @@ class $$UsersTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map((e) =>
+                  (e.readTable(table), $$UsersTableReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({householdMembersRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (householdMembersRefs) db.householdMembers
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (householdMembersRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable: $$UsersTableReferences
+                            ._householdMembersRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$UsersTableReferences(db, table, p0)
+                                .householdMembersRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.userId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
         ));
 }
 
@@ -4285,9 +4415,9 @@ typedef $$UsersTableProcessedTableManager = ProcessedTableManager<
     $$UsersTableAnnotationComposer,
     $$UsersTableCreateCompanionBuilder,
     $$UsersTableUpdateCompanionBuilder,
-    (User, BaseReferences<_$AppDatabase, $UsersTable, User>),
+    (User, $$UsersTableReferences),
     User,
-    PrefetchHooks Function()>;
+    PrefetchHooks Function({bool householdMembersRefs})>;
 typedef $$HouseholdsTableCreateCompanionBuilder = HouseholdsCompanion Function({
   required String id,
   required String name,
@@ -4306,6 +4436,107 @@ typedef $$HouseholdsTableUpdateCompanionBuilder = HouseholdsCompanion Function({
   Value<DateTime> updatedAt,
   Value<int> rowid,
 });
+
+final class $$HouseholdsTableReferences
+    extends BaseReferences<_$AppDatabase, $HouseholdsTable, Household> {
+  $$HouseholdsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$HouseholdMembersTable, List<HouseholdMember>>
+      _householdMembersRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.householdMembers,
+              aliasName: $_aliasNameGenerator(
+                  db.households.id, db.householdMembers.householdId));
+
+  $$HouseholdMembersTableProcessedTableManager get householdMembersRefs {
+    final manager = $$HouseholdMembersTableTableManager(
+            $_db, $_db.householdMembers)
+        .filter((f) => f.householdId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_householdMembersRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$AccountsTable, List<Account>> _accountsRefsTable(
+          _$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(db.accounts,
+          aliasName:
+              $_aliasNameGenerator(db.households.id, db.accounts.householdId));
+
+  $$AccountsTableProcessedTableManager get accountsRefs {
+    final manager = $$AccountsTableTableManager($_db, $_db.accounts)
+        .filter((f) => f.householdId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_accountsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$CategoriesTable, List<Category>>
+      _categoriesRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.categories,
+              aliasName: $_aliasNameGenerator(
+                  db.households.id, db.categories.householdId));
+
+  $$CategoriesTableProcessedTableManager get categoriesRefs {
+    final manager = $$CategoriesTableTableManager($_db, $_db.categories)
+        .filter((f) => f.householdId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_categoriesRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$TransactionsTable, List<Transaction>>
+      _transactionsRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.transactions,
+              aliasName: $_aliasNameGenerator(
+                  db.households.id, db.transactions.householdId));
+
+  $$TransactionsTableProcessedTableManager get transactionsRefs {
+    final manager = $$TransactionsTableTableManager($_db, $_db.transactions)
+        .filter((f) => f.householdId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_transactionsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$RecurringExpensesTable, List<RecurringExpense>>
+      _recurringExpensesRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.recurringExpenses,
+              aliasName: $_aliasNameGenerator(
+                  db.households.id, db.recurringExpenses.householdId));
+
+  $$RecurringExpensesTableProcessedTableManager get recurringExpensesRefs {
+    final manager = $$RecurringExpensesTableTableManager(
+            $_db, $_db.recurringExpenses)
+        .filter((f) => f.householdId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_recurringExpensesRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$RecurringPaymentsTable, List<RecurringPayment>>
+      _recurringPaymentsRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.recurringPayments,
+              aliasName: $_aliasNameGenerator(
+                  db.households.id, db.recurringPayments.householdId));
+
+  $$RecurringPaymentsTableProcessedTableManager get recurringPaymentsRefs {
+    final manager = $$RecurringPaymentsTableTableManager(
+            $_db, $_db.recurringPayments)
+        .filter((f) => f.householdId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_recurringPaymentsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
 
 class $$HouseholdsTableFilterComposer
     extends Composer<_$AppDatabase, $HouseholdsTable> {
@@ -4333,6 +4564,132 @@ class $$HouseholdsTableFilterComposer
 
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+
+  Expression<bool> householdMembersRefs(
+      Expression<bool> Function($$HouseholdMembersTableFilterComposer f) f) {
+    final $$HouseholdMembersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.householdMembers,
+        getReferencedColumn: (t) => t.householdId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdMembersTableFilterComposer(
+              $db: $db,
+              $table: $db.householdMembers,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> accountsRefs(
+      Expression<bool> Function($$AccountsTableFilterComposer f) f) {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.accounts,
+        getReferencedColumn: (t) => t.householdId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AccountsTableFilterComposer(
+              $db: $db,
+              $table: $db.accounts,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> categoriesRefs(
+      Expression<bool> Function($$CategoriesTableFilterComposer f) f) {
+    final $$CategoriesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.householdId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CategoriesTableFilterComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> transactionsRefs(
+      Expression<bool> Function($$TransactionsTableFilterComposer f) f) {
+    final $$TransactionsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.transactions,
+        getReferencedColumn: (t) => t.householdId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TransactionsTableFilterComposer(
+              $db: $db,
+              $table: $db.transactions,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> recurringExpensesRefs(
+      Expression<bool> Function($$RecurringExpensesTableFilterComposer f) f) {
+    final $$RecurringExpensesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.recurringExpenses,
+        getReferencedColumn: (t) => t.householdId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$RecurringExpensesTableFilterComposer(
+              $db: $db,
+              $table: $db.recurringExpenses,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> recurringPaymentsRefs(
+      Expression<bool> Function($$RecurringPaymentsTableFilterComposer f) f) {
+    final $$RecurringPaymentsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.recurringPayments,
+        getReferencedColumn: (t) => t.householdId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$RecurringPaymentsTableFilterComposer(
+              $db: $db,
+              $table: $db.recurringPayments,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$HouseholdsTableOrderingComposer
@@ -4389,6 +4746,134 @@ class $$HouseholdsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  Expression<T> householdMembersRefs<T extends Object>(
+      Expression<T> Function($$HouseholdMembersTableAnnotationComposer a) f) {
+    final $$HouseholdMembersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.householdMembers,
+        getReferencedColumn: (t) => t.householdId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdMembersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.householdMembers,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<T> accountsRefs<T extends Object>(
+      Expression<T> Function($$AccountsTableAnnotationComposer a) f) {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.accounts,
+        getReferencedColumn: (t) => t.householdId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AccountsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.accounts,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<T> categoriesRefs<T extends Object>(
+      Expression<T> Function($$CategoriesTableAnnotationComposer a) f) {
+    final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.householdId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CategoriesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<T> transactionsRefs<T extends Object>(
+      Expression<T> Function($$TransactionsTableAnnotationComposer a) f) {
+    final $$TransactionsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.transactions,
+        getReferencedColumn: (t) => t.householdId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TransactionsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.transactions,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<T> recurringExpensesRefs<T extends Object>(
+      Expression<T> Function($$RecurringExpensesTableAnnotationComposer a) f) {
+    final $$RecurringExpensesTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.recurringExpenses,
+            getReferencedColumn: (t) => t.householdId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$RecurringExpensesTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.recurringExpenses,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return f(composer);
+  }
+
+  Expression<T> recurringPaymentsRefs<T extends Object>(
+      Expression<T> Function($$RecurringPaymentsTableAnnotationComposer a) f) {
+    final $$RecurringPaymentsTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.recurringPayments,
+            getReferencedColumn: (t) => t.householdId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$RecurringPaymentsTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.recurringPayments,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return f(composer);
+  }
 }
 
 class $$HouseholdsTableTableManager extends RootTableManager<
@@ -4400,9 +4885,15 @@ class $$HouseholdsTableTableManager extends RootTableManager<
     $$HouseholdsTableAnnotationComposer,
     $$HouseholdsTableCreateCompanionBuilder,
     $$HouseholdsTableUpdateCompanionBuilder,
-    (Household, BaseReferences<_$AppDatabase, $HouseholdsTable, Household>),
+    (Household, $$HouseholdsTableReferences),
     Household,
-    PrefetchHooks Function()> {
+    PrefetchHooks Function(
+        {bool householdMembersRefs,
+        bool accountsRefs,
+        bool categoriesRefs,
+        bool transactionsRefs,
+        bool recurringExpensesRefs,
+        bool recurringPaymentsRefs})> {
   $$HouseholdsTableTableManager(_$AppDatabase db, $HouseholdsTable table)
       : super(TableManagerState(
           db: db,
@@ -4450,9 +4941,107 @@ class $$HouseholdsTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map((e) => (
+                    e.readTable(table),
+                    $$HouseholdsTableReferences(db, table, e)
+                  ))
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: (
+              {householdMembersRefs = false,
+              accountsRefs = false,
+              categoriesRefs = false,
+              transactionsRefs = false,
+              recurringExpensesRefs = false,
+              recurringPaymentsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (householdMembersRefs) db.householdMembers,
+                if (accountsRefs) db.accounts,
+                if (categoriesRefs) db.categories,
+                if (transactionsRefs) db.transactions,
+                if (recurringExpensesRefs) db.recurringExpenses,
+                if (recurringPaymentsRefs) db.recurringPayments
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (householdMembersRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable: $$HouseholdsTableReferences
+                            ._householdMembersRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$HouseholdsTableReferences(db, table, p0)
+                                .householdMembersRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.householdId == item.id),
+                        typedResults: items),
+                  if (accountsRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable:
+                            $$HouseholdsTableReferences._accountsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$HouseholdsTableReferences(db, table, p0)
+                                .accountsRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.householdId == item.id),
+                        typedResults: items),
+                  if (categoriesRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable: $$HouseholdsTableReferences
+                            ._categoriesRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$HouseholdsTableReferences(db, table, p0)
+                                .categoriesRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.householdId == item.id),
+                        typedResults: items),
+                  if (transactionsRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable: $$HouseholdsTableReferences
+                            ._transactionsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$HouseholdsTableReferences(db, table, p0)
+                                .transactionsRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.householdId == item.id),
+                        typedResults: items),
+                  if (recurringExpensesRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable: $$HouseholdsTableReferences
+                            ._recurringExpensesRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$HouseholdsTableReferences(db, table, p0)
+                                .recurringExpensesRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.householdId == item.id),
+                        typedResults: items),
+                  if (recurringPaymentsRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable: $$HouseholdsTableReferences
+                            ._recurringPaymentsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$HouseholdsTableReferences(db, table, p0)
+                                .recurringPaymentsRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.householdId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
         ));
 }
 
@@ -4465,9 +5054,15 @@ typedef $$HouseholdsTableProcessedTableManager = ProcessedTableManager<
     $$HouseholdsTableAnnotationComposer,
     $$HouseholdsTableCreateCompanionBuilder,
     $$HouseholdsTableUpdateCompanionBuilder,
-    (Household, BaseReferences<_$AppDatabase, $HouseholdsTable, Household>),
+    (Household, $$HouseholdsTableReferences),
     Household,
-    PrefetchHooks Function()>;
+    PrefetchHooks Function(
+        {bool householdMembersRefs,
+        bool accountsRefs,
+        bool categoriesRefs,
+        bool transactionsRefs,
+        bool recurringExpensesRefs,
+        bool recurringPaymentsRefs})>;
 typedef $$HouseholdMembersTableCreateCompanionBuilder
     = HouseholdMembersCompanion Function({
   required String id,
@@ -4487,6 +5082,41 @@ typedef $$HouseholdMembersTableUpdateCompanionBuilder
   Value<int> rowid,
 });
 
+final class $$HouseholdMembersTableReferences extends BaseReferences<
+    _$AppDatabase, $HouseholdMembersTable, HouseholdMember> {
+  $$HouseholdMembersTableReferences(
+      super.$_db, super.$_table, super.$_typedResult);
+
+  static $HouseholdsTable _householdIdTable(_$AppDatabase db) =>
+      db.households.createAlias($_aliasNameGenerator(
+          db.householdMembers.householdId, db.households.id));
+
+  $$HouseholdsTableProcessedTableManager get householdId {
+    final $_column = $_itemColumn<String>('household_id')!;
+
+    final manager = $$HouseholdsTableTableManager($_db, $_db.households)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_householdIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $UsersTable _userIdTable(_$AppDatabase db) => db.users.createAlias(
+      $_aliasNameGenerator(db.householdMembers.userId, db.users.id));
+
+  $$UsersTableProcessedTableManager get userId {
+    final $_column = $_itemColumn<String>('user_id')!;
+
+    final manager = $$UsersTableTableManager($_db, $_db.users)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
 class $$HouseholdMembersTableFilterComposer
     extends Composer<_$AppDatabase, $HouseholdMembersTable> {
   $$HouseholdMembersTableFilterComposer({
@@ -4499,12 +5129,6 @@ class $$HouseholdMembersTableFilterComposer
   ColumnFilters<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get userId => $composableBuilder(
-      column: $table.userId, builder: (column) => ColumnFilters(column));
-
   ColumnWithTypeConverterFilters<HouseholdRole, HouseholdRole, String>
       get role => $composableBuilder(
           column: $table.role,
@@ -4512,6 +5136,46 @@ class $$HouseholdMembersTableFilterComposer
 
   ColumnFilters<DateTime> get joinedAt => $composableBuilder(
       column: $table.joinedAt, builder: (column) => ColumnFilters(column));
+
+  $$HouseholdsTableFilterComposer get householdId {
+    final $$HouseholdsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableFilterComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$UsersTableFilterComposer get userId {
+    final $$UsersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableFilterComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$HouseholdMembersTableOrderingComposer
@@ -4526,17 +5190,51 @@ class $$HouseholdMembersTableOrderingComposer
   ColumnOrderings<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get userId => $composableBuilder(
-      column: $table.userId, builder: (column) => ColumnOrderings(column));
-
   ColumnOrderings<String> get role => $composableBuilder(
       column: $table.role, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<DateTime> get joinedAt => $composableBuilder(
       column: $table.joinedAt, builder: (column) => ColumnOrderings(column));
+
+  $$HouseholdsTableOrderingComposer get householdId {
+    final $$HouseholdsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableOrderingComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$UsersTableOrderingComposer get userId {
+    final $$UsersTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableOrderingComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$HouseholdMembersTableAnnotationComposer
@@ -4551,17 +5249,51 @@ class $$HouseholdMembersTableAnnotationComposer
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => column);
-
-  GeneratedColumn<String> get userId =>
-      $composableBuilder(column: $table.userId, builder: (column) => column);
-
   GeneratedColumnWithTypeConverter<HouseholdRole, String> get role =>
       $composableBuilder(column: $table.role, builder: (column) => column);
 
   GeneratedColumn<DateTime> get joinedAt =>
       $composableBuilder(column: $table.joinedAt, builder: (column) => column);
+
+  $$HouseholdsTableAnnotationComposer get householdId {
+    final $$HouseholdsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$UsersTableAnnotationComposer get userId {
+    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$HouseholdMembersTableTableManager extends RootTableManager<
@@ -4573,12 +5305,9 @@ class $$HouseholdMembersTableTableManager extends RootTableManager<
     $$HouseholdMembersTableAnnotationComposer,
     $$HouseholdMembersTableCreateCompanionBuilder,
     $$HouseholdMembersTableUpdateCompanionBuilder,
-    (
-      HouseholdMember,
-      BaseReferences<_$AppDatabase, $HouseholdMembersTable, HouseholdMember>
-    ),
+    (HouseholdMember, $$HouseholdMembersTableReferences),
     HouseholdMember,
-    PrefetchHooks Function()> {
+    PrefetchHooks Function({bool householdId, bool userId})> {
   $$HouseholdMembersTableTableManager(
       _$AppDatabase db, $HouseholdMembersTable table)
       : super(TableManagerState(
@@ -4623,9 +5352,57 @@ class $$HouseholdMembersTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map((e) => (
+                    e.readTable(table),
+                    $$HouseholdMembersTableReferences(db, table, e)
+                  ))
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({householdId = false, userId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (householdId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.householdId,
+                    referencedTable:
+                        $$HouseholdMembersTableReferences._householdIdTable(db),
+                    referencedColumn: $$HouseholdMembersTableReferences
+                        ._householdIdTable(db)
+                        .id,
+                  ) as T;
+                }
+                if (userId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.userId,
+                    referencedTable:
+                        $$HouseholdMembersTableReferences._userIdTable(db),
+                    referencedColumn:
+                        $$HouseholdMembersTableReferences._userIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ));
 }
 
@@ -4638,12 +5415,9 @@ typedef $$HouseholdMembersTableProcessedTableManager = ProcessedTableManager<
     $$HouseholdMembersTableAnnotationComposer,
     $$HouseholdMembersTableCreateCompanionBuilder,
     $$HouseholdMembersTableUpdateCompanionBuilder,
-    (
-      HouseholdMember,
-      BaseReferences<_$AppDatabase, $HouseholdMembersTable, HouseholdMember>
-    ),
+    (HouseholdMember, $$HouseholdMembersTableReferences),
     HouseholdMember,
-    PrefetchHooks Function()>;
+    PrefetchHooks Function({bool householdId, bool userId})>;
 typedef $$AccountsTableCreateCompanionBuilder = AccountsCompanion Function({
   required String id,
   required String householdId,
@@ -4673,6 +5447,44 @@ typedef $$AccountsTableUpdateCompanionBuilder = AccountsCompanion Function({
   Value<int> rowid,
 });
 
+final class $$AccountsTableReferences
+    extends BaseReferences<_$AppDatabase, $AccountsTable, Account> {
+  $$AccountsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $HouseholdsTable _householdIdTable(_$AppDatabase db) =>
+      db.households.createAlias(
+          $_aliasNameGenerator(db.accounts.householdId, db.households.id));
+
+  $$HouseholdsTableProcessedTableManager get householdId {
+    final $_column = $_itemColumn<String>('household_id')!;
+
+    final manager = $$HouseholdsTableTableManager($_db, $_db.households)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_householdIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static MultiTypedResultKey<$RecurringExpensesTable, List<RecurringExpense>>
+      _recurringExpensesRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.recurringExpenses,
+              aliasName: $_aliasNameGenerator(
+                  db.accounts.id, db.recurringExpenses.defaultAccountId));
+
+  $$RecurringExpensesTableProcessedTableManager get recurringExpensesRefs {
+    final manager =
+        $$RecurringExpensesTableTableManager($_db, $_db.recurringExpenses)
+            .filter((f) =>
+                f.defaultAccountId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_recurringExpensesRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
 class $$AccountsTableFilterComposer
     extends Composer<_$AppDatabase, $AccountsTable> {
   $$AccountsTableFilterComposer({
@@ -4684,9 +5496,6 @@ class $$AccountsTableFilterComposer
   });
   ColumnFilters<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnFilters(column));
@@ -4719,6 +5528,47 @@ class $$AccountsTableFilterComposer
 
   ColumnFilters<String> get updatedBy => $composableBuilder(
       column: $table.updatedBy, builder: (column) => ColumnFilters(column));
+
+  $$HouseholdsTableFilterComposer get householdId {
+    final $$HouseholdsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableFilterComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<bool> recurringExpensesRefs(
+      Expression<bool> Function($$RecurringExpensesTableFilterComposer f) f) {
+    final $$RecurringExpensesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.recurringExpenses,
+        getReferencedColumn: (t) => t.defaultAccountId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$RecurringExpensesTableFilterComposer(
+              $db: $db,
+              $table: $db.recurringExpenses,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$AccountsTableOrderingComposer
@@ -4732,9 +5582,6 @@ class $$AccountsTableOrderingComposer
   });
   ColumnOrderings<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnOrderings(column));
@@ -4763,6 +5610,26 @@ class $$AccountsTableOrderingComposer
 
   ColumnOrderings<String> get updatedBy => $composableBuilder(
       column: $table.updatedBy, builder: (column) => ColumnOrderings(column));
+
+  $$HouseholdsTableOrderingComposer get householdId {
+    final $$HouseholdsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableOrderingComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$AccountsTableAnnotationComposer
@@ -4776,9 +5643,6 @@ class $$AccountsTableAnnotationComposer
   });
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => column);
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
@@ -4806,6 +5670,48 @@ class $$AccountsTableAnnotationComposer
 
   GeneratedColumn<String> get updatedBy =>
       $composableBuilder(column: $table.updatedBy, builder: (column) => column);
+
+  $$HouseholdsTableAnnotationComposer get householdId {
+    final $$HouseholdsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<T> recurringExpensesRefs<T extends Object>(
+      Expression<T> Function($$RecurringExpensesTableAnnotationComposer a) f) {
+    final $$RecurringExpensesTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.recurringExpenses,
+            getReferencedColumn: (t) => t.defaultAccountId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$RecurringExpensesTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.recurringExpenses,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return f(composer);
+  }
 }
 
 class $$AccountsTableTableManager extends RootTableManager<
@@ -4817,9 +5723,9 @@ class $$AccountsTableTableManager extends RootTableManager<
     $$AccountsTableAnnotationComposer,
     $$AccountsTableCreateCompanionBuilder,
     $$AccountsTableUpdateCompanionBuilder,
-    (Account, BaseReferences<_$AppDatabase, $AccountsTable, Account>),
+    (Account, $$AccountsTableReferences),
     Account,
-    PrefetchHooks Function()> {
+    PrefetchHooks Function({bool householdId, bool recurringExpensesRefs})> {
   $$AccountsTableTableManager(_$AppDatabase db, $AccountsTable table)
       : super(TableManagerState(
           db: db,
@@ -4887,9 +5793,60 @@ class $$AccountsTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map((e) =>
+                  (e.readTable(table), $$AccountsTableReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: (
+              {householdId = false, recurringExpensesRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (recurringExpensesRefs) db.recurringExpenses
+              ],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (householdId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.householdId,
+                    referencedTable:
+                        $$AccountsTableReferences._householdIdTable(db),
+                    referencedColumn:
+                        $$AccountsTableReferences._householdIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (recurringExpensesRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable: $$AccountsTableReferences
+                            ._recurringExpensesRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$AccountsTableReferences(db, table, p0)
+                                .recurringExpensesRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.defaultAccountId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
         ));
 }
 
@@ -4902,9 +5859,9 @@ typedef $$AccountsTableProcessedTableManager = ProcessedTableManager<
     $$AccountsTableAnnotationComposer,
     $$AccountsTableCreateCompanionBuilder,
     $$AccountsTableUpdateCompanionBuilder,
-    (Account, BaseReferences<_$AppDatabase, $AccountsTable, Account>),
+    (Account, $$AccountsTableReferences),
     Account,
-    PrefetchHooks Function()>;
+    PrefetchHooks Function({bool householdId, bool recurringExpensesRefs})>;
 typedef $$CategoriesTableCreateCompanionBuilder = CategoriesCompanion Function({
   required String id,
   required String householdId,
@@ -4934,6 +5891,58 @@ typedef $$CategoriesTableUpdateCompanionBuilder = CategoriesCompanion Function({
   Value<int> rowid,
 });
 
+final class $$CategoriesTableReferences
+    extends BaseReferences<_$AppDatabase, $CategoriesTable, Category> {
+  $$CategoriesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $HouseholdsTable _householdIdTable(_$AppDatabase db) =>
+      db.households.createAlias(
+          $_aliasNameGenerator(db.categories.householdId, db.households.id));
+
+  $$HouseholdsTableProcessedTableManager get householdId {
+    final $_column = $_itemColumn<String>('household_id')!;
+
+    final manager = $$HouseholdsTableTableManager($_db, $_db.households)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_householdIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static MultiTypedResultKey<$TransactionsTable, List<Transaction>>
+      _transactionsRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.transactions,
+              aliasName: $_aliasNameGenerator(
+                  db.categories.id, db.transactions.categoryId));
+
+  $$TransactionsTableProcessedTableManager get transactionsRefs {
+    final manager = $$TransactionsTableTableManager($_db, $_db.transactions)
+        .filter((f) => f.categoryId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_transactionsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$RecurringExpensesTable, List<RecurringExpense>>
+      _recurringExpensesRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.recurringExpenses,
+              aliasName: $_aliasNameGenerator(
+                  db.categories.id, db.recurringExpenses.categoryId));
+
+  $$RecurringExpensesTableProcessedTableManager get recurringExpensesRefs {
+    final manager = $$RecurringExpensesTableTableManager(
+            $_db, $_db.recurringExpenses)
+        .filter((f) => f.categoryId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_recurringExpensesRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
 class $$CategoriesTableFilterComposer
     extends Composer<_$AppDatabase, $CategoriesTable> {
   $$CategoriesTableFilterComposer({
@@ -4945,9 +5954,6 @@ class $$CategoriesTableFilterComposer
   });
   ColumnFilters<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnFilters(column));
@@ -4977,6 +5983,68 @@ class $$CategoriesTableFilterComposer
 
   ColumnFilters<String> get updatedBy => $composableBuilder(
       column: $table.updatedBy, builder: (column) => ColumnFilters(column));
+
+  $$HouseholdsTableFilterComposer get householdId {
+    final $$HouseholdsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableFilterComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<bool> transactionsRefs(
+      Expression<bool> Function($$TransactionsTableFilterComposer f) f) {
+    final $$TransactionsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.transactions,
+        getReferencedColumn: (t) => t.categoryId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TransactionsTableFilterComposer(
+              $db: $db,
+              $table: $db.transactions,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> recurringExpensesRefs(
+      Expression<bool> Function($$RecurringExpensesTableFilterComposer f) f) {
+    final $$RecurringExpensesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.recurringExpenses,
+        getReferencedColumn: (t) => t.categoryId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$RecurringExpensesTableFilterComposer(
+              $db: $db,
+              $table: $db.recurringExpenses,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$CategoriesTableOrderingComposer
@@ -4990,9 +6058,6 @@ class $$CategoriesTableOrderingComposer
   });
   ColumnOrderings<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnOrderings(column));
@@ -5020,6 +6085,26 @@ class $$CategoriesTableOrderingComposer
 
   ColumnOrderings<String> get updatedBy => $composableBuilder(
       column: $table.updatedBy, builder: (column) => ColumnOrderings(column));
+
+  $$HouseholdsTableOrderingComposer get householdId {
+    final $$HouseholdsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableOrderingComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$CategoriesTableAnnotationComposer
@@ -5033,9 +6118,6 @@ class $$CategoriesTableAnnotationComposer
   });
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => column);
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
@@ -5063,6 +6145,69 @@ class $$CategoriesTableAnnotationComposer
 
   GeneratedColumn<String> get updatedBy =>
       $composableBuilder(column: $table.updatedBy, builder: (column) => column);
+
+  $$HouseholdsTableAnnotationComposer get householdId {
+    final $$HouseholdsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<T> transactionsRefs<T extends Object>(
+      Expression<T> Function($$TransactionsTableAnnotationComposer a) f) {
+    final $$TransactionsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.transactions,
+        getReferencedColumn: (t) => t.categoryId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TransactionsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.transactions,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<T> recurringExpensesRefs<T extends Object>(
+      Expression<T> Function($$RecurringExpensesTableAnnotationComposer a) f) {
+    final $$RecurringExpensesTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.recurringExpenses,
+            getReferencedColumn: (t) => t.categoryId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$RecurringExpensesTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.recurringExpenses,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return f(composer);
+  }
 }
 
 class $$CategoriesTableTableManager extends RootTableManager<
@@ -5074,9 +6219,12 @@ class $$CategoriesTableTableManager extends RootTableManager<
     $$CategoriesTableAnnotationComposer,
     $$CategoriesTableCreateCompanionBuilder,
     $$CategoriesTableUpdateCompanionBuilder,
-    (Category, BaseReferences<_$AppDatabase, $CategoriesTable, Category>),
+    (Category, $$CategoriesTableReferences),
     Category,
-    PrefetchHooks Function()> {
+    PrefetchHooks Function(
+        {bool householdId,
+        bool transactionsRefs,
+        bool recurringExpensesRefs})> {
   $$CategoriesTableTableManager(_$AppDatabase db, $CategoriesTable table)
       : super(TableManagerState(
           db: db,
@@ -5144,9 +6292,77 @@ class $$CategoriesTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map((e) => (
+                    e.readTable(table),
+                    $$CategoriesTableReferences(db, table, e)
+                  ))
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: (
+              {householdId = false,
+              transactionsRefs = false,
+              recurringExpensesRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (transactionsRefs) db.transactions,
+                if (recurringExpensesRefs) db.recurringExpenses
+              ],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (householdId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.householdId,
+                    referencedTable:
+                        $$CategoriesTableReferences._householdIdTable(db),
+                    referencedColumn:
+                        $$CategoriesTableReferences._householdIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (transactionsRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable: $$CategoriesTableReferences
+                            ._transactionsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$CategoriesTableReferences(db, table, p0)
+                                .transactionsRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.categoryId == item.id),
+                        typedResults: items),
+                  if (recurringExpensesRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable: $$CategoriesTableReferences
+                            ._recurringExpensesRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$CategoriesTableReferences(db, table, p0)
+                                .recurringExpensesRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.categoryId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
         ));
 }
 
@@ -5159,9 +6375,10 @@ typedef $$CategoriesTableProcessedTableManager = ProcessedTableManager<
     $$CategoriesTableAnnotationComposer,
     $$CategoriesTableCreateCompanionBuilder,
     $$CategoriesTableUpdateCompanionBuilder,
-    (Category, BaseReferences<_$AppDatabase, $CategoriesTable, Category>),
+    (Category, $$CategoriesTableReferences),
     Category,
-    PrefetchHooks Function()>;
+    PrefetchHooks Function(
+        {bool householdId, bool transactionsRefs, bool recurringExpensesRefs})>;
 typedef $$TransactionsTableCreateCompanionBuilder = TransactionsCompanion
     Function({
   required String id,
@@ -5203,6 +6420,90 @@ typedef $$TransactionsTableUpdateCompanionBuilder = TransactionsCompanion
   Value<int> rowid,
 });
 
+final class $$TransactionsTableReferences
+    extends BaseReferences<_$AppDatabase, $TransactionsTable, Transaction> {
+  $$TransactionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $HouseholdsTable _householdIdTable(_$AppDatabase db) =>
+      db.households.createAlias(
+          $_aliasNameGenerator(db.transactions.householdId, db.households.id));
+
+  $$HouseholdsTableProcessedTableManager get householdId {
+    final $_column = $_itemColumn<String>('household_id')!;
+
+    final manager = $$HouseholdsTableTableManager($_db, $_db.households)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_householdIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $AccountsTable _sourceAccountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias($_aliasNameGenerator(
+          db.transactions.sourceAccountId, db.accounts.id));
+
+  $$AccountsTableProcessedTableManager? get sourceAccountId {
+    final $_column = $_itemColumn<String>('source_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableManager($_db, $_db.accounts)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_sourceAccountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $AccountsTable _destinationAccountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias($_aliasNameGenerator(
+          db.transactions.destinationAccountId, db.accounts.id));
+
+  $$AccountsTableProcessedTableManager? get destinationAccountId {
+    final $_column = $_itemColumn<String>('destination_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableManager($_db, $_db.accounts)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item =
+        $_typedResult.readTableOrNull(_destinationAccountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $CategoriesTable _categoryIdTable(_$AppDatabase db) =>
+      db.categories.createAlias(
+          $_aliasNameGenerator(db.transactions.categoryId, db.categories.id));
+
+  $$CategoriesTableProcessedTableManager? get categoryId {
+    final $_column = $_itemColumn<String>('category_id');
+    if ($_column == null) return null;
+    final manager = $$CategoriesTableTableManager($_db, $_db.categories)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static MultiTypedResultKey<$RecurringPaymentsTable, List<RecurringPayment>>
+      _recurringPaymentsRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.recurringPayments,
+              aliasName: $_aliasNameGenerator(
+                  db.transactions.id, db.recurringPayments.transactionId));
+
+  $$RecurringPaymentsTableProcessedTableManager get recurringPaymentsRefs {
+    final manager = $$RecurringPaymentsTableTableManager(
+            $_db, $_db.recurringPayments)
+        .filter(
+            (f) => f.transactionId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_recurringPaymentsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
 class $$TransactionsTableFilterComposer
     extends Composer<_$AppDatabase, $TransactionsTable> {
   $$TransactionsTableFilterComposer({
@@ -5214,9 +6515,6 @@ class $$TransactionsTableFilterComposer
   });
   ColumnFilters<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => ColumnFilters(column));
 
   ColumnWithTypeConverterFilters<TransactionType, TransactionType, String>
       get type => $composableBuilder(
@@ -5230,17 +6528,6 @@ class $$TransactionsTableFilterComposer
 
   ColumnFilters<int> get amount => $composableBuilder(
       column: $table.amount, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get sourceAccountId => $composableBuilder(
-      column: $table.sourceAccountId,
-      builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get destinationAccountId => $composableBuilder(
-      column: $table.destinationAccountId,
-      builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get categoryId => $composableBuilder(
-      column: $table.categoryId, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => ColumnFilters(column));
@@ -5268,6 +6555,107 @@ class $$TransactionsTableFilterComposer
 
   ColumnFilters<bool> get isDeleted => $composableBuilder(
       column: $table.isDeleted, builder: (column) => ColumnFilters(column));
+
+  $$HouseholdsTableFilterComposer get householdId {
+    final $$HouseholdsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableFilterComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get sourceAccountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.sourceAccountId,
+        referencedTable: $db.accounts,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AccountsTableFilterComposer(
+              $db: $db,
+              $table: $db.accounts,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get destinationAccountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.destinationAccountId,
+        referencedTable: $db.accounts,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AccountsTableFilterComposer(
+              $db: $db,
+              $table: $db.accounts,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CategoriesTableFilterComposer get categoryId {
+    final $$CategoriesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryId,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CategoriesTableFilterComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<bool> recurringPaymentsRefs(
+      Expression<bool> Function($$RecurringPaymentsTableFilterComposer f) f) {
+    final $$RecurringPaymentsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.recurringPayments,
+        getReferencedColumn: (t) => t.transactionId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$RecurringPaymentsTableFilterComposer(
+              $db: $db,
+              $table: $db.recurringPayments,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$TransactionsTableOrderingComposer
@@ -5282,9 +6670,6 @@ class $$TransactionsTableOrderingComposer
   ColumnOrderings<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => ColumnOrderings(column));
-
   ColumnOrderings<String> get type => $composableBuilder(
       column: $table.type, builder: (column) => ColumnOrderings(column));
 
@@ -5293,17 +6678,6 @@ class $$TransactionsTableOrderingComposer
 
   ColumnOrderings<int> get amount => $composableBuilder(
       column: $table.amount, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get sourceAccountId => $composableBuilder(
-      column: $table.sourceAccountId,
-      builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get destinationAccountId => $composableBuilder(
-      column: $table.destinationAccountId,
-      builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get categoryId => $composableBuilder(
-      column: $table.categoryId, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => ColumnOrderings(column));
@@ -5329,6 +6703,86 @@ class $$TransactionsTableOrderingComposer
 
   ColumnOrderings<bool> get isDeleted => $composableBuilder(
       column: $table.isDeleted, builder: (column) => ColumnOrderings(column));
+
+  $$HouseholdsTableOrderingComposer get householdId {
+    final $$HouseholdsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableOrderingComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get sourceAccountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.sourceAccountId,
+        referencedTable: $db.accounts,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AccountsTableOrderingComposer(
+              $db: $db,
+              $table: $db.accounts,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get destinationAccountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.destinationAccountId,
+        referencedTable: $db.accounts,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AccountsTableOrderingComposer(
+              $db: $db,
+              $table: $db.accounts,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CategoriesTableOrderingComposer get categoryId {
+    final $$CategoriesTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryId,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CategoriesTableOrderingComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$TransactionsTableAnnotationComposer
@@ -5343,9 +6797,6 @@ class $$TransactionsTableAnnotationComposer
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => column);
-
   GeneratedColumnWithTypeConverter<TransactionType, String> get type =>
       $composableBuilder(column: $table.type, builder: (column) => column);
 
@@ -5355,15 +6806,6 @@ class $$TransactionsTableAnnotationComposer
 
   GeneratedColumn<int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
-
-  GeneratedColumn<String> get sourceAccountId => $composableBuilder(
-      column: $table.sourceAccountId, builder: (column) => column);
-
-  GeneratedColumn<String> get destinationAccountId => $composableBuilder(
-      column: $table.destinationAccountId, builder: (column) => column);
-
-  GeneratedColumn<String> get categoryId => $composableBuilder(
-      column: $table.categoryId, builder: (column) => column);
 
   GeneratedColumn<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => column);
@@ -5389,6 +6831,108 @@ class $$TransactionsTableAnnotationComposer
 
   GeneratedColumn<bool> get isDeleted =>
       $composableBuilder(column: $table.isDeleted, builder: (column) => column);
+
+  $$HouseholdsTableAnnotationComposer get householdId {
+    final $$HouseholdsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get sourceAccountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.sourceAccountId,
+        referencedTable: $db.accounts,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AccountsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.accounts,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get destinationAccountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.destinationAccountId,
+        referencedTable: $db.accounts,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AccountsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.accounts,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CategoriesTableAnnotationComposer get categoryId {
+    final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryId,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CategoriesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<T> recurringPaymentsRefs<T extends Object>(
+      Expression<T> Function($$RecurringPaymentsTableAnnotationComposer a) f) {
+    final $$RecurringPaymentsTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.recurringPayments,
+            getReferencedColumn: (t) => t.transactionId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$RecurringPaymentsTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.recurringPayments,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return f(composer);
+  }
 }
 
 class $$TransactionsTableTableManager extends RootTableManager<
@@ -5400,12 +6944,14 @@ class $$TransactionsTableTableManager extends RootTableManager<
     $$TransactionsTableAnnotationComposer,
     $$TransactionsTableCreateCompanionBuilder,
     $$TransactionsTableUpdateCompanionBuilder,
-    (
-      Transaction,
-      BaseReferences<_$AppDatabase, $TransactionsTable, Transaction>
-    ),
+    (Transaction, $$TransactionsTableReferences),
     Transaction,
-    PrefetchHooks Function()> {
+    PrefetchHooks Function(
+        {bool householdId,
+        bool sourceAccountId,
+        bool destinationAccountId,
+        bool categoryId,
+        bool recurringPaymentsRefs})> {
   $$TransactionsTableTableManager(_$AppDatabase db, $TransactionsTable table)
       : super(TableManagerState(
           db: db,
@@ -5493,9 +7039,98 @@ class $$TransactionsTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map((e) => (
+                    e.readTable(table),
+                    $$TransactionsTableReferences(db, table, e)
+                  ))
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: (
+              {householdId = false,
+              sourceAccountId = false,
+              destinationAccountId = false,
+              categoryId = false,
+              recurringPaymentsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (recurringPaymentsRefs) db.recurringPayments
+              ],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (householdId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.householdId,
+                    referencedTable:
+                        $$TransactionsTableReferences._householdIdTable(db),
+                    referencedColumn:
+                        $$TransactionsTableReferences._householdIdTable(db).id,
+                  ) as T;
+                }
+                if (sourceAccountId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.sourceAccountId,
+                    referencedTable:
+                        $$TransactionsTableReferences._sourceAccountIdTable(db),
+                    referencedColumn: $$TransactionsTableReferences
+                        ._sourceAccountIdTable(db)
+                        .id,
+                  ) as T;
+                }
+                if (destinationAccountId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.destinationAccountId,
+                    referencedTable: $$TransactionsTableReferences
+                        ._destinationAccountIdTable(db),
+                    referencedColumn: $$TransactionsTableReferences
+                        ._destinationAccountIdTable(db)
+                        .id,
+                  ) as T;
+                }
+                if (categoryId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.categoryId,
+                    referencedTable:
+                        $$TransactionsTableReferences._categoryIdTable(db),
+                    referencedColumn:
+                        $$TransactionsTableReferences._categoryIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (recurringPaymentsRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable: $$TransactionsTableReferences
+                            ._recurringPaymentsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$TransactionsTableReferences(db, table, p0)
+                                .recurringPaymentsRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.transactionId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
         ));
 }
 
@@ -5508,12 +7143,14 @@ typedef $$TransactionsTableProcessedTableManager = ProcessedTableManager<
     $$TransactionsTableAnnotationComposer,
     $$TransactionsTableCreateCompanionBuilder,
     $$TransactionsTableUpdateCompanionBuilder,
-    (
-      Transaction,
-      BaseReferences<_$AppDatabase, $TransactionsTable, Transaction>
-    ),
+    (Transaction, $$TransactionsTableReferences),
     Transaction,
-    PrefetchHooks Function()>;
+    PrefetchHooks Function(
+        {bool householdId,
+        bool sourceAccountId,
+        bool destinationAccountId,
+        bool categoryId,
+        bool recurringPaymentsRefs})>;
 typedef $$RecurringExpensesTableCreateCompanionBuilder
     = RecurringExpensesCompanion Function({
   required String id,
@@ -5547,6 +7184,75 @@ typedef $$RecurringExpensesTableUpdateCompanionBuilder
   Value<int> rowid,
 });
 
+final class $$RecurringExpensesTableReferences extends BaseReferences<
+    _$AppDatabase, $RecurringExpensesTable, RecurringExpense> {
+  $$RecurringExpensesTableReferences(
+      super.$_db, super.$_table, super.$_typedResult);
+
+  static $HouseholdsTable _householdIdTable(_$AppDatabase db) =>
+      db.households.createAlias($_aliasNameGenerator(
+          db.recurringExpenses.householdId, db.households.id));
+
+  $$HouseholdsTableProcessedTableManager get householdId {
+    final $_column = $_itemColumn<String>('household_id')!;
+
+    final manager = $$HouseholdsTableTableManager($_db, $_db.households)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_householdIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $CategoriesTable _categoryIdTable(_$AppDatabase db) =>
+      db.categories.createAlias($_aliasNameGenerator(
+          db.recurringExpenses.categoryId, db.categories.id));
+
+  $$CategoriesTableProcessedTableManager get categoryId {
+    final $_column = $_itemColumn<String>('category_id')!;
+
+    final manager = $$CategoriesTableTableManager($_db, $_db.categories)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $AccountsTable _defaultAccountIdTable(_$AppDatabase db) =>
+      db.accounts.createAlias($_aliasNameGenerator(
+          db.recurringExpenses.defaultAccountId, db.accounts.id));
+
+  $$AccountsTableProcessedTableManager? get defaultAccountId {
+    final $_column = $_itemColumn<String>('default_account_id');
+    if ($_column == null) return null;
+    final manager = $$AccountsTableTableManager($_db, $_db.accounts)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_defaultAccountIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static MultiTypedResultKey<$RecurringPaymentsTable, List<RecurringPayment>>
+      _recurringPaymentsRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.recurringPayments,
+              aliasName: $_aliasNameGenerator(db.recurringExpenses.id,
+                  db.recurringPayments.recurringExpenseId));
+
+  $$RecurringPaymentsTableProcessedTableManager get recurringPaymentsRefs {
+    final manager =
+        $$RecurringPaymentsTableTableManager($_db, $_db.recurringPayments)
+            .filter((f) =>
+                f.recurringExpenseId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache =
+        $_typedResult.readTableOrNull(_recurringPaymentsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
 class $$RecurringExpensesTableFilterComposer
     extends Composer<_$AppDatabase, $RecurringExpensesTable> {
   $$RecurringExpensesTableFilterComposer({
@@ -5559,21 +7265,11 @@ class $$RecurringExpensesTableFilterComposer
   ColumnFilters<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => ColumnFilters(column));
-
   ColumnFilters<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<int> get defaultAmount => $composableBuilder(
       column: $table.defaultAmount, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get categoryId => $composableBuilder(
-      column: $table.categoryId, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get defaultAccountId => $composableBuilder(
-      column: $table.defaultAccountId,
-      builder: (column) => ColumnFilters(column));
 
   ColumnFilters<int> get dueDay => $composableBuilder(
       column: $table.dueDay, builder: (column) => ColumnFilters(column));
@@ -5592,6 +7288,87 @@ class $$RecurringExpensesTableFilterComposer
 
   ColumnFilters<String> get updatedBy => $composableBuilder(
       column: $table.updatedBy, builder: (column) => ColumnFilters(column));
+
+  $$HouseholdsTableFilterComposer get householdId {
+    final $$HouseholdsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableFilterComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CategoriesTableFilterComposer get categoryId {
+    final $$CategoriesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryId,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CategoriesTableFilterComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$AccountsTableFilterComposer get defaultAccountId {
+    final $$AccountsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.defaultAccountId,
+        referencedTable: $db.accounts,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AccountsTableFilterComposer(
+              $db: $db,
+              $table: $db.accounts,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<bool> recurringPaymentsRefs(
+      Expression<bool> Function($$RecurringPaymentsTableFilterComposer f) f) {
+    final $$RecurringPaymentsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.recurringPayments,
+        getReferencedColumn: (t) => t.recurringExpenseId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$RecurringPaymentsTableFilterComposer(
+              $db: $db,
+              $table: $db.recurringPayments,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$RecurringExpensesTableOrderingComposer
@@ -5606,21 +7383,11 @@ class $$RecurringExpensesTableOrderingComposer
   ColumnOrderings<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => ColumnOrderings(column));
-
   ColumnOrderings<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<int> get defaultAmount => $composableBuilder(
       column: $table.defaultAmount,
-      builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get categoryId => $composableBuilder(
-      column: $table.categoryId, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get defaultAccountId => $composableBuilder(
-      column: $table.defaultAccountId,
       builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<int> get dueDay => $composableBuilder(
@@ -5640,6 +7407,66 @@ class $$RecurringExpensesTableOrderingComposer
 
   ColumnOrderings<String> get updatedBy => $composableBuilder(
       column: $table.updatedBy, builder: (column) => ColumnOrderings(column));
+
+  $$HouseholdsTableOrderingComposer get householdId {
+    final $$HouseholdsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableOrderingComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CategoriesTableOrderingComposer get categoryId {
+    final $$CategoriesTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryId,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CategoriesTableOrderingComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$AccountsTableOrderingComposer get defaultAccountId {
+    final $$AccountsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.defaultAccountId,
+        referencedTable: $db.accounts,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AccountsTableOrderingComposer(
+              $db: $db,
+              $table: $db.accounts,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$RecurringExpensesTableAnnotationComposer
@@ -5654,20 +7481,11 @@ class $$RecurringExpensesTableAnnotationComposer
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => column);
-
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
   GeneratedColumn<int> get defaultAmount => $composableBuilder(
       column: $table.defaultAmount, builder: (column) => column);
-
-  GeneratedColumn<String> get categoryId => $composableBuilder(
-      column: $table.categoryId, builder: (column) => column);
-
-  GeneratedColumn<String> get defaultAccountId => $composableBuilder(
-      column: $table.defaultAccountId, builder: (column) => column);
 
   GeneratedColumn<int> get dueDay =>
       $composableBuilder(column: $table.dueDay, builder: (column) => column);
@@ -5686,6 +7504,88 @@ class $$RecurringExpensesTableAnnotationComposer
 
   GeneratedColumn<String> get updatedBy =>
       $composableBuilder(column: $table.updatedBy, builder: (column) => column);
+
+  $$HouseholdsTableAnnotationComposer get householdId {
+    final $$HouseholdsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CategoriesTableAnnotationComposer get categoryId {
+    final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryId,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CategoriesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$AccountsTableAnnotationComposer get defaultAccountId {
+    final $$AccountsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.defaultAccountId,
+        referencedTable: $db.accounts,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AccountsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.accounts,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  Expression<T> recurringPaymentsRefs<T extends Object>(
+      Expression<T> Function($$RecurringPaymentsTableAnnotationComposer a) f) {
+    final $$RecurringPaymentsTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.id,
+            referencedTable: $db.recurringPayments,
+            getReferencedColumn: (t) => t.recurringExpenseId,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$RecurringPaymentsTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.recurringPayments,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return f(composer);
+  }
 }
 
 class $$RecurringExpensesTableTableManager extends RootTableManager<
@@ -5697,12 +7597,13 @@ class $$RecurringExpensesTableTableManager extends RootTableManager<
     $$RecurringExpensesTableAnnotationComposer,
     $$RecurringExpensesTableCreateCompanionBuilder,
     $$RecurringExpensesTableUpdateCompanionBuilder,
-    (
-      RecurringExpense,
-      BaseReferences<_$AppDatabase, $RecurringExpensesTable, RecurringExpense>
-    ),
+    (RecurringExpense, $$RecurringExpensesTableReferences),
     RecurringExpense,
-    PrefetchHooks Function()> {
+    PrefetchHooks Function(
+        {bool householdId,
+        bool categoryId,
+        bool defaultAccountId,
+        bool recurringPaymentsRefs})> {
   $$RecurringExpensesTableTableManager(
       _$AppDatabase db, $RecurringExpensesTable table)
       : super(TableManagerState(
@@ -5776,9 +7677,88 @@ class $$RecurringExpensesTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map((e) => (
+                    e.readTable(table),
+                    $$RecurringExpensesTableReferences(db, table, e)
+                  ))
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: (
+              {householdId = false,
+              categoryId = false,
+              defaultAccountId = false,
+              recurringPaymentsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (recurringPaymentsRefs) db.recurringPayments
+              ],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (householdId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.householdId,
+                    referencedTable: $$RecurringExpensesTableReferences
+                        ._householdIdTable(db),
+                    referencedColumn: $$RecurringExpensesTableReferences
+                        ._householdIdTable(db)
+                        .id,
+                  ) as T;
+                }
+                if (categoryId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.categoryId,
+                    referencedTable:
+                        $$RecurringExpensesTableReferences._categoryIdTable(db),
+                    referencedColumn: $$RecurringExpensesTableReferences
+                        ._categoryIdTable(db)
+                        .id,
+                  ) as T;
+                }
+                if (defaultAccountId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.defaultAccountId,
+                    referencedTable: $$RecurringExpensesTableReferences
+                        ._defaultAccountIdTable(db),
+                    referencedColumn: $$RecurringExpensesTableReferences
+                        ._defaultAccountIdTable(db)
+                        .id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (recurringPaymentsRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable: $$RecurringExpensesTableReferences
+                            ._recurringPaymentsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$RecurringExpensesTableReferences(db, table, p0)
+                                .recurringPaymentsRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.recurringExpenseId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
         ));
 }
 
@@ -5791,12 +7771,13 @@ typedef $$RecurringExpensesTableProcessedTableManager = ProcessedTableManager<
     $$RecurringExpensesTableAnnotationComposer,
     $$RecurringExpensesTableCreateCompanionBuilder,
     $$RecurringExpensesTableUpdateCompanionBuilder,
-    (
-      RecurringExpense,
-      BaseReferences<_$AppDatabase, $RecurringExpensesTable, RecurringExpense>
-    ),
+    (RecurringExpense, $$RecurringExpensesTableReferences),
     RecurringExpense,
-    PrefetchHooks Function()>;
+    PrefetchHooks Function(
+        {bool householdId,
+        bool categoryId,
+        bool defaultAccountId,
+        bool recurringPaymentsRefs})>;
 typedef $$RecurringPaymentsTableCreateCompanionBuilder
     = RecurringPaymentsCompanion Function({
   required String id,
@@ -5828,6 +7809,58 @@ typedef $$RecurringPaymentsTableUpdateCompanionBuilder
   Value<int> rowid,
 });
 
+final class $$RecurringPaymentsTableReferences extends BaseReferences<
+    _$AppDatabase, $RecurringPaymentsTable, RecurringPayment> {
+  $$RecurringPaymentsTableReferences(
+      super.$_db, super.$_table, super.$_typedResult);
+
+  static $HouseholdsTable _householdIdTable(_$AppDatabase db) =>
+      db.households.createAlias($_aliasNameGenerator(
+          db.recurringPayments.householdId, db.households.id));
+
+  $$HouseholdsTableProcessedTableManager get householdId {
+    final $_column = $_itemColumn<String>('household_id')!;
+
+    final manager = $$HouseholdsTableTableManager($_db, $_db.households)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_householdIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $RecurringExpensesTable _recurringExpenseIdTable(_$AppDatabase db) =>
+      db.recurringExpenses.createAlias($_aliasNameGenerator(
+          db.recurringPayments.recurringExpenseId, db.recurringExpenses.id));
+
+  $$RecurringExpensesTableProcessedTableManager get recurringExpenseId {
+    final $_column = $_itemColumn<String>('recurring_expense_id')!;
+
+    final manager =
+        $$RecurringExpensesTableTableManager($_db, $_db.recurringExpenses)
+            .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_recurringExpenseIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $TransactionsTable _transactionIdTable(_$AppDatabase db) =>
+      db.transactions.createAlias($_aliasNameGenerator(
+          db.recurringPayments.transactionId, db.transactions.id));
+
+  $$TransactionsTableProcessedTableManager? get transactionId {
+    final $_column = $_itemColumn<String>('transaction_id');
+    if ($_column == null) return null;
+    final manager = $$TransactionsTableTableManager($_db, $_db.transactions)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_transactionIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
 class $$RecurringPaymentsTableFilterComposer
     extends Composer<_$AppDatabase, $RecurringPaymentsTable> {
   $$RecurringPaymentsTableFilterComposer({
@@ -5839,13 +7872,6 @@ class $$RecurringPaymentsTableFilterComposer
   });
   ColumnFilters<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get recurringExpenseId => $composableBuilder(
-      column: $table.recurringExpenseId,
-      builder: (column) => ColumnFilters(column));
 
   ColumnFilters<int> get periodYear => $composableBuilder(
       column: $table.periodYear, builder: (column) => ColumnFilters(column));
@@ -5859,9 +7885,6 @@ class $$RecurringPaymentsTableFilterComposer
           column: $table.status,
           builder: (column) => ColumnWithTypeConverterFilters(column));
 
-  ColumnFilters<String> get transactionId => $composableBuilder(
-      column: $table.transactionId, builder: (column) => ColumnFilters(column));
-
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
 
@@ -5873,6 +7896,66 @@ class $$RecurringPaymentsTableFilterComposer
 
   ColumnFilters<String> get updatedBy => $composableBuilder(
       column: $table.updatedBy, builder: (column) => ColumnFilters(column));
+
+  $$HouseholdsTableFilterComposer get householdId {
+    final $$HouseholdsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableFilterComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$RecurringExpensesTableFilterComposer get recurringExpenseId {
+    final $$RecurringExpensesTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.recurringExpenseId,
+        referencedTable: $db.recurringExpenses,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$RecurringExpensesTableFilterComposer(
+              $db: $db,
+              $table: $db.recurringExpenses,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$TransactionsTableFilterComposer get transactionId {
+    final $$TransactionsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.transactionId,
+        referencedTable: $db.transactions,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TransactionsTableFilterComposer(
+              $db: $db,
+              $table: $db.transactions,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$RecurringPaymentsTableOrderingComposer
@@ -5887,13 +7970,6 @@ class $$RecurringPaymentsTableOrderingComposer
   ColumnOrderings<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get recurringExpenseId => $composableBuilder(
-      column: $table.recurringExpenseId,
-      builder: (column) => ColumnOrderings(column));
-
   ColumnOrderings<int> get periodYear => $composableBuilder(
       column: $table.periodYear, builder: (column) => ColumnOrderings(column));
 
@@ -5902,10 +7978,6 @@ class $$RecurringPaymentsTableOrderingComposer
 
   ColumnOrderings<String> get status => $composableBuilder(
       column: $table.status, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get transactionId => $composableBuilder(
-      column: $table.transactionId,
-      builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnOrderings(column));
@@ -5918,6 +7990,66 @@ class $$RecurringPaymentsTableOrderingComposer
 
   ColumnOrderings<String> get updatedBy => $composableBuilder(
       column: $table.updatedBy, builder: (column) => ColumnOrderings(column));
+
+  $$HouseholdsTableOrderingComposer get householdId {
+    final $$HouseholdsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableOrderingComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$RecurringExpensesTableOrderingComposer get recurringExpenseId {
+    final $$RecurringExpensesTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.recurringExpenseId,
+        referencedTable: $db.recurringExpenses,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$RecurringExpensesTableOrderingComposer(
+              $db: $db,
+              $table: $db.recurringExpenses,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$TransactionsTableOrderingComposer get transactionId {
+    final $$TransactionsTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.transactionId,
+        referencedTable: $db.transactions,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TransactionsTableOrderingComposer(
+              $db: $db,
+              $table: $db.transactions,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$RecurringPaymentsTableAnnotationComposer
@@ -5932,12 +8064,6 @@ class $$RecurringPaymentsTableAnnotationComposer
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get householdId => $composableBuilder(
-      column: $table.householdId, builder: (column) => column);
-
-  GeneratedColumn<String> get recurringExpenseId => $composableBuilder(
-      column: $table.recurringExpenseId, builder: (column) => column);
-
   GeneratedColumn<int> get periodYear => $composableBuilder(
       column: $table.periodYear, builder: (column) => column);
 
@@ -5946,9 +8072,6 @@ class $$RecurringPaymentsTableAnnotationComposer
 
   GeneratedColumnWithTypeConverter<RecurringPaymentStatus, String> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
-
-  GeneratedColumn<String> get transactionId => $composableBuilder(
-      column: $table.transactionId, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -5961,6 +8084,67 @@ class $$RecurringPaymentsTableAnnotationComposer
 
   GeneratedColumn<String> get updatedBy =>
       $composableBuilder(column: $table.updatedBy, builder: (column) => column);
+
+  $$HouseholdsTableAnnotationComposer get householdId {
+    final $$HouseholdsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.householdId,
+        referencedTable: $db.households,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$HouseholdsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.households,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$RecurringExpensesTableAnnotationComposer get recurringExpenseId {
+    final $$RecurringExpensesTableAnnotationComposer composer =
+        $composerBuilder(
+            composer: this,
+            getCurrentColumn: (t) => t.recurringExpenseId,
+            referencedTable: $db.recurringExpenses,
+            getReferencedColumn: (t) => t.id,
+            builder: (joinBuilder,
+                    {$addJoinBuilderToRootComposer,
+                    $removeJoinBuilderFromRootComposer}) =>
+                $$RecurringExpensesTableAnnotationComposer(
+                  $db: $db,
+                  $table: $db.recurringExpenses,
+                  $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                  joinBuilder: joinBuilder,
+                  $removeJoinBuilderFromRootComposer:
+                      $removeJoinBuilderFromRootComposer,
+                ));
+    return composer;
+  }
+
+  $$TransactionsTableAnnotationComposer get transactionId {
+    final $$TransactionsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.transactionId,
+        referencedTable: $db.transactions,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$TransactionsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.transactions,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$RecurringPaymentsTableTableManager extends RootTableManager<
@@ -5972,12 +8156,10 @@ class $$RecurringPaymentsTableTableManager extends RootTableManager<
     $$RecurringPaymentsTableAnnotationComposer,
     $$RecurringPaymentsTableCreateCompanionBuilder,
     $$RecurringPaymentsTableUpdateCompanionBuilder,
-    (
-      RecurringPayment,
-      BaseReferences<_$AppDatabase, $RecurringPaymentsTable, RecurringPayment>
-    ),
+    (RecurringPayment, $$RecurringPaymentsTableReferences),
     RecurringPayment,
-    PrefetchHooks Function()> {
+    PrefetchHooks Function(
+        {bool householdId, bool recurringExpenseId, bool transactionId})> {
   $$RecurringPaymentsTableTableManager(
       _$AppDatabase db, $RecurringPaymentsTable table)
       : super(TableManagerState(
@@ -6047,9 +8229,72 @@ class $$RecurringPaymentsTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map((e) => (
+                    e.readTable(table),
+                    $$RecurringPaymentsTableReferences(db, table, e)
+                  ))
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: (
+              {householdId = false,
+              recurringExpenseId = false,
+              transactionId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (householdId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.householdId,
+                    referencedTable: $$RecurringPaymentsTableReferences
+                        ._householdIdTable(db),
+                    referencedColumn: $$RecurringPaymentsTableReferences
+                        ._householdIdTable(db)
+                        .id,
+                  ) as T;
+                }
+                if (recurringExpenseId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.recurringExpenseId,
+                    referencedTable: $$RecurringPaymentsTableReferences
+                        ._recurringExpenseIdTable(db),
+                    referencedColumn: $$RecurringPaymentsTableReferences
+                        ._recurringExpenseIdTable(db)
+                        .id,
+                  ) as T;
+                }
+                if (transactionId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.transactionId,
+                    referencedTable: $$RecurringPaymentsTableReferences
+                        ._transactionIdTable(db),
+                    referencedColumn: $$RecurringPaymentsTableReferences
+                        ._transactionIdTable(db)
+                        .id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ));
 }
 
@@ -6062,12 +8307,10 @@ typedef $$RecurringPaymentsTableProcessedTableManager = ProcessedTableManager<
     $$RecurringPaymentsTableAnnotationComposer,
     $$RecurringPaymentsTableCreateCompanionBuilder,
     $$RecurringPaymentsTableUpdateCompanionBuilder,
-    (
-      RecurringPayment,
-      BaseReferences<_$AppDatabase, $RecurringPaymentsTable, RecurringPayment>
-    ),
+    (RecurringPayment, $$RecurringPaymentsTableReferences),
     RecurringPayment,
-    PrefetchHooks Function()>;
+    PrefetchHooks Function(
+        {bool householdId, bool recurringExpenseId, bool transactionId})>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;

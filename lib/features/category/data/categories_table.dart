@@ -2,10 +2,12 @@ import 'package:drift/drift.dart';
 
 import '../domain/category_type.dart';
 
+import '../../household/data/households_table.dart';
+
 class Categories extends Table {
   TextColumn get id => text()();
 
-  TextColumn get householdId => text()();
+  TextColumn get householdId => text().references(Households, #id)();
 
   TextColumn get name => text()();
 

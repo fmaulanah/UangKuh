@@ -3,10 +3,12 @@ import 'package:drift/drift.dart';
 import '../domain/account_purpose.dart';
 import '../domain/account_type.dart';
 
+import '../../household/data/households_table.dart';
+
 class Accounts extends Table {
   TextColumn get id => text()();
 
-  TextColumn get householdId => text()();
+  TextColumn get householdId => text().references(Households, #id)();
 
   TextColumn get name => text()();
 

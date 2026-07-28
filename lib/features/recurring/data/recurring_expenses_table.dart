@@ -1,17 +1,22 @@
 import 'package:drift/drift.dart';
 
+import '../../account/data/accounts_table.dart';
+import '../../category/data/categories_table.dart';
+import '../../household/data/households_table.dart';
+
 class RecurringExpenses extends Table {
   TextColumn get id => text()();
 
-  TextColumn get householdId => text()();
+  TextColumn get householdId => text().references(Households, #id)();
 
   TextColumn get name => text()();
 
   IntColumn get defaultAmount => integer()();
 
-  TextColumn get categoryId => text()();
+  TextColumn get categoryId => text().references(Categories, #id)();
 
-  TextColumn get defaultAccountId => text().nullable()();
+  TextColumn get defaultAccountId =>
+      text().nullable().references(Accounts, #id)();
 
   IntColumn get dueDay => integer().nullable()();
 
