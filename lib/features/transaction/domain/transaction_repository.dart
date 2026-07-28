@@ -26,4 +26,25 @@ abstract class TransactionRepository {
     required DateTime transactionDate,
     required String userId,
   });
+
+  Future<void> createTransfer({
+    required String id,
+    required String householdId,
+    required String sourceAccountId,
+    required String destinationAccountId,
+    required int amount,
+    String? description,
+    required DateTime transactionDate,
+    required String userId,
+  });
+
+  Future<void> createAdjustment({
+    required String id,
+    required String householdId,
+    required String accountId,
+    required int amount,
+    String? description,
+    required DateTime transactionDate,
+    required String userId,
+  });
 }

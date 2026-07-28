@@ -143,6 +143,119 @@ class DriftTransactionRepository implements TransactionRepository {
         );
   }
 
+  @override
+  Future<void> createTransfer({
+    required String id,
+    required String householdId,
+    required String sourceAccountId,
+    required String destinationAccountId,
+    required int amount,
+    String? description,
+    required DateTime transactionDate,
+    required String userId,
+  }) async {
+    if (amount <= 0) {
+      throw ArgumentError('Transfer amount must be greater than zero.');
+    }
+
+    if (sourceAccountId == destinationAccountId) {
+      throw ArgumentError(
+        'Source and destination accounts must be different.',
+      );
+    }
+
+    final sourceAccount = await _getAccount(sourceAccountId);
+    final destinationAccount = await _getAccount(destinationAccountId);
+
+    if (sourceAccount.householdId != householdId) {
+      throw StateError(
+        'Source account does not belong to this household.',
+      );
+    }
+
+    if (destinationAccount.householdId != householdId) {
+      throw StateError(
+        'Destination account does not belong to this household.',
+      );
+    }
+
+    if (sourceAccount.isArchived) {
+      throw StateError('Archived source account cannot be used.');
+    }
+
+    if (destinationAccount.isArchived) {
+      throw StateError('Archived destination account cannot be used.');
+    }
+
+    final now = DateTime.now();
+    final cleanDescription = _cleanDescription(description);
+
+    await _database.into(_database.transactions).insert(
+          TransactionsCompanion.insert(
+            id: id,
+            householdId: householdId,
+            type: TransactionType.transfer,
+            amount: amount,
+            sourceAccountId: Value(sourceAccountId),
+            destinationAccountId: Value(destinationAccountId),
+            description: Value(cleanDescription),
+            transactionDate: transactionDate,
+            createdBy: userId,
+            updatedBy: userId,
+            createdAt: now,
+            updatedAt: now,
+            syncStatus: SyncStatus.pending,
+          ),
+        );
+  }
+
+  @override
+  Future<void> createAdjustment({
+    required String id,
+    required String householdId,
+    required String accountId,
+    required int amount,
+    String? description,
+    required DateTime transactionDate,
+    required String userId,
+  }) async {
+    if (amount == 0) {
+      throw ArgumentError('Adjustment amount cannot be zero.');
+    }
+
+    final account = await _getAccount(accountId);
+
+    if (account.householdId != householdId) {
+      throw StateError(
+        'Account does not belong to this household.',
+      );
+    }
+
+    if (account.isArchived) {
+      throw StateError('Archived account cannot be used.');
+    }
+
+    final now = DateTime.now();
+    final cleanDescription = _cleanDescription(description);
+
+    await _database.into(_database.transactions).insert(
+          TransactionsCompanion.insert(
+            id: id,
+            householdId: householdId,
+            type: TransactionType.adjustment,
+            amount: amount,
+            destinationAccountId: Value(accountId),
+            description: Value(cleanDescription),
+            transactionDate: transactionDate,
+            createdBy: userId,
+            updatedBy: userId,
+            createdAt: now,
+            updatedAt: now,
+            syncStatus: SyncStatus.pending,
+          ),
+        );
+  }
+
   Future<Account> _getAccount(String id) async {
     final account = await (_database.select(_database.accounts)
           ..where((account) => account.id.equals(id)))
