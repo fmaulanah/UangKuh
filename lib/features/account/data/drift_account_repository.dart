@@ -5,6 +5,8 @@ import '../domain/account_purpose.dart';
 import '../domain/account_repository.dart';
 import '../domain/account_type.dart';
 
+import '../../transaction/domain/transaction_type.dart';
+
 class DriftAccountRepository implements AccountRepository {
   DriftAccountRepository(this._database);
 
@@ -117,5 +119,72 @@ class DriftAccountRepository implements AccountRepository {
         updatedBy: Value(userId),
       ),
     );
+  }
+
+  @override
+  Future<int> getCurrentBalance(String accountId) async {
+    final account = await getAccountById(accountId);
+
+    if (account == null) {
+      throw StateError('Account not found.');
+    }
+
+    final transactions = await (_database.select(_database.transactions)
+          ..where(
+            (transaction) =>
+                transaction.isDeleted.equals(false) &
+                (transaction.sourceAccountId.equals(accountId) |
+                    transaction.destinationAccountId.equals(accountId)),
+          ))
+        .get();
+
+    var balance = account.initialBalance;
+
+    for (final transaction in transactions) {
+      switch (transaction.type) {
+        case TransactionType.expense:
+          if (transaction.sourceAccountId == accountId) {
+            balance -= transaction.amount;
+          }
+          break;
+
+        case TransactionType.income:
+          if (transaction.destinationAccountId == accountId) {
+            balance += transaction.amount;
+          }
+          break;
+
+        case TransactionType.transfer:
+          if (transaction.sourceAccountId == accountId) {
+            balance -= transaction.amount;
+          }
+
+          if (transaction.destinationAccountId == accountId) {
+            balance += transaction.amount;
+          }
+          break;
+
+        case TransactionType.adjustment:
+          if (transaction.destinationAccountId == accountId) {
+            balance += transaction.amount;
+          }
+          break;
+      }
+    }
+
+    return balance;
+  }
+
+  @override
+  Future<int> getTotalBalance(String householdId) async {
+    final accounts = await getAccounts(householdId);
+
+    var total = 0;
+
+    for (final account in accounts) {
+      total += await getCurrentBalance(account.id);
+    }
+
+    return total;
   }
 }

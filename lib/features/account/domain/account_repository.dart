@@ -29,4 +29,8 @@ abstract class AccountRepository {
     required String id,
     required String userId,
   });
+
+  Future<int> getCurrentBalance(String accountId);
+
+  Future<int> getTotalBalance(String householdId);
 }
