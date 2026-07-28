@@ -1,0 +1,4 @@
+enum ExpenseType {
+  daily,
+  recurring,
+}

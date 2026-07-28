@@ -1117,16 +1117,821 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
   }
 }
 
+class $TransactionsTable extends Transactions
+    with TableInfo<$TransactionsTable, Transaction> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TransactionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _householdIdMeta =
+      const VerificationMeta('householdId');
+  @override
+  late final GeneratedColumn<String> householdId = GeneratedColumn<String>(
+      'household_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumnWithTypeConverter<TransactionType, String> type =
+      GeneratedColumn<String>('type', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<TransactionType>($TransactionsTable.$convertertype);
+  static const VerificationMeta _expenseTypeMeta =
+      const VerificationMeta('expenseType');
+  @override
+  late final GeneratedColumnWithTypeConverter<ExpenseType?, String>
+      expenseType = GeneratedColumn<String>('expense_type', aliasedName, true,
+              type: DriftSqlType.string, requiredDuringInsert: false)
+          .withConverter<ExpenseType?>(
+              $TransactionsTable.$converterexpenseTypen);
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
+      'amount', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _sourceAccountIdMeta =
+      const VerificationMeta('sourceAccountId');
+  @override
+  late final GeneratedColumn<String> sourceAccountId = GeneratedColumn<String>(
+      'source_account_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _destinationAccountIdMeta =
+      const VerificationMeta('destinationAccountId');
+  @override
+  late final GeneratedColumn<String> destinationAccountId =
+      GeneratedColumn<String>('destination_account_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _categoryIdMeta =
+      const VerificationMeta('categoryId');
+  @override
+  late final GeneratedColumn<String> categoryId = GeneratedColumn<String>(
+      'category_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _transactionDateMeta =
+      const VerificationMeta('transactionDate');
+  @override
+  late final GeneratedColumn<DateTime> transactionDate =
+      GeneratedColumn<DateTime>('transaction_date', aliasedName, false,
+          type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _createdByMeta =
+      const VerificationMeta('createdBy');
+  @override
+  late final GeneratedColumn<String> createdBy = GeneratedColumn<String>(
+      'created_by', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _updatedByMeta =
+      const VerificationMeta('updatedBy');
+  @override
+  late final GeneratedColumn<String> updatedBy = GeneratedColumn<String>(
+      'updated_by', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _syncStatusMeta =
+      const VerificationMeta('syncStatus');
+  @override
+  late final GeneratedColumnWithTypeConverter<SyncStatus, String> syncStatus =
+      GeneratedColumn<String>('sync_status', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<SyncStatus>($TransactionsTable.$convertersyncStatus);
+  static const VerificationMeta _isDeletedMeta =
+      const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+      'is_deleted', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        householdId,
+        type,
+        expenseType,
+        amount,
+        sourceAccountId,
+        destinationAccountId,
+        categoryId,
+        description,
+        transactionDate,
+        createdBy,
+        updatedBy,
+        createdAt,
+        updatedAt,
+        syncStatus,
+        isDeleted
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'transactions';
+  @override
+  VerificationContext validateIntegrity(Insertable<Transaction> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('household_id')) {
+      context.handle(
+          _householdIdMeta,
+          householdId.isAcceptableOrUnknown(
+              data['household_id']!, _householdIdMeta));
+    } else if (isInserting) {
+      context.missing(_householdIdMeta);
+    }
+    context.handle(_typeMeta, const VerificationResult.success());
+    context.handle(_expenseTypeMeta, const VerificationResult.success());
+    if (data.containsKey('amount')) {
+      context.handle(_amountMeta,
+          amount.isAcceptableOrUnknown(data['amount']!, _amountMeta));
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    if (data.containsKey('source_account_id')) {
+      context.handle(
+          _sourceAccountIdMeta,
+          sourceAccountId.isAcceptableOrUnknown(
+              data['source_account_id']!, _sourceAccountIdMeta));
+    }
+    if (data.containsKey('destination_account_id')) {
+      context.handle(
+          _destinationAccountIdMeta,
+          destinationAccountId.isAcceptableOrUnknown(
+              data['destination_account_id']!, _destinationAccountIdMeta));
+    }
+    if (data.containsKey('category_id')) {
+      context.handle(
+          _categoryIdMeta,
+          categoryId.isAcceptableOrUnknown(
+              data['category_id']!, _categoryIdMeta));
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    }
+    if (data.containsKey('transaction_date')) {
+      context.handle(
+          _transactionDateMeta,
+          transactionDate.isAcceptableOrUnknown(
+              data['transaction_date']!, _transactionDateMeta));
+    } else if (isInserting) {
+      context.missing(_transactionDateMeta);
+    }
+    if (data.containsKey('created_by')) {
+      context.handle(_createdByMeta,
+          createdBy.isAcceptableOrUnknown(data['created_by']!, _createdByMeta));
+    } else if (isInserting) {
+      context.missing(_createdByMeta);
+    }
+    if (data.containsKey('updated_by')) {
+      context.handle(_updatedByMeta,
+          updatedBy.isAcceptableOrUnknown(data['updated_by']!, _updatedByMeta));
+    } else if (isInserting) {
+      context.missing(_updatedByMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    context.handle(_syncStatusMeta, const VerificationResult.success());
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Transaction map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Transaction(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      householdId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}household_id'])!,
+      type: $TransactionsTable.$convertertype.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}type'])!),
+      expenseType: $TransactionsTable.$converterexpenseTypen.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.string, data['${effectivePrefix}expense_type'])),
+      amount: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}amount'])!,
+      sourceAccountId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}source_account_id']),
+      destinationAccountId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}destination_account_id']),
+      categoryId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}category_id']),
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      transactionDate: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}transaction_date'])!,
+      createdBy: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}created_by'])!,
+      updatedBy: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}updated_by'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+      syncStatus: $TransactionsTable.$convertersyncStatus.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.string, data['${effectivePrefix}sync_status'])!),
+      isDeleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted'])!,
+    );
+  }
+
+  @override
+  $TransactionsTable createAlias(String alias) {
+    return $TransactionsTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<TransactionType, String, String> $convertertype =
+      const EnumNameConverter<TransactionType>(TransactionType.values);
+  static JsonTypeConverter2<ExpenseType, String, String> $converterexpenseType =
+      const EnumNameConverter<ExpenseType>(ExpenseType.values);
+  static JsonTypeConverter2<ExpenseType?, String?, String?>
+      $converterexpenseTypen =
+      JsonTypeConverter2.asNullable($converterexpenseType);
+  static JsonTypeConverter2<SyncStatus, String, String> $convertersyncStatus =
+      const EnumNameConverter<SyncStatus>(SyncStatus.values);
+}
+
+class Transaction extends DataClass implements Insertable<Transaction> {
+  final String id;
+  final String householdId;
+  final TransactionType type;
+  final ExpenseType? expenseType;
+  final int amount;
+  final String? sourceAccountId;
+  final String? destinationAccountId;
+  final String? categoryId;
+  final String? description;
+  final DateTime transactionDate;
+  final String createdBy;
+  final String updatedBy;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final SyncStatus syncStatus;
+  final bool isDeleted;
+  const Transaction(
+      {required this.id,
+      required this.householdId,
+      required this.type,
+      this.expenseType,
+      required this.amount,
+      this.sourceAccountId,
+      this.destinationAccountId,
+      this.categoryId,
+      this.description,
+      required this.transactionDate,
+      required this.createdBy,
+      required this.updatedBy,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.syncStatus,
+      required this.isDeleted});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['household_id'] = Variable<String>(householdId);
+    {
+      map['type'] =
+          Variable<String>($TransactionsTable.$convertertype.toSql(type));
+    }
+    if (!nullToAbsent || expenseType != null) {
+      map['expense_type'] = Variable<String>(
+          $TransactionsTable.$converterexpenseTypen.toSql(expenseType));
+    }
+    map['amount'] = Variable<int>(amount);
+    if (!nullToAbsent || sourceAccountId != null) {
+      map['source_account_id'] = Variable<String>(sourceAccountId);
+    }
+    if (!nullToAbsent || destinationAccountId != null) {
+      map['destination_account_id'] = Variable<String>(destinationAccountId);
+    }
+    if (!nullToAbsent || categoryId != null) {
+      map['category_id'] = Variable<String>(categoryId);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    map['transaction_date'] = Variable<DateTime>(transactionDate);
+    map['created_by'] = Variable<String>(createdBy);
+    map['updated_by'] = Variable<String>(updatedBy);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    {
+      map['sync_status'] = Variable<String>(
+          $TransactionsTable.$convertersyncStatus.toSql(syncStatus));
+    }
+    map['is_deleted'] = Variable<bool>(isDeleted);
+    return map;
+  }
+
+  TransactionsCompanion toCompanion(bool nullToAbsent) {
+    return TransactionsCompanion(
+      id: Value(id),
+      householdId: Value(householdId),
+      type: Value(type),
+      expenseType: expenseType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(expenseType),
+      amount: Value(amount),
+      sourceAccountId: sourceAccountId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sourceAccountId),
+      destinationAccountId: destinationAccountId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(destinationAccountId),
+      categoryId: categoryId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(categoryId),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      transactionDate: Value(transactionDate),
+      createdBy: Value(createdBy),
+      updatedBy: Value(updatedBy),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      syncStatus: Value(syncStatus),
+      isDeleted: Value(isDeleted),
+    );
+  }
+
+  factory Transaction.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Transaction(
+      id: serializer.fromJson<String>(json['id']),
+      householdId: serializer.fromJson<String>(json['householdId']),
+      type: $TransactionsTable.$convertertype
+          .fromJson(serializer.fromJson<String>(json['type'])),
+      expenseType: $TransactionsTable.$converterexpenseTypen
+          .fromJson(serializer.fromJson<String?>(json['expenseType'])),
+      amount: serializer.fromJson<int>(json['amount']),
+      sourceAccountId: serializer.fromJson<String?>(json['sourceAccountId']),
+      destinationAccountId:
+          serializer.fromJson<String?>(json['destinationAccountId']),
+      categoryId: serializer.fromJson<String?>(json['categoryId']),
+      description: serializer.fromJson<String?>(json['description']),
+      transactionDate: serializer.fromJson<DateTime>(json['transactionDate']),
+      createdBy: serializer.fromJson<String>(json['createdBy']),
+      updatedBy: serializer.fromJson<String>(json['updatedBy']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      syncStatus: $TransactionsTable.$convertersyncStatus
+          .fromJson(serializer.fromJson<String>(json['syncStatus'])),
+      isDeleted: serializer.fromJson<bool>(json['isDeleted']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'householdId': serializer.toJson<String>(householdId),
+      'type': serializer
+          .toJson<String>($TransactionsTable.$convertertype.toJson(type)),
+      'expenseType': serializer.toJson<String?>(
+          $TransactionsTable.$converterexpenseTypen.toJson(expenseType)),
+      'amount': serializer.toJson<int>(amount),
+      'sourceAccountId': serializer.toJson<String?>(sourceAccountId),
+      'destinationAccountId': serializer.toJson<String?>(destinationAccountId),
+      'categoryId': serializer.toJson<String?>(categoryId),
+      'description': serializer.toJson<String?>(description),
+      'transactionDate': serializer.toJson<DateTime>(transactionDate),
+      'createdBy': serializer.toJson<String>(createdBy),
+      'updatedBy': serializer.toJson<String>(updatedBy),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'syncStatus': serializer.toJson<String>(
+          $TransactionsTable.$convertersyncStatus.toJson(syncStatus)),
+      'isDeleted': serializer.toJson<bool>(isDeleted),
+    };
+  }
+
+  Transaction copyWith(
+          {String? id,
+          String? householdId,
+          TransactionType? type,
+          Value<ExpenseType?> expenseType = const Value.absent(),
+          int? amount,
+          Value<String?> sourceAccountId = const Value.absent(),
+          Value<String?> destinationAccountId = const Value.absent(),
+          Value<String?> categoryId = const Value.absent(),
+          Value<String?> description = const Value.absent(),
+          DateTime? transactionDate,
+          String? createdBy,
+          String? updatedBy,
+          DateTime? createdAt,
+          DateTime? updatedAt,
+          SyncStatus? syncStatus,
+          bool? isDeleted}) =>
+      Transaction(
+        id: id ?? this.id,
+        householdId: householdId ?? this.householdId,
+        type: type ?? this.type,
+        expenseType: expenseType.present ? expenseType.value : this.expenseType,
+        amount: amount ?? this.amount,
+        sourceAccountId: sourceAccountId.present
+            ? sourceAccountId.value
+            : this.sourceAccountId,
+        destinationAccountId: destinationAccountId.present
+            ? destinationAccountId.value
+            : this.destinationAccountId,
+        categoryId: categoryId.present ? categoryId.value : this.categoryId,
+        description: description.present ? description.value : this.description,
+        transactionDate: transactionDate ?? this.transactionDate,
+        createdBy: createdBy ?? this.createdBy,
+        updatedBy: updatedBy ?? this.updatedBy,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        syncStatus: syncStatus ?? this.syncStatus,
+        isDeleted: isDeleted ?? this.isDeleted,
+      );
+  Transaction copyWithCompanion(TransactionsCompanion data) {
+    return Transaction(
+      id: data.id.present ? data.id.value : this.id,
+      householdId:
+          data.householdId.present ? data.householdId.value : this.householdId,
+      type: data.type.present ? data.type.value : this.type,
+      expenseType:
+          data.expenseType.present ? data.expenseType.value : this.expenseType,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      sourceAccountId: data.sourceAccountId.present
+          ? data.sourceAccountId.value
+          : this.sourceAccountId,
+      destinationAccountId: data.destinationAccountId.present
+          ? data.destinationAccountId.value
+          : this.destinationAccountId,
+      categoryId:
+          data.categoryId.present ? data.categoryId.value : this.categoryId,
+      description:
+          data.description.present ? data.description.value : this.description,
+      transactionDate: data.transactionDate.present
+          ? data.transactionDate.value
+          : this.transactionDate,
+      createdBy: data.createdBy.present ? data.createdBy.value : this.createdBy,
+      updatedBy: data.updatedBy.present ? data.updatedBy.value : this.updatedBy,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      syncStatus:
+          data.syncStatus.present ? data.syncStatus.value : this.syncStatus,
+      isDeleted: data.isDeleted.present ? data.isDeleted.value : this.isDeleted,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Transaction(')
+          ..write('id: $id, ')
+          ..write('householdId: $householdId, ')
+          ..write('type: $type, ')
+          ..write('expenseType: $expenseType, ')
+          ..write('amount: $amount, ')
+          ..write('sourceAccountId: $sourceAccountId, ')
+          ..write('destinationAccountId: $destinationAccountId, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('description: $description, ')
+          ..write('transactionDate: $transactionDate, ')
+          ..write('createdBy: $createdBy, ')
+          ..write('updatedBy: $updatedBy, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('isDeleted: $isDeleted')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      householdId,
+      type,
+      expenseType,
+      amount,
+      sourceAccountId,
+      destinationAccountId,
+      categoryId,
+      description,
+      transactionDate,
+      createdBy,
+      updatedBy,
+      createdAt,
+      updatedAt,
+      syncStatus,
+      isDeleted);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Transaction &&
+          other.id == this.id &&
+          other.householdId == this.householdId &&
+          other.type == this.type &&
+          other.expenseType == this.expenseType &&
+          other.amount == this.amount &&
+          other.sourceAccountId == this.sourceAccountId &&
+          other.destinationAccountId == this.destinationAccountId &&
+          other.categoryId == this.categoryId &&
+          other.description == this.description &&
+          other.transactionDate == this.transactionDate &&
+          other.createdBy == this.createdBy &&
+          other.updatedBy == this.updatedBy &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.syncStatus == this.syncStatus &&
+          other.isDeleted == this.isDeleted);
+}
+
+class TransactionsCompanion extends UpdateCompanion<Transaction> {
+  final Value<String> id;
+  final Value<String> householdId;
+  final Value<TransactionType> type;
+  final Value<ExpenseType?> expenseType;
+  final Value<int> amount;
+  final Value<String?> sourceAccountId;
+  final Value<String?> destinationAccountId;
+  final Value<String?> categoryId;
+  final Value<String?> description;
+  final Value<DateTime> transactionDate;
+  final Value<String> createdBy;
+  final Value<String> updatedBy;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<SyncStatus> syncStatus;
+  final Value<bool> isDeleted;
+  final Value<int> rowid;
+  const TransactionsCompanion({
+    this.id = const Value.absent(),
+    this.householdId = const Value.absent(),
+    this.type = const Value.absent(),
+    this.expenseType = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.sourceAccountId = const Value.absent(),
+    this.destinationAccountId = const Value.absent(),
+    this.categoryId = const Value.absent(),
+    this.description = const Value.absent(),
+    this.transactionDate = const Value.absent(),
+    this.createdBy = const Value.absent(),
+    this.updatedBy = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TransactionsCompanion.insert({
+    required String id,
+    required String householdId,
+    required TransactionType type,
+    this.expenseType = const Value.absent(),
+    required int amount,
+    this.sourceAccountId = const Value.absent(),
+    this.destinationAccountId = const Value.absent(),
+    this.categoryId = const Value.absent(),
+    this.description = const Value.absent(),
+    required DateTime transactionDate,
+    required String createdBy,
+    required String updatedBy,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required SyncStatus syncStatus,
+    this.isDeleted = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        householdId = Value(householdId),
+        type = Value(type),
+        amount = Value(amount),
+        transactionDate = Value(transactionDate),
+        createdBy = Value(createdBy),
+        updatedBy = Value(updatedBy),
+        createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt),
+        syncStatus = Value(syncStatus);
+  static Insertable<Transaction> custom({
+    Expression<String>? id,
+    Expression<String>? householdId,
+    Expression<String>? type,
+    Expression<String>? expenseType,
+    Expression<int>? amount,
+    Expression<String>? sourceAccountId,
+    Expression<String>? destinationAccountId,
+    Expression<String>? categoryId,
+    Expression<String>? description,
+    Expression<DateTime>? transactionDate,
+    Expression<String>? createdBy,
+    Expression<String>? updatedBy,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<String>? syncStatus,
+    Expression<bool>? isDeleted,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (householdId != null) 'household_id': householdId,
+      if (type != null) 'type': type,
+      if (expenseType != null) 'expense_type': expenseType,
+      if (amount != null) 'amount': amount,
+      if (sourceAccountId != null) 'source_account_id': sourceAccountId,
+      if (destinationAccountId != null)
+        'destination_account_id': destinationAccountId,
+      if (categoryId != null) 'category_id': categoryId,
+      if (description != null) 'description': description,
+      if (transactionDate != null) 'transaction_date': transactionDate,
+      if (createdBy != null) 'created_by': createdBy,
+      if (updatedBy != null) 'updated_by': updatedBy,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TransactionsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? householdId,
+      Value<TransactionType>? type,
+      Value<ExpenseType?>? expenseType,
+      Value<int>? amount,
+      Value<String?>? sourceAccountId,
+      Value<String?>? destinationAccountId,
+      Value<String?>? categoryId,
+      Value<String?>? description,
+      Value<DateTime>? transactionDate,
+      Value<String>? createdBy,
+      Value<String>? updatedBy,
+      Value<DateTime>? createdAt,
+      Value<DateTime>? updatedAt,
+      Value<SyncStatus>? syncStatus,
+      Value<bool>? isDeleted,
+      Value<int>? rowid}) {
+    return TransactionsCompanion(
+      id: id ?? this.id,
+      householdId: householdId ?? this.householdId,
+      type: type ?? this.type,
+      expenseType: expenseType ?? this.expenseType,
+      amount: amount ?? this.amount,
+      sourceAccountId: sourceAccountId ?? this.sourceAccountId,
+      destinationAccountId: destinationAccountId ?? this.destinationAccountId,
+      categoryId: categoryId ?? this.categoryId,
+      description: description ?? this.description,
+      transactionDate: transactionDate ?? this.transactionDate,
+      createdBy: createdBy ?? this.createdBy,
+      updatedBy: updatedBy ?? this.updatedBy,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      syncStatus: syncStatus ?? this.syncStatus,
+      isDeleted: isDeleted ?? this.isDeleted,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (householdId.present) {
+      map['household_id'] = Variable<String>(householdId.value);
+    }
+    if (type.present) {
+      map['type'] =
+          Variable<String>($TransactionsTable.$convertertype.toSql(type.value));
+    }
+    if (expenseType.present) {
+      map['expense_type'] = Variable<String>(
+          $TransactionsTable.$converterexpenseTypen.toSql(expenseType.value));
+    }
+    if (amount.present) {
+      map['amount'] = Variable<int>(amount.value);
+    }
+    if (sourceAccountId.present) {
+      map['source_account_id'] = Variable<String>(sourceAccountId.value);
+    }
+    if (destinationAccountId.present) {
+      map['destination_account_id'] =
+          Variable<String>(destinationAccountId.value);
+    }
+    if (categoryId.present) {
+      map['category_id'] = Variable<String>(categoryId.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (transactionDate.present) {
+      map['transaction_date'] = Variable<DateTime>(transactionDate.value);
+    }
+    if (createdBy.present) {
+      map['created_by'] = Variable<String>(createdBy.value);
+    }
+    if (updatedBy.present) {
+      map['updated_by'] = Variable<String>(updatedBy.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(
+          $TransactionsTable.$convertersyncStatus.toSql(syncStatus.value));
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TransactionsCompanion(')
+          ..write('id: $id, ')
+          ..write('householdId: $householdId, ')
+          ..write('type: $type, ')
+          ..write('expenseType: $expenseType, ')
+          ..write('amount: $amount, ')
+          ..write('sourceAccountId: $sourceAccountId, ')
+          ..write('destinationAccountId: $destinationAccountId, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('description: $description, ')
+          ..write('transactionDate: $transactionDate, ')
+          ..write('createdBy: $createdBy, ')
+          ..write('updatedBy: $updatedBy, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $AccountsTable accounts = $AccountsTable(this);
   late final $CategoriesTable categories = $CategoriesTable(this);
+  late final $TransactionsTable transactions = $TransactionsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [accounts, categories];
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [accounts, categories, transactions];
 }
 
 typedef $$AccountsTableCreateCompanionBuilder = AccountsCompanion Function({
@@ -1647,6 +2452,358 @@ typedef $$CategoriesTableProcessedTableManager = ProcessedTableManager<
     (Category, BaseReferences<_$AppDatabase, $CategoriesTable, Category>),
     Category,
     PrefetchHooks Function()>;
+typedef $$TransactionsTableCreateCompanionBuilder = TransactionsCompanion
+    Function({
+  required String id,
+  required String householdId,
+  required TransactionType type,
+  Value<ExpenseType?> expenseType,
+  required int amount,
+  Value<String?> sourceAccountId,
+  Value<String?> destinationAccountId,
+  Value<String?> categoryId,
+  Value<String?> description,
+  required DateTime transactionDate,
+  required String createdBy,
+  required String updatedBy,
+  required DateTime createdAt,
+  required DateTime updatedAt,
+  required SyncStatus syncStatus,
+  Value<bool> isDeleted,
+  Value<int> rowid,
+});
+typedef $$TransactionsTableUpdateCompanionBuilder = TransactionsCompanion
+    Function({
+  Value<String> id,
+  Value<String> householdId,
+  Value<TransactionType> type,
+  Value<ExpenseType?> expenseType,
+  Value<int> amount,
+  Value<String?> sourceAccountId,
+  Value<String?> destinationAccountId,
+  Value<String?> categoryId,
+  Value<String?> description,
+  Value<DateTime> transactionDate,
+  Value<String> createdBy,
+  Value<String> updatedBy,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<SyncStatus> syncStatus,
+  Value<bool> isDeleted,
+  Value<int> rowid,
+});
+
+class $$TransactionsTableFilterComposer
+    extends Composer<_$AppDatabase, $TransactionsTable> {
+  $$TransactionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get householdId => $composableBuilder(
+      column: $table.householdId, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<TransactionType, TransactionType, String>
+      get type => $composableBuilder(
+          column: $table.type,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<ExpenseType?, ExpenseType, String>
+      get expenseType => $composableBuilder(
+          column: $table.expenseType,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<int> get amount => $composableBuilder(
+      column: $table.amount, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get sourceAccountId => $composableBuilder(
+      column: $table.sourceAccountId,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get destinationAccountId => $composableBuilder(
+      column: $table.destinationAccountId,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get categoryId => $composableBuilder(
+      column: $table.categoryId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get transactionDate => $composableBuilder(
+      column: $table.transactionDate,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get createdBy => $composableBuilder(
+      column: $table.createdBy, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get updatedBy => $composableBuilder(
+      column: $table.updatedBy, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<SyncStatus, SyncStatus, String>
+      get syncStatus => $composableBuilder(
+          column: $table.syncStatus,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<bool> get isDeleted => $composableBuilder(
+      column: $table.isDeleted, builder: (column) => ColumnFilters(column));
+}
+
+class $$TransactionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $TransactionsTable> {
+  $$TransactionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get householdId => $composableBuilder(
+      column: $table.householdId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get type => $composableBuilder(
+      column: $table.type, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get expenseType => $composableBuilder(
+      column: $table.expenseType, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get amount => $composableBuilder(
+      column: $table.amount, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get sourceAccountId => $composableBuilder(
+      column: $table.sourceAccountId,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get destinationAccountId => $composableBuilder(
+      column: $table.destinationAccountId,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get categoryId => $composableBuilder(
+      column: $table.categoryId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get transactionDate => $composableBuilder(
+      column: $table.transactionDate,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get createdBy => $composableBuilder(
+      column: $table.createdBy, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get updatedBy => $composableBuilder(
+      column: $table.updatedBy, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+      column: $table.syncStatus, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isDeleted => $composableBuilder(
+      column: $table.isDeleted, builder: (column) => ColumnOrderings(column));
+}
+
+class $$TransactionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TransactionsTable> {
+  $$TransactionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get householdId => $composableBuilder(
+      column: $table.householdId, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<TransactionType, String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<ExpenseType?, String> get expenseType =>
+      $composableBuilder(
+          column: $table.expenseType, builder: (column) => column);
+
+  GeneratedColumn<int> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceAccountId => $composableBuilder(
+      column: $table.sourceAccountId, builder: (column) => column);
+
+  GeneratedColumn<String> get destinationAccountId => $composableBuilder(
+      column: $table.destinationAccountId, builder: (column) => column);
+
+  GeneratedColumn<String> get categoryId => $composableBuilder(
+      column: $table.categoryId, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get transactionDate => $composableBuilder(
+      column: $table.transactionDate, builder: (column) => column);
+
+  GeneratedColumn<String> get createdBy =>
+      $composableBuilder(column: $table.createdBy, builder: (column) => column);
+
+  GeneratedColumn<String> get updatedBy =>
+      $composableBuilder(column: $table.updatedBy, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<SyncStatus, String> get syncStatus =>
+      $composableBuilder(
+          column: $table.syncStatus, builder: (column) => column);
+
+  GeneratedColumn<bool> get isDeleted =>
+      $composableBuilder(column: $table.isDeleted, builder: (column) => column);
+}
+
+class $$TransactionsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $TransactionsTable,
+    Transaction,
+    $$TransactionsTableFilterComposer,
+    $$TransactionsTableOrderingComposer,
+    $$TransactionsTableAnnotationComposer,
+    $$TransactionsTableCreateCompanionBuilder,
+    $$TransactionsTableUpdateCompanionBuilder,
+    (
+      Transaction,
+      BaseReferences<_$AppDatabase, $TransactionsTable, Transaction>
+    ),
+    Transaction,
+    PrefetchHooks Function()> {
+  $$TransactionsTableTableManager(_$AppDatabase db, $TransactionsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TransactionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TransactionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TransactionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> householdId = const Value.absent(),
+            Value<TransactionType> type = const Value.absent(),
+            Value<ExpenseType?> expenseType = const Value.absent(),
+            Value<int> amount = const Value.absent(),
+            Value<String?> sourceAccountId = const Value.absent(),
+            Value<String?> destinationAccountId = const Value.absent(),
+            Value<String?> categoryId = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+            Value<DateTime> transactionDate = const Value.absent(),
+            Value<String> createdBy = const Value.absent(),
+            Value<String> updatedBy = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<SyncStatus> syncStatus = const Value.absent(),
+            Value<bool> isDeleted = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TransactionsCompanion(
+            id: id,
+            householdId: householdId,
+            type: type,
+            expenseType: expenseType,
+            amount: amount,
+            sourceAccountId: sourceAccountId,
+            destinationAccountId: destinationAccountId,
+            categoryId: categoryId,
+            description: description,
+            transactionDate: transactionDate,
+            createdBy: createdBy,
+            updatedBy: updatedBy,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            syncStatus: syncStatus,
+            isDeleted: isDeleted,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String householdId,
+            required TransactionType type,
+            Value<ExpenseType?> expenseType = const Value.absent(),
+            required int amount,
+            Value<String?> sourceAccountId = const Value.absent(),
+            Value<String?> destinationAccountId = const Value.absent(),
+            Value<String?> categoryId = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+            required DateTime transactionDate,
+            required String createdBy,
+            required String updatedBy,
+            required DateTime createdAt,
+            required DateTime updatedAt,
+            required SyncStatus syncStatus,
+            Value<bool> isDeleted = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TransactionsCompanion.insert(
+            id: id,
+            householdId: householdId,
+            type: type,
+            expenseType: expenseType,
+            amount: amount,
+            sourceAccountId: sourceAccountId,
+            destinationAccountId: destinationAccountId,
+            categoryId: categoryId,
+            description: description,
+            transactionDate: transactionDate,
+            createdBy: createdBy,
+            updatedBy: updatedBy,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            syncStatus: syncStatus,
+            isDeleted: isDeleted,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$TransactionsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $TransactionsTable,
+    Transaction,
+    $$TransactionsTableFilterComposer,
+    $$TransactionsTableOrderingComposer,
+    $$TransactionsTableAnnotationComposer,
+    $$TransactionsTableCreateCompanionBuilder,
+    $$TransactionsTableUpdateCompanionBuilder,
+    (
+      Transaction,
+      BaseReferences<_$AppDatabase, $TransactionsTable, Transaction>
+    ),
+    Transaction,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -1655,4 +2812,6 @@ class $AppDatabaseManager {
       $$AccountsTableTableManager(_db, _db.accounts);
   $$CategoriesTableTableManager get categories =>
       $$CategoriesTableTableManager(_db, _db.categories);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db, _db.transactions);
 }

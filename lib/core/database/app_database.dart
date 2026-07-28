@@ -12,12 +12,18 @@ import '../../features/account/domain/account_type.dart';
 import '../../features/category/data/categories_table.dart';
 import '../../features/category/domain/category_type.dart';
 
+import '../../features/transaction/data/transactions_table.dart';
+import '../../features/transaction/domain/expense_type.dart';
+import '../../features/transaction/domain/sync_status.dart';
+import '../../features/transaction/domain/transaction_type.dart';
+
 part 'app_database.g.dart';
 
 @DriftDatabase(
   tables: [
     Accounts,
     Categories,
+    Transactions,
   ],
 )
 class AppDatabase extends _$AppDatabase {
