@@ -1,0 +1,4 @@
+enum RecurringPaymentStatus {
+  unpaid,
+  paid,
+}

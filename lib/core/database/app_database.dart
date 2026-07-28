@@ -17,6 +17,10 @@ import '../../features/transaction/domain/expense_type.dart';
 import '../../features/transaction/domain/sync_status.dart';
 import '../../features/transaction/domain/transaction_type.dart';
 
+import '../../features/recurring/data/recurring_expenses_table.dart';
+import '../../features/recurring/data/recurring_payments_table.dart';
+import '../../features/recurring/domain/recurring_payment_status.dart';
+
 part 'app_database.g.dart';
 
 @DriftDatabase(
@@ -24,6 +28,8 @@ part 'app_database.g.dart';
     Accounts,
     Categories,
     Transactions,
+    RecurringExpenses,
+    RecurringPayments,
   ],
 )
 class AppDatabase extends _$AppDatabase {
