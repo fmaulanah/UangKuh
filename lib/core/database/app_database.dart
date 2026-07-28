@@ -5,16 +5,19 @@ import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
+import '../../features/account/data/accounts_table.dart';
 import '../../features/account/domain/account_purpose.dart';
 import '../../features/account/domain/account_type.dart';
 
-import '../../features/account/data/accounts_table.dart';
+import '../../features/category/data/categories_table.dart';
+import '../../features/category/domain/category_type.dart';
 
 part 'app_database.g.dart';
 
 @DriftDatabase(
   tables: [
     Accounts,
+    Categories,
   ],
 )
 class AppDatabase extends _$AppDatabase {
