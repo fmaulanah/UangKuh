@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../features/account/presentation/account_form_screen.dart';
 import '../features/account/presentation/account_screen.dart';
 import '../features/category/presentation/category_screen.dart';
+import '../features/category/presentation/category_form_screen.dart';
 import '../features/dashboard/presentation/dashboard_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
 import '../features/recurring/presentation/recurring_screen.dart';
@@ -94,6 +95,25 @@ class AppRouter {
                     builder: (context, state) {
                       return const CategoryScreen();
                     },
+                    routes: [
+                      GoRoute(
+                        path: 'new',
+                        builder: (context, state) {
+                          return const CategoryFormScreen();
+                        },
+                      ),
+                      GoRoute(
+                        path: ':categoryId/edit',
+                        builder: (context, state) {
+                          final categoryId =
+                              state.pathParameters['categoryId']!;
+
+                          return CategoryFormScreen(
+                            categoryId: categoryId,
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
