@@ -147,36 +147,54 @@ class DashboardScreen extends ConsumerWidget {
                   ),
             ),
             const SizedBox(height: 12),
-            Row(
+            Column(
               children: [
-                Expanded(
-                  child: _QuickActionButton(
-                    icon: Icons.remove,
-                    label: 'Expense',
-                    onPressed: () {
-                      context.push('/expense/new');
-                    },
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _QuickActionButton(
+                        icon: Icons.remove,
+                        label: 'Expense',
+                        onPressed: () {
+                          context.push('/expense/new');
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _QuickActionButton(
+                        icon: Icons.add,
+                        label: 'Income',
+                        onPressed: () {
+                          context.push('/income/new');
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _QuickActionButton(
-                    icon: Icons.add,
-                    label: 'Income',
-                    onPressed: () {
-                      context.push('/income/new');
-                    },
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _QuickActionButton(
-                    icon: Icons.swap_horiz,
-                    label: 'Transfer',
-                    onPressed: () {
-                      context.push('/transfer/new');
-                    },
-                  ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _QuickActionButton(
+                        icon: Icons.swap_horiz,
+                        label: 'Transfer',
+                        onPressed: () {
+                          context.push('/transfer/new');
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _QuickActionButton(
+                        icon: Icons.tune_rounded,
+                        label: 'Adjustment',
+                        onPressed: () {
+                          context.push('/adjustment/new');
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

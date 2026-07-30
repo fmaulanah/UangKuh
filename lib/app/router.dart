@@ -20,6 +20,7 @@ import '../features/transaction/presentation/income_form_screen.dart';
 import '../features/transaction/presentation/transfer_form_screen.dart';
 import '../features/transaction/presentation/transaction_detail_screen.dart';
 import '../features/transaction/presentation/models/transaction_list_item.dart';
+import '../features/transaction/presentation/adjustment_form_screen.dart';
 
 import 'app_shell.dart';
 
@@ -65,6 +66,12 @@ class AppRouter {
                     path: 'transfer/new',
                     builder: (context, state) {
                       return const TransferFormScreen();
+                    },
+                  ),
+                  GoRoute(
+                    path: 'adjustment/new',
+                    builder: (context, state) {
+                      return const AdjustmentFormScreen();
                     },
                   ),
                 ],
