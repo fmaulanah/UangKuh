@@ -8,6 +8,7 @@ import '../../account/providers/account_list_provider.dart';
 import '../../auth/providers/app_session_provider.dart';
 import '../../category/domain/category_type.dart';
 import '../../category/providers/category_repository_provider.dart';
+import '../../dashboard/providers/dashboard_total_balance_provider.dart';
 
 class IncomeFormScreen extends ConsumerStatefulWidget {
   const IncomeFormScreen({super.key});
@@ -347,6 +348,7 @@ class _IncomeFormScreenState extends ConsumerState<IncomeFormScreen> {
 
       ref.invalidate(accountListProvider);
       ref.invalidate(transactionHistoryProvider);
+      ref.invalidate(dashboardTotalBalanceProvider);
 
       if (!mounted) {
         return;

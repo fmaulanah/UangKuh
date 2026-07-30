@@ -6,6 +6,7 @@ import '../providers/transaction_history_provider.dart';
 
 import '../../account/providers/account_list_provider.dart';
 import '../../auth/providers/app_session_provider.dart';
+import '../../dashboard/providers/dashboard_total_balance_provider.dart';
 
 class TransferFormScreen extends ConsumerStatefulWidget {
   const TransferFormScreen({super.key});
@@ -335,6 +336,7 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
 
       ref.invalidate(accountListProvider);
       ref.invalidate(transactionHistoryProvider);
+      ref.invalidate(dashboardTotalBalanceProvider);
 
       if (!mounted) {
         return;

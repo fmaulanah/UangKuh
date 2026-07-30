@@ -9,6 +9,7 @@ import '../../account/providers/account_list_provider.dart';
 import '../../auth/providers/app_session_provider.dart';
 import '../../category/domain/category_type.dart';
 import '../../category/providers/category_repository_provider.dart';
+import '../../dashboard/providers/dashboard_total_balance_provider.dart';
 
 class ExpenseFormScreen extends ConsumerStatefulWidget {
   const ExpenseFormScreen({super.key});
@@ -16,8 +17,6 @@ class ExpenseFormScreen extends ConsumerStatefulWidget {
   @override
   ConsumerState<ExpenseFormScreen> createState() => _ExpenseFormScreenState();
 }
-
-final _descriptionController = TextEditingController();
 
 class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
   bool _isLoading = true;
@@ -28,6 +27,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
   String? _categoryId;
 
   final _amountController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -380,6 +380,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
       // Balance account berubah karena ledger transaction berubah.
       ref.invalidate(accountListProvider);
       ref.invalidate(transactionHistoryProvider);
+      ref.invalidate(dashboardTotalBalanceProvider);
 
       if (!mounted) {
         return;
@@ -403,6 +404,16 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
         _isSaving = false;
       });
     }
+  }
+
+  String? _normalizedDescription() {
+    final description = _descriptionController.text.trim();
+
+    if (description.isEmpty) {
+      return null;
+    }
+
+    return description;
   }
 }
 
@@ -438,16 +449,6 @@ String _formatDate(DateTime date) {
   final month = date.month.toString().padLeft(2, '0');
 
   return '$day/$month/${date.year}';
-}
-
-String? _normalizedDescription() {
-  final description = _descriptionController.text.trim();
-
-  if (description.isEmpty) {
-    return null;
-  }
-
-  return description;
 }
 
 String _generateTransactionId() {
