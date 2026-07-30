@@ -116,6 +116,47 @@ class DriftRecurringRepository implements RecurringRepository {
   }
 
   @override
+  Future<void> updateRecurringExpense({
+    required String id,
+    required String name,
+    required int defaultAmount,
+    required String categoryId,
+    String? defaultAccountId,
+    int? dueDay,
+    required String userId,
+  }) async {
+    final existing = await getRecurringExpenseById(id);
+
+    if (existing == null) {
+      throw StateError(
+        'Recurring expense not found.',
+      );
+    }
+
+    if (!existing.isActive) {
+      throw StateError(
+        'Inactive recurring expense cannot be edited.',
+      );
+    }
+
+    await (_database.update(_database.recurringExpenses)
+          ..where(
+            (row) => row.id.equals(id),
+          ))
+        .write(
+      RecurringExpensesCompanion(
+        name: Value(name),
+        defaultAmount: Value(defaultAmount),
+        categoryId: Value(categoryId),
+        defaultAccountId: Value(defaultAccountId),
+        dueDay: Value(dueDay),
+        updatedAt: Value(DateTime.now()),
+        updatedBy: Value(userId),
+      ),
+    );
+  }
+
+  @override
   Future<void> deactivateRecurringExpense({
     required String id,
     required String userId,
@@ -295,6 +336,24 @@ class DriftRecurringRepository implements RecurringRepository {
     }
 
     return category;
+  }
+
+  @override
+  Future<RecurringPayment?> getRecurringPaymentForPeriod({
+    required String recurringExpenseId,
+    required int periodYear,
+    required int periodMonth,
+  }) async {
+    return (_database.select(_database.recurringPayments)
+          ..where(
+            (row) =>
+                row.recurringExpenseId.equals(
+                  recurringExpenseId,
+                ) &
+                row.periodYear.equals(periodYear) &
+                row.periodMonth.equals(periodMonth),
+          ))
+        .getSingleOrNull();
   }
 
   String? _cleanDescription(String? description) {

@@ -11,6 +11,8 @@ import '../features/dashboard/presentation/dashboard_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
 
 import '../features/recurring/presentation/recurring_screen.dart';
+import '../features/recurring/presentation/recurring_form_screen.dart';
+import '../features/recurring/presentation/recurring_payment_screen.dart';
 
 import '../features/transaction/presentation/transaction_history_screen.dart';
 import '../features/transaction/presentation/expense_form_screen.dart';
@@ -98,6 +100,34 @@ class AppRouter {
                 builder: (context, state) {
                   return const RecurringScreen();
                 },
+                routes: [
+                  GoRoute(
+                    path: 'new',
+                    builder: (context, state) {
+                      return const RecurringFormScreen();
+                    },
+                  ),
+                  GoRoute(
+                    path: ':recurringId/edit',
+                    builder: (context, state) {
+                      final recurringId = state.pathParameters['recurringId']!;
+
+                      return RecurringFormScreen(
+                        recurringId: recurringId,
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: ':recurringId/pay',
+                    builder: (context, state) {
+                      final recurringId = state.pathParameters['recurringId']!;
+
+                      return RecurringPaymentScreen(
+                        recurringId: recurringId,
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),

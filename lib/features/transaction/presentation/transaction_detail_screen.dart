@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../recurring/providers/recurring_plan_provider.dart';
 import '../../account/providers/account_list_provider.dart';
 import '../../auth/providers/app_session_provider.dart';
 import '../providers/transaction_history_provider.dart';
@@ -207,6 +208,7 @@ class _TransactionDetailScreenState
       ref.invalidate(transactionHistoryProvider);
       ref.invalidate(transactionListProvider);
       ref.invalidate(accountListProvider);
+      ref.invalidate(recurringPlanProvider);
 
       if (!mounted) {
         return;

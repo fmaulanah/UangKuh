@@ -59,17 +59,29 @@ class DriftTransactionRepository implements TransactionRepository {
 
     final now = DateTime.now();
 
-    await (_database.update(_database.transactions)
-          ..where(
-            (row) => row.id.equals(id),
-          ))
-        .write(
-      TransactionsCompanion(
-        isDeleted: const Value(true),
-        updatedAt: Value(now),
-        updatedBy: Value(userId),
-      ),
-    );
+    await _database.transaction(() async {
+      // Kalau transaction berasal dari recurring payment,
+      // hapus payment marker-nya juga.
+      await (_database.delete(_database.recurringPayments)
+            ..where(
+              (row) => row.transactionId.equals(id),
+            ))
+          .go();
+
+      // Transaction tetap soft-delete agar audit/history semantics
+      // yang sudah ada tidak berubah.
+      await (_database.update(_database.transactions)
+            ..where(
+              (row) => row.id.equals(id),
+            ))
+          .write(
+        TransactionsCompanion(
+          isDeleted: const Value(true),
+          updatedAt: Value(now),
+          updatedBy: Value(userId),
+        ),
+      );
+    });
   }
 
   @override

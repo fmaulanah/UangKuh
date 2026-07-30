@@ -18,6 +18,16 @@ abstract class RecurringRepository {
     required String userId,
   });
 
+  Future<void> updateRecurringExpense({
+    required String id,
+    required String name,
+    required int defaultAmount,
+    required String categoryId,
+    String? defaultAccountId,
+    int? dueDay,
+    required String userId,
+  });
+
   Future<void> deactivateRecurringExpense({
     required String id,
     required String userId,
@@ -35,5 +45,11 @@ abstract class RecurringRepository {
     String? description,
     required DateTime transactionDate,
     required String userId,
+  });
+
+  Future<RecurringPayment?> getRecurringPaymentForPeriod({
+    required String recurringExpenseId,
+    required int periodYear,
+    required int periodMonth,
   });
 }
