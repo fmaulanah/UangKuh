@@ -3,6 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/theme.dart';
+import '../../../app/widgets/app_surface_card.dart';
+
 import '../providers/transaction_history_provider.dart';
 import '../domain/transaction_type.dart';
 
@@ -29,12 +32,12 @@ class _TransactionHistoryScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('History'),
+        elevation: 0,
+        centerTitle: false,
+        title: const Text('Transaction History'),
       ),
       body: transactionsAsync.when(
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        loading: () => const _HistoryLoadingState(),
         error: (error, stackTrace) => Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -46,8 +49,12 @@ class _TransactionHistoryScreenState
                   size: 48,
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'Unable to load transactions.',
+                _HistoryErrorState(
+                  onRetry: () {
+                    ref.invalidate(
+                      transactionHistoryProvider,
+                    );
+                  },
                 ),
                 const SizedBox(height: 16),
                 FilledButton(
@@ -65,8 +72,11 @@ class _TransactionHistoryScreenState
         data: (transactions) {
           if (transactions.isEmpty) {
             return const Center(
-              child: Text(
-                'No transactions yet.',
+              child: const _HistoryEmptyState(
+                icon: Icons.receipt_long_outlined,
+                title: 'No transactions yet',
+                message:
+                    'Your transaction history will appear here.',
               ),
             );
           }
@@ -94,31 +104,54 @@ class _TransactionHistoryScreenState
           }).toList();
 
           return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _HistoryFilterBar(
-                selectedType: _selectedType,
-                startDate: _startDate,
-                endDate: _endDate,
-                onTypeChanged: (value) {
-                  setState(() {
-                    _selectedType = value;
-                  });
-                },
-                onDatePressed: _selectDateRange,
-                onClear: _clearFilters,
+              const _HistoryHeader(),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppTheme.spaceMd,
+                ),
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(
+                      AppTheme.spaceSm,
+                    ),
+                    child: _HistoryFilterBar(
+                      selectedType: _selectedType,
+                      startDate: _startDate,
+                      endDate: _endDate,
+                      onTypeChanged: (value) {
+                        setState(() {
+                          _selectedType = value;
+                        });
+                      },
+                      onDatePressed: _selectDateRange,
+                      onClear: _clearFilters,
+                    ),
+                  ),
+                ),
               ),
+
+              const SizedBox(
+                height: AppTheme.spaceMd,
+              ),
+
               Expanded(
                 child: filteredTransactions.isEmpty
                     ? const Center(
                         child: Padding(
                           padding: EdgeInsets.all(24),
-                          child: Text(
-                            'No transactions match these filters.',
-                            textAlign: TextAlign.center,
+                          child: const _HistoryEmptyState(
+                            icon: Icons.search_off_rounded,
+                            title: 'No matching transactions',
+                            message:
+                                'Try changing or clearing the filters.',
                           ),
                         ),
                       )
                     : RefreshIndicator(
+                        color: AppTheme.primary,
                         onRefresh: () async {
                           ref.invalidate(transactionHistoryProvider);
                           ref.invalidate(transactionListProvider);
@@ -129,7 +162,12 @@ class _TransactionHistoryScreenState
                         },
                         child: ListView.separated(
                           physics: const AlwaysScrollableScrollPhysics(),
-                          padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.fromLTRB(
+                            AppTheme.spaceMd,
+                            0,
+                            AppTheme.spaceMd,
+                            AppTheme.spaceLg,
+                          ),
                           itemCount: filteredTransactions.length,
                           separatorBuilder: (context, index) {
                             final current = filteredTransactions[index];
@@ -163,91 +201,144 @@ class _TransactionHistoryScreenState
                                 if (showDateHeader) ...[
                                   Padding(
                                     padding: EdgeInsets.only(
-                                      left: 4,
-                                      right: 4,
-                                      top: index == 0 ? 4 : 20,
-                                      bottom: 8,
+                                      top: index == 0
+                                          ? AppTheme.spaceSm
+                                          : AppTheme.spaceLg,
+                                      bottom: AppTheme.spaceSm,
                                     ),
                                     child: Text(
                                       _dateGroupLabel(
                                         transaction.transactionDate,
-                                      ),
+                                      ).toUpperCase(),
                                       style: Theme.of(context)
                                           .textTheme
-                                          .titleSmall
+                                          .labelLarge
                                           ?.copyWith(
+                                            color: AppTheme.textSecondary,
                                             fontWeight: FontWeight.w700,
+                                            letterSpacing: 1,
                                           ),
                                     ),
                                   ),
                                 ],
-                                ListTile(
-                                  onTap: () {
-                                    context.push(
-                                      '/history/transaction',
-                                      extra: transaction,
-                                    );
-                                  },
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 4,
-                                    vertical: 6,
+                                Card(
+                                  margin: const EdgeInsets.only(
+                                    bottom: AppTheme.spaceSm,
                                   ),
-                                  leading: CircleAvatar(
-                                    backgroundColor: _transactionContainerColor(
-                                      context,
-                                      transaction.type,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(
+                                      AppTheme.radiusLg,
                                     ),
-                                    foregroundColor:
-                                        _transactionForegroundColor(
-                                      context,
-                                      transaction.type,
-                                    ),
-                                    child: Icon(
-                                      _transactionIcon(transaction.type),
-                                    ),
-                                  ),
-                                  title: Text(
-                                    transaction.title,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        transaction.subtitle,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
+                                    onTap: () {
+                                      context.push(
+                                        '/history/transaction',
+                                        extra: transaction,
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(
+                                        AppTheme.spaceMd,
                                       ),
-                                      if (transaction.description != null) ...[
-                                        const SizedBox(height: 2),
-                                        Text(
-                                          transaction.description!,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall,
-                                        ),
-                                      ],
-                                    ],
-                                  ),
-                                  trailing: Text(
-                                    _formatTransactionAmount(
-                                      transaction.type,
-                                      transaction.amount,
-                                    ),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.w700,
-                                          color: _transactionForegroundColor(
-                                            context,
-                                            transaction.type,
+                                      child: Row(
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 22,
+                                            backgroundColor:
+                                                _transactionContainerColor(
+                                              context,
+                                              transaction.type,
+                                            ),
+                                            foregroundColor:
+                                                _transactionForegroundColor(
+                                              context,
+                                              transaction.type,
+                                            ),
+                                            child: Icon(
+                                              _transactionIcon(
+                                                transaction.type,
+                                              ),
+                                            ),
                                           ),
-                                        ),
+
+                                          const SizedBox(
+                                            width: AppTheme.spaceMd,
+                                          ),
+
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  transaction.title,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium,
+                                                ),
+
+                                                const SizedBox(
+                                                  height: AppTheme.spaceXs,
+                                                ),
+
+                                                Text(
+                                                  transaction.subtitle,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall,
+                                                ),
+
+                                                if (transaction.description !=
+                                                    null) ...[
+                                                  const SizedBox(
+                                                    height:
+                                                        AppTheme.spaceXs,
+                                                  ),
+
+                                                  Text(
+                                                    transaction.description!,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodySmall,
+                                                  ),
+                                                ],
+                                              ],
+                                            ),
+                                          ),
+
+                                          const SizedBox(
+                                            width: AppTheme.spaceMd,
+                                          ),
+
+                                          Text(
+                                            _formatTransactionAmount(
+                                              transaction.type,
+                                              transaction.amount,
+                                            ),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.copyWith(
+                                                  color:
+                                                      _transactionForegroundColor(
+                                                    context,
+                                                    transaction.type,
+                                                  ),
+                                                  fontWeight:
+                                                      FontWeight.w700,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -318,6 +409,42 @@ class _TransactionHistoryScreenState
   }
 }
 
+class _HistoryHeader extends StatelessWidget {
+  const _HistoryHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        AppTheme.spaceMd,
+        AppTheme.spaceMd,
+        AppTheme.spaceMd,
+        AppTheme.spaceSm,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Text(
+          //   'Transaction History',
+          //   style: textTheme.headlineSmall,
+          // ),
+          // const SizedBox(
+          //   height: AppTheme.spaceXs,
+          // ),
+          // Text(
+          //   'Browse and review all your financial activities.',
+          //   style: textTheme.bodyMedium?.copyWith(
+          //     color: AppTheme.textSecondary,
+          //   ),
+          // ),
+        ],
+      ),
+    );
+  }
+}
+
 class _HistoryFilterBar extends StatelessWidget {
   const _HistoryFilterBar({
     required this.selectedType,
@@ -340,15 +467,13 @@ class _HistoryFilterBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.fromLTRB(
-        16,
-        8,
-        16,
-        4,
+      padding: const EdgeInsets.all(
+        AppTheme.spaceXs,
       ),
       child: Row(
         children: [
           ChoiceChip(
+            showCheckmark: false,
             label: const Text('All'),
             selected: selectedType == null,
             onSelected: (_) {
@@ -362,6 +487,7 @@ class _HistoryFilterBar extends StatelessWidget {
                 right: 8,
               ),
               child: ChoiceChip(
+                showCheckmark: false,
                 label: Text(
                   _transactionTypeLabel(type),
                 ),
@@ -374,6 +500,7 @@ class _HistoryFilterBar extends StatelessWidget {
           ),
           const SizedBox(width: 4),
           ActionChip(
+            backgroundColor: AppTheme.surfaceVariant,
             avatar: const Icon(
               Icons.date_range_outlined,
               size: 18,
@@ -389,6 +516,7 @@ class _HistoryFilterBar extends StatelessWidget {
           if (selectedType != null || startDate != null || endDate != null) ...[
             const SizedBox(width: 8),
             ActionChip(
+              backgroundColor: AppTheme.surfaceVariant,
               avatar: const Icon(
                 Icons.close,
                 size: 18,
@@ -398,6 +526,147 @@ class _HistoryFilterBar extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+class _HistoryErrorState extends StatelessWidget {
+  const _HistoryErrorState({
+    required this.onRetry,
+  });
+
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(
+          AppTheme.spaceLg,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.error_outline_rounded,
+              size: 64,
+              color: AppTheme.danger,
+            ),
+
+            const SizedBox(
+              height: AppTheme.spaceMd,
+            ),
+
+            Text(
+              'Unable to load history',
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge,
+            ),
+
+            const SizedBox(
+              height: AppTheme.spaceSm,
+            ),
+
+            Text(
+              'Please try again.',
+              textAlign: TextAlign.center,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(
+                    color: AppTheme.textSecondary,
+                  ),
+            ),
+
+            const SizedBox(
+              height: AppTheme.spaceLg,
+            ),
+
+            FilledButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Retry'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _HistoryEmptyState extends StatelessWidget {
+  const _HistoryEmptyState({
+    required this.icon,
+    required this.title,
+    required this.message,
+  });
+
+  final IconData icon;
+  final String title;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(
+          AppTheme.spaceLg,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 64,
+              color: AppTheme.textSecondary,
+            ),
+
+            const SizedBox(
+              height: AppTheme.spaceMd,
+            ),
+
+            Text(
+              title,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge,
+            ),
+
+            const SizedBox(
+              height: AppTheme.spaceSm,
+            ),
+
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(
+                    color:
+                        AppTheme.textSecondary,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _HistoryLoadingState extends StatelessWidget {
+  const _HistoryLoadingState();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Padding(
+        padding: EdgeInsets.all(
+          AppTheme.spaceLg,
+        ),
+        child: CircularProgressIndicator(),
       ),
     );
   }

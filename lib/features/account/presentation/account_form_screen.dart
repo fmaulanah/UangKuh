@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/theme.dart';
+
 import '../../auth/providers/app_session_provider.dart';
+
 import '../domain/account_purpose.dart';
 import '../domain/account_type.dart';
 import '../providers/account_list_provider.dart';
@@ -58,149 +61,173 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
         appBar: AppBar(
           title: const Text('Edit Account'),
         ),
-        body: const Center(
-          child: CircularProgressIndicator(),
-        ),
+        body: const _AccountLoadingState(),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.isEditing ? 'Edit Account' : 'Add Account',
+        title: const Text(
+          'Account',
         ),
       ),
       body: SafeArea(
         child: Form(
           key: _formKey,
           child: ListView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(
+              AppTheme.spaceMd,
+              AppTheme.spaceMd,
+              AppTheme.spaceMd,
+              AppTheme.spaceLg,
+            ),
             children: [
-              TextFormField(
-                controller: _nameController,
-                textInputAction: TextInputAction.next,
-                enabled: !_isSaving,
-                decoration: const InputDecoration(
-                  labelText: 'Account name',
-                  hintText: 'e.g. BCA, GoPay, Cash',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return 'Account name is required.';
-                  }
-
-                  return null;
-                },
+              _AccountHeader(
+                isEditing: widget.isEditing,
               ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<AccountType>(
-                value: _type,
-                decoration: const InputDecoration(
-                  labelText: 'Account type',
-                  border: OutlineInputBorder(),
-                ),
-                items: AccountType.values
-                    .map(
-                      (type) => DropdownMenuItem(
-                        value: type,
-                        child: Text(_accountTypeLabel(type)),
-                      ),
-                    )
-                    .toList(),
-                onChanged: _isSaving
-                    ? null
-                    : (value) {
-                        if (value == null) {
-                          return;
-                        }
-
-                        setState(() {
-                          _type = value;
-                        });
-                      },
+              const SizedBox(
+                height: AppTheme.spaceMd,
               ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<AccountPurpose>(
-                value: _purpose,
-                decoration: const InputDecoration(
-                  labelText: 'Purpose',
-                  border: OutlineInputBorder(),
-                ),
-                items: AccountPurpose.values
-                    .map(
-                      (purpose) => DropdownMenuItem(
-                        value: purpose,
-                        child: Text(
-                          _accountPurposeLabel(purpose),
-                        ),
-                      ),
-                    )
-                    .toList(),
-                onChanged: _isSaving
-                    ? null
-                    : (value) {
-                        if (value == null) {
-                          return;
-                        }
-
-                        setState(() {
-                          _purpose = value;
-                        });
-                      },
-              ),
-              if (!widget.isEditing) ...[
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _initialBalanceController,
-                  keyboardType: TextInputType.number,
-                  enabled: !_isSaving,
-                  decoration: const InputDecoration(
-                    labelText: 'Initial balance',
-                    hintText: '0',
-                    prefixText: 'Rp ',
-                    border: OutlineInputBorder(),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(
+                    AppTheme.spaceMd,
                   ),
-                  validator: (value) {
-                    final text = value?.trim() ?? '';
-
-                    if (text.isEmpty) {
-                      return null;
-                    }
-
-                    final amount = int.tryParse(text);
-
-                    if (amount == null) {
-                      return 'Enter a valid amount.';
-                    }
-
-                    if (amount < 0) {
-                      return 'Initial balance cannot be negative.';
-                    }
-
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Use the balance this account has when you start using UangKuh.',
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ],
-              const SizedBox(height: 24),
-              FilledButton(
-                onPressed: _isSaving ? null : _save,
-                child: _isSaving
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: _nameController,
+                        textInputAction: TextInputAction.next,
+                        enabled: !_isSaving,
+                        decoration: const InputDecoration(
+                          labelText: 'Account name',
+                          hintText: 'e.g. BCA, GoPay, Cash',
+                          border: OutlineInputBorder(),
                         ),
-                      )
-                    : Text(
-                        widget.isEditing ? 'Save Changes' : 'Save Account',
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Account name is required.';
+                          }
+
+                          return null;
+                        },
                       ),
+                      const SizedBox(height: 16),
+                      DropdownButtonFormField<AccountType>(
+                        value: _type,
+                        decoration: const InputDecoration(
+                          labelText: 'Account type',
+                          border: OutlineInputBorder(),
+                        ),
+                        items: AccountType.values
+                            .map(
+                              (type) => DropdownMenuItem(
+                                value: type,
+                                child: Text(_accountTypeLabel(type)),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: _isSaving
+                            ? null
+                            : (value) {
+                                if (value == null) {
+                                  return;
+                                }
+
+                                setState(() {
+                                  _type = value;
+                                });
+                              },
+                      ),
+                      const SizedBox(height: 16),
+                      DropdownButtonFormField<AccountPurpose>(
+                        value: _purpose,
+                        decoration: const InputDecoration(
+                          labelText: 'Purpose',
+                          border: OutlineInputBorder(),
+                        ),
+                        items: AccountPurpose.values
+                            .map(
+                              (purpose) => DropdownMenuItem(
+                                value: purpose,
+                                child: Text(
+                                  _accountPurposeLabel(purpose),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: _isSaving
+                            ? null
+                            : (value) {
+                                if (value == null) {
+                                  return;
+                                }
+
+                                setState(() {
+                                  _purpose = value;
+                                });
+                              },
+                      ),
+                      if (!widget.isEditing) ...[
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: _initialBalanceController,
+                          keyboardType: TextInputType.number,
+                          enabled: !_isSaving,
+                          decoration: const InputDecoration(
+                            labelText: 'Initial balance',
+                            hintText: '0',
+                            prefixText: 'Rp ',
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            final text = value?.trim() ?? '';
+
+                            if (text.isEmpty) {
+                              return null;
+                            }
+
+                            final amount = int.tryParse(text);
+
+                            if (amount == null) {
+                              return 'Enter a valid amount.';
+                            }
+
+                            if (amount < 0) {
+                              return 'Initial balance cannot be negative.';
+                            }
+
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Use the balance this account has when you start using UangKuh.',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                      const SizedBox(
+                        height: AppTheme.spaceLg,
+                      ),
+                      FilledButton(
+                        onPressed: _isSaving ? null : _save,
+                        child: _isSaving
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : Text(
+                                widget.isEditing
+                                    ? 'Save Changes'
+                                    : 'Save Account',
+                              ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
@@ -313,6 +340,49 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
 
   String _generateId() {
     return 'account-${DateTime.now().microsecondsSinceEpoch}';
+  }
+}
+
+class _AccountHeader extends StatelessWidget {
+  const _AccountHeader({
+    required this.isEditing,
+  });
+
+  final bool isEditing;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          isEditing ? 'Edit Account' : 'Create Account',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+        const SizedBox(
+          height: AppTheme.spaceXs,
+        ),
+        Text(
+          isEditing
+              ? 'Update your account information.'
+              : 'Create a new account to manage your money.',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: AppTheme.textSecondary,
+              ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AccountLoadingState extends StatelessWidget {
+  const _AccountLoadingState();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
   }
 }
 
