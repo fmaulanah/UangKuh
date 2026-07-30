@@ -2,12 +2,21 @@ import 'package:go_router/go_router.dart';
 
 import '../features/account/presentation/account_form_screen.dart';
 import '../features/account/presentation/account_screen.dart';
+
 import '../features/category/presentation/category_screen.dart';
 import '../features/category/presentation/category_form_screen.dart';
+
 import '../features/dashboard/presentation/dashboard_screen.dart';
+
 import '../features/profile/presentation/profile_screen.dart';
+
 import '../features/recurring/presentation/recurring_screen.dart';
+
 import '../features/transaction/presentation/transaction_history_screen.dart';
+import '../features/transaction/presentation/expense_form_screen.dart';
+import '../features/transaction/presentation/income_form_screen.dart';
+import '../features/transaction/presentation/transfer_form_screen.dart';
+
 import 'app_shell.dart';
 
 class AppRouter {
@@ -35,6 +44,26 @@ class AppRouter {
                 builder: (context, state) {
                   return const DashboardScreen();
                 },
+                routes: [
+                  GoRoute(
+                    path: 'expense/new',
+                    builder: (context, state) {
+                      return const ExpenseFormScreen();
+                    },
+                  ),
+                  GoRoute(
+                    path: 'income/new',
+                    builder: (context, state) {
+                      return const IncomeFormScreen();
+                    },
+                  ),
+                  GoRoute(
+                    path: 'transfer/new',
+                    builder: (context, state) {
+                      return const TransferFormScreen();
+                    },
+                  ),
+                ],
               ),
             ],
           ),

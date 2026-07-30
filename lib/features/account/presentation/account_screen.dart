@@ -295,11 +295,11 @@ class _EmptyAccounts extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
-            FilledButton.icon(
-              onPressed: onAdd,
-              icon: const Icon(Icons.add),
-              label: const Text('Add Account'),
-            ),
+            // FilledButton.icon(
+            //   onPressed: onAdd,
+            //   icon: const Icon(Icons.add),
+            //   label: const Text('Add Account'),
+            // ),
           ],
         ),
       ),
