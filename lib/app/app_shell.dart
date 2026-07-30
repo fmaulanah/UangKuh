@@ -22,31 +22,56 @@ class AppShell extends StatelessWidget {
       body: SafeArea(
         child: navigationShell,
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: _onDestinationSelected,
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Home',
+      bottomNavigationBar: DecoratedBox(
+        decoration: const BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Color(0xFFE2E8F0),
+            ),
           ),
-          NavigationDestination(
-            icon: Icon(Icons.receipt_long_outlined),
-            selectedIcon: Icon(Icons.receipt_long),
-            label: 'History',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.event_repeat_outlined),
-            selectedIcon: Icon(Icons.event_repeat),
-            label: 'Plan',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Me',
-          ),
-        ],
+        ),
+        child: NavigationBar(
+          selectedIndex: navigationShell.currentIndex,
+          onDestinationSelected: _onDestinationSelected,
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(
+                Icons.home_outlined,
+              ),
+              selectedIcon: Icon(
+                Icons.home_rounded,
+              ),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              icon: Icon(
+                Icons.receipt_long_outlined,
+              ),
+              selectedIcon: Icon(
+                Icons.receipt_long_rounded,
+              ),
+              label: 'History',
+            ),
+            NavigationDestination(
+              icon: Icon(
+                Icons.event_repeat_outlined,
+              ),
+              selectedIcon: Icon(
+                Icons.event_repeat_rounded,
+              ),
+              label: 'Plan',
+            ),
+            NavigationDestination(
+              icon: Icon(
+                Icons.person_outline_rounded,
+              ),
+              selectedIcon: Icon(
+                Icons.person_rounded,
+              ),
+              label: 'Me',
+            ),
+          ],
+        ),
       ),
     );
   }

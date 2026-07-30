@@ -101,7 +101,9 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Transfer Money'),
+        elevation: 0,
+        centerTitle: false,
+        title: const Text('Transfer'),
       ),
       body: _buildBody(),
     );

@@ -41,6 +41,11 @@ dependencies:
   path: ^1.9.0
   sqlite3_flutter_libs: 0.5.42
 
+flutter_launcher_icons:
+  android: true
+  image_path: "assets/images/logo.png"
+  min_sdk_android: 21
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -48,6 +53,7 @@ dev_dependencies:
   drift_dev: 2.24.0
   build_runner: ^2.4.14
   analyzer: 7.3.0
+  flutter_launcher_icons: ^0.14.4
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

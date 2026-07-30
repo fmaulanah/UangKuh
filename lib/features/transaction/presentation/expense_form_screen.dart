@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/theme.dart';
+import '../../../app/widgets/app_surface_card.dart';
+
 import '../domain/expense_type.dart';
 import '../providers/transaction_repository_provider.dart';
 import '../providers/transaction_history_provider.dart';
@@ -136,190 +139,276 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
     }
 
     if (_errorMessage != null) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.error_outline,
-                size: 48,
-              ),
-              const SizedBox(height: 16),
-              Text(_errorMessage!),
-            ],
-          ),
-        ),
+      return _ExpenseErrorState(
+        message: _errorMessage!,
       );
     }
 
     return Form(
-        key: _formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            TextFormField(
-              controller: _amountController,
-              keyboardType: TextInputType.number,
-              enabled: !_isSaving,
-              validator: (value) {
-                final text = value?.trim() ?? '';
+      key: _formKey,
+      child: ListView(
+        padding: const EdgeInsets.fromLTRB(
+          AppTheme.spaceMd,
+          AppTheme.spaceSm,
+          AppTheme.spaceMd,
+          AppTheme.spaceXl,
+        ),
+        children: [
+          // ---------------------------------------------------------------
+          // Header
+          // ---------------------------------------------------------------
 
-                if (text.isEmpty) {
-                  return 'Amount is required.';
-                }
+          _FormHeader(),
 
-                final amount = int.tryParse(text);
+          const SizedBox(
+            height: AppTheme.spaceLg,
+          ),
 
-                if (amount == null) {
-                  return 'Enter a valid amount.';
-                }
+          // ---------------------------------------------------------------
+          // Amount
+          // ---------------------------------------------------------------
 
-                if (amount <= 0) {
-                  return 'Amount must be greater than zero.';
-                }
+          _AmountCard(
+            controller: _amountController,
+            enabled: !_isSaving,
+          ),
 
-                return null;
-              },
-              decoration: const InputDecoration(
-                labelText: 'Amount',
-                hintText: '0',
-                prefixText: 'Rp ',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: _accountId,
-              validator: (value) {
-                if (value == null) {
-                  return 'Select an account.';
-                }
+          const SizedBox(
+            height: AppTheme.spaceLg,
+          ),
 
-                return null;
-              },
-              decoration: const InputDecoration(
-                labelText: 'From account',
-                border: OutlineInputBorder(),
-              ),
-              items: _accounts
-                  .map(
-                    (account) => DropdownMenuItem(
-                      value: account.id,
-                      child: Text(account.name),
+          // ---------------------------------------------------------------
+          // Details
+          // ---------------------------------------------------------------
+
+          const _FormSectionTitle(
+            title: 'Expense details',
+            subtitle: 'Where did this money go?',
+          ),
+
+          const SizedBox(
+            height: AppTheme.spaceSm,
+          ),
+
+          AppSurfaceCard(
+            child: Column(
+              children: [
+                DropdownButtonFormField<String>(
+                  value: _accountId,
+                  isExpanded: true,
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Select an account.';
+                    }
+
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'From account',
+                    prefixIcon: Icon(
+                      Icons.account_balance_wallet_outlined,
                     ),
-                  )
-                  .toList(),
-              onChanged: _isSaving
-                  ? null
-                  : (value) {
-                      setState(() {
-                        _accountId = value;
-                      });
-                    },
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              value: _categoryId,
-              validator: (value) {
-                if (value == null) {
-                  return 'Select an expense category.';
-                }
+                  ),
+                  items: _accounts
+                      .map(
+                        (account) => DropdownMenuItem(
+                          value: account.id,
+                          child: Text(
+                            account.name,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: _isSaving
+                      ? null
+                      : (value) {
+                          setState(() {
+                            _accountId = value;
+                          });
+                        },
+                ),
+                const SizedBox(
+                  height: AppTheme.spaceMd,
+                ),
+                DropdownButtonFormField<String>(
+                  value: _categoryId,
+                  isExpanded: true,
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Select an expense category.';
+                    }
 
-                return null;
-              },
-              decoration: const InputDecoration(
-                labelText: 'Expense category',
-                border: OutlineInputBorder(),
-              ),
-              items: _categories
-                  .map(
-                    (category) => DropdownMenuItem(
-                      value: category.id,
-                      child: Text(category.name),
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Category',
+                    prefixIcon: Icon(
+                      Icons.category_outlined,
                     ),
-                  )
-                  .toList(),
-              onChanged: _isSaving
-                  ? null
-                  : (value) {
-                      setState(() {
-                        _categoryId = value;
-                      });
-                    },
+                  ),
+                  items: _categories
+                      .map(
+                        (category) => DropdownMenuItem(
+                          value: category.id,
+                          child: Text(
+                            category.name,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: _isSaving
+                      ? null
+                      : (value) {
+                          setState(() {
+                            _categoryId = value;
+                          });
+                        },
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<ExpenseType>(
+          ),
+
+          const SizedBox(
+            height: AppTheme.spaceLg,
+          ),
+
+          // ---------------------------------------------------------------
+          // Expense Type
+          // ---------------------------------------------------------------
+
+          const _FormSectionTitle(
+            title: 'Expense type',
+            subtitle: 'Choose how this expense should be classified.',
+          ),
+
+          const SizedBox(
+            height: AppTheme.spaceSm,
+          ),
+
+          AppSurfaceCard(
+            child: _ExpenseTypeSelector(
               value: _expenseType,
-              decoration: const InputDecoration(
-                labelText: 'Expense type',
-                border: OutlineInputBorder(),
-              ),
-              items: ExpenseType.values
-                  .map(
-                    (type) => DropdownMenuItem(
-                      value: type,
-                      child: Text(
-                        _expenseTypeLabel(type),
+              enabled: !_isSaving,
+              onChanged: (value) {
+                setState(() {
+                  _expenseType = value;
+                });
+              },
+            ),
+          ),
+
+          const SizedBox(
+            height: AppTheme.spaceLg,
+          ),
+
+          // ---------------------------------------------------------------
+          // Additional Details
+          // ---------------------------------------------------------------
+
+          const _FormSectionTitle(
+            title: 'Additional details',
+            subtitle: 'Add a date or note for this transaction.',
+          ),
+
+          const SizedBox(
+            height: AppTheme.spaceSm,
+          ),
+
+          AppSurfaceCard(
+            child: Column(
+              children: [
+                InkWell(
+                  onTap: _isSaving ? null : _selectDate,
+                  borderRadius: BorderRadius.circular(
+                    AppTheme.radiusMd,
+                  ),
+                  child: InputDecorator(
+                    decoration: const InputDecoration(
+                      labelText: 'Date',
+                      prefixIcon: Icon(
+                        Icons.calendar_today_outlined,
+                      ),
+                      suffixIcon: Icon(
+                        Icons.chevron_right_rounded,
                       ),
                     ),
-                  )
-                  .toList(),
-              onChanged: _isSaving
-                  ? null
-                  : (value) {
-                      if (value == null) {
-                        return;
-                      }
-
-                      setState(() {
-                        _expenseType = value;
-                      });
-                    },
-            ),
-            const SizedBox(height: 16),
-            InkWell(
-              onTap: _isSaving ? null : _selectDate,
-              child: InputDecorator(
-                decoration: const InputDecoration(
-                  labelText: 'Date',
-                  border: OutlineInputBorder(),
-                  suffixIcon: Icon(
-                    Icons.calendar_today_outlined,
+                    child: Text(
+                      _formatDate(
+                        _transactionDate,
+                      ),
+                    ),
                   ),
                 ),
-                child: Text(
-                  _formatDate(_transactionDate),
+                const SizedBox(
+                  height: AppTheme.spaceMd,
                 ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _descriptionController,
-              maxLines: 3,
-              enabled: !_isSaving,
-              decoration: const InputDecoration(
-                labelText: 'Description',
-                hintText: 'Optional',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 24),
-            FilledButton(
-              onPressed: _isSaving ? null : _save,
-              child: _isSaving
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
+                TextFormField(
+                  controller: _descriptionController,
+                  maxLines: 3,
+                  minLines: 3,
+                  enabled: !_isSaving,
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: const InputDecoration(
+                    labelText: 'Description',
+                    hintText: 'Optional note',
+                    alignLabelWithHint: true,
+                    prefixIcon: Padding(
+                      padding: EdgeInsets.only(
+                        bottom: 48,
                       ),
-                    )
-                  : const Text('Save Expense'),
+                      child: Icon(
+                        Icons.notes_rounded,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ));
+          ),
+
+          const SizedBox(
+            height: AppTheme.spaceLg,
+          ),
+
+          // ---------------------------------------------------------------
+          // Save
+          // ---------------------------------------------------------------
+
+          FilledButton.icon(
+            onPressed: _isSaving ? null : _save,
+            icon: _isSaving
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : const Icon(
+                    Icons.check_rounded,
+                  ),
+            label: Text(
+              _isSaving ? 'Saving...' : 'Save Expense',
+            ),
+          ),
+
+          const SizedBox(
+            height: AppTheme.spaceSm,
+          ),
+
+          Text(
+            'This expense will reduce the balance of the selected account.',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppTheme.textSecondary,
+                ),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _selectDate() async {
@@ -348,7 +437,9 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
       return;
     }
 
-    final session = ref.read(appSessionProvider);
+    final session = ref.read(
+      appSessionProvider,
+    );
 
     if (session == null) {
       return;
@@ -377,10 +468,17 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
         userId: session.userId,
       );
 
-      // Balance account berubah karena ledger transaction berubah.
-      ref.invalidate(accountListProvider);
-      ref.invalidate(transactionHistoryProvider);
-      ref.invalidate(dashboardTotalBalanceProvider);
+      ref.invalidate(
+        accountListProvider,
+      );
+
+      ref.invalidate(
+        transactionHistoryProvider,
+      );
+
+      ref.invalidate(
+        dashboardTotalBalanceProvider,
+      );
 
       if (!mounted) {
         return;
@@ -388,7 +486,9 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
 
       Navigator.of(context).pop();
     } catch (error) {
-      debugPrint('CREATE EXPENSE ERROR: $error');
+      debugPrint(
+        'CREATE EXPENSE ERROR: $error',
+      );
 
       if (!mounted) {
         return;
@@ -396,7 +496,9 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Unable to create expense.'),
+          content: Text(
+            'Unable to create expense.',
+          ),
         ),
       );
 
@@ -416,6 +518,415 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
     return description;
   }
 }
+
+// -----------------------------------------------------------------------------
+// Header
+// -----------------------------------------------------------------------------
+
+class _FormHeader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: AppTheme.danger.withValues(
+              alpha: 0.10,
+            ),
+            borderRadius: BorderRadius.circular(
+              AppTheme.radiusLg,
+            ),
+          ),
+          child: const Icon(
+            Icons.arrow_upward_rounded,
+            color: AppTheme.danger,
+          ),
+        ),
+        const SizedBox(
+          width: AppTheme.spaceMd,
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Record an expense',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(
+                height: AppTheme.spaceXs,
+              ),
+              Text(
+                'Keep your spending and account balance up to date.',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppTheme.textSecondary,
+                    ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Amount
+// -----------------------------------------------------------------------------
+
+class _AmountCard extends StatelessWidget {
+  const _AmountCard({
+    required this.controller,
+    required this.enabled,
+  });
+
+  final TextEditingController controller;
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(
+        AppTheme.spaceLg,
+      ),
+      decoration: BoxDecoration(
+        color: AppTheme.danger.withValues(
+          alpha: 0.06,
+        ),
+        borderRadius: BorderRadius.circular(
+          AppTheme.radiusXl,
+        ),
+        border: Border.all(
+          color: AppTheme.danger.withValues(
+            alpha: 0.14,
+          ),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'AMOUNT',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: AppTheme.danger,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.8,
+                ),
+          ),
+          const SizedBox(
+            height: AppTheme.spaceSm,
+          ),
+          TextFormField(
+            controller: controller,
+            enabled: enabled,
+            keyboardType: TextInputType.number,
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: AppTheme.textPrimary,
+                ),
+            validator: (value) {
+              final text = value?.trim() ?? '';
+
+              if (text.isEmpty) {
+                return 'Amount is required.';
+              }
+
+              final amount = int.tryParse(
+                text,
+              );
+
+              if (amount == null) {
+                return 'Enter a valid amount.';
+              }
+
+              if (amount <= 0) {
+                return 'Amount must be greater than zero.';
+              }
+
+              return null;
+            },
+            decoration: const InputDecoration(
+              hintText: '0',
+              prefixText: 'Rp ',
+              filled: false,
+              contentPadding: EdgeInsets.zero,
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              focusedErrorBorder: InputBorder.none,
+            ),
+          ),
+          const SizedBox(
+            height: AppTheme.spaceXs,
+          ),
+          Text(
+            'Enter the amount you spent.',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppTheme.textSecondary,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Expense Type
+// -----------------------------------------------------------------------------
+
+class _ExpenseTypeSelector extends StatelessWidget {
+  const _ExpenseTypeSelector({
+    required this.value,
+    required this.enabled,
+    required this.onChanged,
+  });
+
+  final ExpenseType value;
+  final bool enabled;
+  final ValueChanged<ExpenseType> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _ExpenseTypeOption(
+            icon: Icons.shopping_bag_outlined,
+            label: 'Daily',
+            description: 'Regular spending',
+            selected: value == ExpenseType.daily,
+            enabled: enabled,
+            onTap: () {
+              onChanged(
+                ExpenseType.daily,
+              );
+            },
+          ),
+        ),
+        const SizedBox(
+          width: AppTheme.spaceSm,
+        ),
+        Expanded(
+          child: _ExpenseTypeOption(
+            icon: Icons.event_repeat_rounded,
+            label: 'Recurring',
+            description: 'Planned payment',
+            selected: value == ExpenseType.recurring,
+            enabled: enabled,
+            onTap: () {
+              onChanged(
+                ExpenseType.recurring,
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ExpenseTypeOption extends StatelessWidget {
+  const _ExpenseTypeOption({
+    required this.icon,
+    required this.label,
+    required this.description,
+    required this.selected,
+    required this.enabled,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final String description;
+  final bool selected;
+  final bool enabled;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+
+    final borderColor = selected ? primary : AppTheme.border;
+
+    final backgroundColor = selected
+        ? primary.withValues(
+            alpha: 0.08,
+          )
+        : AppTheme.surface;
+
+    return InkWell(
+      onTap: enabled ? onTap : null,
+      borderRadius: BorderRadius.circular(
+        AppTheme.radiusMd,
+      ),
+      child: AnimatedContainer(
+        duration: const Duration(
+          milliseconds: 160,
+        ),
+        padding: const EdgeInsets.all(
+          AppTheme.spaceMd,
+        ),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(
+            AppTheme.radiusMd,
+          ),
+          border: Border.all(
+            color: borderColor,
+            width: selected ? 1.5 : 1,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  icon,
+                  size: 20,
+                  color: selected ? primary : AppTheme.textSecondary,
+                ),
+                const Spacer(),
+                if (selected)
+                  Icon(
+                    Icons.check_circle_rounded,
+                    size: 19,
+                    color: primary,
+                  ),
+              ],
+            ),
+            const SizedBox(
+              height: AppTheme.spaceMd,
+            ),
+            Text(
+              label,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: selected ? primary : AppTheme.textPrimary,
+                  ),
+            ),
+            const SizedBox(
+              height: AppTheme.spaceXs,
+            ),
+            Text(
+              description,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Section Title
+// -----------------------------------------------------------------------------
+
+class _FormSectionTitle extends StatelessWidget {
+  const _FormSectionTitle({
+    required this.title,
+    required this.subtitle,
+  });
+
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(
+          height: AppTheme.spaceXs,
+        ),
+        Text(
+          subtitle,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: AppTheme.textSecondary,
+              ),
+        ),
+      ],
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Error State
+// -----------------------------------------------------------------------------
+
+class _ExpenseErrorState extends StatelessWidget {
+  const _ExpenseErrorState({
+    required this.message,
+  });
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(
+          AppTheme.spaceLg,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                color: AppTheme.danger.withValues(
+                  alpha: 0.10,
+                ),
+                borderRadius: BorderRadius.circular(
+                  AppTheme.radiusXl,
+                ),
+              ),
+              child: const Icon(
+                Icons.error_outline_rounded,
+                size: 30,
+                color: AppTheme.danger,
+              ),
+            ),
+            const SizedBox(
+              height: AppTheme.spaceMd,
+            ),
+            Text(
+              'Unable to load form',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(
+              height: AppTheme.spaceSm,
+            ),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppTheme.textSecondary,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Options
+// -----------------------------------------------------------------------------
 
 class _AccountOption {
   const _AccountOption({
@@ -437,16 +948,22 @@ class _CategoryOption {
   final String name;
 }
 
-String _expenseTypeLabel(ExpenseType type) {
-  return switch (type) {
-    ExpenseType.daily => 'Daily',
-    ExpenseType.recurring => 'Recurring',
-  };
-}
+// -----------------------------------------------------------------------------
+// Helpers
+// -----------------------------------------------------------------------------
 
-String _formatDate(DateTime date) {
-  final day = date.day.toString().padLeft(2, '0');
-  final month = date.month.toString().padLeft(2, '0');
+String _formatDate(
+  DateTime date,
+) {
+  final day = date.day.toString().padLeft(
+        2,
+        '0',
+      );
+
+  final month = date.month.toString().padLeft(
+        2,
+        '0',
+      );
 
   return '$day/$month/${date.year}';
 }

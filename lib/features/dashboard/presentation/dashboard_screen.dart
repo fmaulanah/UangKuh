@@ -1,21 +1,26 @@
-import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../transaction/providers/transaction_history_provider.dart';
-import '../../transaction/presentation/models/transaction_list_item.dart';
-import '../../transaction/domain/transaction_type.dart';
+import '../../../app/theme.dart';
+import '../../../app/widgets/app_amount_text.dart';
+import '../../../app/widgets/app_section_header.dart';
+import '../../../app/widgets/app_surface_card.dart';
 
-import '../../account/providers/account_list_provider.dart';
-import '../../account/presentation/account_list_item.dart';
 import '../../account/domain/account_type.dart';
+import '../../account/presentation/account_list_item.dart';
+import '../../account/providers/account_list_provider.dart';
 
-import '../../recurring/providers/recurring_plan_provider.dart';
 import '../../recurring/presentation/models/recurring_plan_item.dart';
+import '../../recurring/providers/recurring_plan_provider.dart';
+
+import '../../transaction/domain/transaction_type.dart';
+import '../../transaction/presentation/models/transaction_list_item.dart';
+import '../../transaction/providers/transaction_history_provider.dart';
 
 import '../domain/monthly_summary.dart';
-import '../providers/dashboard_total_balance_provider.dart';
 import '../providers/dashboard_monthly_summary_provider.dart';
+import '../providers/dashboard_total_balance_provider.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -46,9 +51,6 @@ class DashboardScreen extends ConsumerWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
       body: RefreshIndicator(
         onRefresh: () async {
           ref.invalidate(
@@ -87,137 +89,102 @@ class DashboardScreen extends ConsumerWidget {
         },
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(
+            AppTheme.spaceMd,
+            AppTheme.spaceLg,
+            AppTheme.spaceMd,
+            AppTheme.spaceXl,
+          ),
           children: [
-            Text(
-              _greeting(),
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+            _DashboardHeader(),
+            const SizedBox(
+              height: AppTheme.spaceLg,
             ),
-            const SizedBox(height: 4),
-            Text(
-              'Here\'s your financial overview.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'Overview',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
-            const SizedBox(height: 12),
+
+            // Balance
             _DashboardBalanceCard(
               totalBalanceAsync: totalBalanceAsync,
             ),
-            const SizedBox(height: 24),
-            Text(
-              'Accounts',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+
+            const SizedBox(
+              height: AppTheme.spaceLg,
             ),
-            const SizedBox(height: 12),
-            _AccountOverview(
-              accountListAsync: accountListAsync,
+
+            // Quick Actions
+            const AppSectionHeader(
+              title: 'Quick Actions',
             ),
-            const SizedBox(height: 12),
+            const SizedBox(
+              height: AppTheme.spaceSm,
+            ),
+            _QuickActions(),
+
+            const SizedBox(
+              height: AppTheme.spaceLg,
+            ),
+
+            // Monthly Summary
+            const AppSectionHeader(
+              title: 'This Month',
+            ),
+            const SizedBox(
+              height: AppTheme.spaceSm,
+            ),
             _MonthlySummaryCard(
               summaryAsync: monthlySummaryAsync,
             ),
-            const SizedBox(height: 24),
-            Text(
-              'Plan',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+
+            const SizedBox(
+              height: AppTheme.spaceLg,
             ),
-            const SizedBox(height: 12),
+
+            // Accounts
+            const AppSectionHeader(
+              title: 'Accounts',
+            ),
+            const SizedBox(
+              height: AppTheme.spaceSm,
+            ),
+            _AccountOverview(
+              accountListAsync: accountListAsync,
+            ),
+
+            const SizedBox(
+              height: AppTheme.spaceLg,
+            ),
+
+            // Plan
+            AppSectionHeader(
+              title: 'Plan',
+              actionLabel: 'View plan',
+              onActionPressed: () {
+                context.go('/plan');
+              },
+            ),
+            const SizedBox(
+              height: AppTheme.spaceSm,
+            ),
             _RecurringPlanSummary(
               planAsync: recurringPlanAsync,
             ),
-            const SizedBox(height: 24),
-            Text(
-              'Quick Actions',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+
+            const SizedBox(
+              height: AppTheme.spaceLg,
             ),
-            const SizedBox(height: 12),
-            Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: _QuickActionButton(
-                        icon: Icons.remove,
-                        label: 'Expense',
-                        onPressed: () {
-                          context.push('/expense/new');
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _QuickActionButton(
-                        icon: Icons.add,
-                        label: 'Income',
-                        onPressed: () {
-                          context.push('/income/new');
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _QuickActionButton(
-                        icon: Icons.swap_horiz,
-                        label: 'Transfer',
-                        onPressed: () {
-                          context.push('/transfer/new');
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _QuickActionButton(
-                        icon: Icons.tune_rounded,
-                        label: 'Adjustment',
-                        onPressed: () {
-                          context.push('/adjustment/new');
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+
+            // Recent Transactions
+            AppSectionHeader(
+              title: 'Recent Transactions',
+              actionLabel: 'View all',
+              onActionPressed: () {
+                context.go('/history');
+              },
             ),
-            const SizedBox(height: 24),
-            Text(
-              'Recent Transactions',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+            const SizedBox(
+              height: AppTheme.spaceSm,
             ),
-            const SizedBox(height: 12),
             _RecentTransactionsCard(
               transactionsAsync: recentTransactionsAsync,
-            ),
-            const SizedBox(height: 12),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {
-                  context.go('/history');
-                },
-                child: const Text('View all'),
-              ),
             ),
           ],
         ),
@@ -225,6 +192,60 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 }
+
+// -----------------------------------------------------------------------------
+// Header
+// -----------------------------------------------------------------------------
+
+class _DashboardHeader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _greeting(),
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              const SizedBox(
+                height: AppTheme.spaceXs,
+              ),
+              Text(
+                'Your money at a glance.',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppTheme.textSecondary,
+                    ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
+            color:
+                Theme.of(context).colorScheme.primary.withValues(alpha: 0.10),
+            borderRadius: BorderRadius.circular(
+              AppTheme.radiusLg,
+            ),
+          ),
+          child: Icon(
+            Icons.wallet_rounded,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Total Balance
+// -----------------------------------------------------------------------------
 
 class _DashboardBalanceCard extends StatelessWidget {
   const _DashboardBalanceCard({
@@ -235,48 +256,232 @@ class _DashboardBalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(
+        AppTheme.spaceLg,
+      ),
+      decoration: BoxDecoration(
+        color: colorScheme.primary,
+        borderRadius: BorderRadius.circular(
+          AppTheme.radiusXl,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(
+                    alpha: 0.14,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                    AppTheme.radiusMd,
+                  ),
+                ),
+                child: const Icon(
                   Icons.account_balance_wallet_outlined,
+                  color: Colors.white,
+                  size: 21,
                 ),
-                const SizedBox(width: 8),
-                Text(
+              ),
+              const SizedBox(
+                width: AppTheme.spaceMd,
+              ),
+              const Expanded(
+                child: Text(
                   'Total Balance',
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ],
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: AppTheme.spaceLg,
+          ),
+          totalBalanceAsync.when(
+            loading: () => const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.white,
+              ),
             ),
-            const SizedBox(height: 12),
-            totalBalanceAsync.when(
-              loading: () => const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                ),
+            error: (error, stackTrace) => const Text(
+              'Unable to load balance.',
+              style: TextStyle(
+                color: Colors.white,
               ),
-              error: (error, stackTrace) => Text(
-                'Unable to load balance.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-              ),
-              data: (balance) => Text(
+            ),
+            data: (balance) {
+              return Text(
                 _formatRupiah(balance),
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: Colors.white,
                       fontWeight: FontWeight.w700,
                     ),
+              );
+            },
+          ),
+          const SizedBox(
+            height: AppTheme.spaceSm,
+          ),
+          const Text(
+            'Across all your active accounts',
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 13,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Quick Actions
+// -----------------------------------------------------------------------------
+
+class _QuickActions extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: _QuickActionButton(
+            icon: Icons.arrow_upward_rounded,
+            label: 'Expense',
+            tone: _QuickActionTone.expense,
+            onPressed: () {
+              context.push('/expense/new');
+            },
+          ),
+        ),
+        const SizedBox(
+          width: AppTheme.spaceSm,
+        ),
+        Expanded(
+          child: _QuickActionButton(
+            icon: Icons.arrow_downward_rounded,
+            label: 'Income',
+            tone: _QuickActionTone.income,
+            onPressed: () {
+              context.push('/income/new');
+            },
+          ),
+        ),
+        const SizedBox(
+          width: AppTheme.spaceSm,
+        ),
+        Expanded(
+          child: _QuickActionButton(
+            icon: Icons.swap_horiz_rounded,
+            label: 'Transfer',
+            tone: _QuickActionTone.normal,
+            onPressed: () {
+              context.push('/transfer/new');
+            },
+          ),
+        ),
+        const SizedBox(
+          width: AppTheme.spaceSm,
+        ),
+        Expanded(
+          child: _QuickActionButton(
+            icon: Icons.tune_rounded,
+            label: 'Adjust',
+            tone: _QuickActionTone.normal,
+            onPressed: () {
+              context.push('/adjustment/new');
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+enum _QuickActionTone {
+  expense,
+  income,
+  normal,
+}
+
+class _QuickActionButton extends StatelessWidget {
+  const _QuickActionButton({
+    required this.icon,
+    required this.label,
+    required this.tone,
+    required this.onPressed,
+  });
+
+  final IconData icon;
+  final String label;
+  final _QuickActionTone tone;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    final foregroundColor = switch (tone) {
+      _QuickActionTone.expense => AppTheme.danger,
+      _QuickActionTone.income => AppTheme.success,
+      _QuickActionTone.normal => colorScheme.primary,
+    };
+
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(
+        AppTheme.radiusLg,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: AppTheme.spaceSm,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: foregroundColor.withValues(
+                  alpha: 0.10,
+                ),
+                borderRadius: BorderRadius.circular(
+                  AppTheme.radiusLg,
+                ),
               ),
+              child: Icon(
+                icon,
+                color: foregroundColor,
+                size: 23,
+              ),
+            ),
+            const SizedBox(
+              height: AppTheme.spaceSm,
+            ),
+            Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
           ],
         ),
@@ -285,41 +490,176 @@ class _DashboardBalanceCard extends StatelessWidget {
   }
 }
 
-class _QuickActionButton extends StatelessWidget {
-  const _QuickActionButton({
-    required this.icon,
-    required this.label,
-    required this.onPressed,
+// -----------------------------------------------------------------------------
+// Monthly Summary
+// -----------------------------------------------------------------------------
+
+class _MonthlySummaryCard extends StatelessWidget {
+  const _MonthlySummaryCard({
+    required this.summaryAsync,
   });
 
-  final IconData icon;
-  final String label;
-  final VoidCallback onPressed;
+  final AsyncValue<MonthlySummary> summaryAsync;
 
   @override
   Widget build(BuildContext context) {
-    return FilledButton.tonal(
-      onPressed: onPressed,
-      style: FilledButton.styleFrom(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 16,
-        ),
-      ),
+    return AppSurfaceCard(
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon),
-          const SizedBox(height: 6),
           Text(
-            label,
-            textAlign: TextAlign.center,
+            _monthYearLabel(
+              DateTime.now(),
+            ),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppTheme.textSecondary,
+                ),
+          ),
+          const SizedBox(
+            height: AppTheme.spaceMd,
+          ),
+          summaryAsync.when(
+            loading: () => const SizedBox(
+              height: 80,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            ),
+            error: (error, stackTrace) => Text(
+              'Unable to load monthly summary.',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+            ),
+            data: (summary) {
+              return Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _MonthlyMetric(
+                          icon: Icons.arrow_downward_rounded,
+                          label: 'Income',
+                          amount: summary.income,
+                          tone: AppAmountTone.positive,
+                        ),
+                      ),
+                      Container(
+                        width: 1,
+                        height: 54,
+                        color: AppTheme.border,
+                      ),
+                      Expanded(
+                        child: _MonthlyMetric(
+                          icon: Icons.arrow_upward_rounded,
+                          label: 'Expense',
+                          amount: summary.expense,
+                          tone: AppAmountTone.negative,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Divider(
+                    height: AppTheme.spaceXl,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Net this month',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                        ),
+                      ),
+                      AppAmountText(
+                        text: _signedRupiah(
+                          summary.net,
+                        ),
+                        tone: summary.net > 0
+                            ? AppAmountTone.positive
+                            : summary.net < 0
+                                ? AppAmountTone.negative
+                                : AppAmountTone.normal,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            },
           ),
         ],
       ),
     );
   }
 }
+
+class _MonthlyMetric extends StatelessWidget {
+  const _MonthlyMetric({
+    required this.icon,
+    required this.label,
+    required this.amount,
+    required this.tone,
+  });
+
+  final IconData icon;
+  final String label;
+  final int amount;
+  final AppAmountTone tone;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = switch (tone) {
+      AppAmountTone.positive => AppTheme.success,
+      AppAmountTone.negative => AppTheme.danger,
+      AppAmountTone.normal => Theme.of(context).colorScheme.primary,
+    };
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppTheme.spaceSm,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                icon,
+                size: 17,
+                color: color,
+              ),
+              const SizedBox(
+                width: AppTheme.spaceXs,
+              ),
+              Flexible(
+                child: Text(
+                  label,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: AppTheme.spaceSm,
+          ),
+          AppAmountText(
+            text: _formatRupiah(amount),
+            tone: tone,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Accounts
+// -----------------------------------------------------------------------------
 
 class _AccountOverview extends StatelessWidget {
   const _AccountOverview({
@@ -330,17 +670,21 @@ class _AccountOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
+    return AppSurfaceCard(
+      padding: EdgeInsets.zero,
       child: accountListAsync.when(
         loading: () => const Padding(
-          padding: EdgeInsets.all(24),
+          padding: EdgeInsets.all(
+            AppTheme.spaceLg,
+          ),
           child: Center(
             child: CircularProgressIndicator(),
           ),
         ),
         error: (error, stackTrace) => Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(
+            AppTheme.spaceMd,
+          ),
           child: Text(
             'Unable to load accounts.',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -351,7 +695,9 @@ class _AccountOverview extends StatelessWidget {
         data: (items) {
           if (items.isEmpty) {
             return const Padding(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(
+                AppTheme.spaceMd,
+              ),
               child: Text(
                 'No accounts yet.',
               ),
@@ -386,37 +732,72 @@ class _AccountBalanceRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+
     return Padding(
       padding: const EdgeInsets.symmetric(
-        horizontal: 16,
+        horizontal: AppTheme.spaceMd,
         vertical: 14,
       ),
       child: Row(
         children: [
-          CircleAvatar(
+          Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: primary.withValues(
+                alpha: 0.09,
+              ),
+              borderRadius: BorderRadius.circular(
+                AppTheme.radiusMd,
+              ),
+            ),
             child: Icon(
-              _accountIcon(item.account.type),
+              _accountIcon(
+                item.account.type,
+              ),
+              color: primary,
+              size: 21,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(
+            width: AppTheme.spaceMd,
+          ),
           Expanded(
-            child: Text(
-              item.account.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w500,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.account.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+                const SizedBox(
+                  height: 2,
+                ),
+                Text(
+                  _accountTypeLabel(
+                    item.account.type,
                   ),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
             ),
           ),
-          const SizedBox(width: 12),
-          Text(
-            _formatRupiah(
+          const SizedBox(
+            width: AppTheme.spaceSm,
+          ),
+          AppAmountText(
+            text: _formatRupiah(
               item.currentBalance,
             ),
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+            tone: item.currentBalance < 0
+                ? AppAmountTone.negative
+                : AppAmountTone.normal,
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
         ],
       ),
@@ -424,135 +805,168 @@ class _AccountBalanceRow extends StatelessWidget {
   }
 }
 
-class _MonthlySummaryCard extends StatelessWidget {
-  const _MonthlySummaryCard({
-    required this.summaryAsync,
+// -----------------------------------------------------------------------------
+// Plan
+// -----------------------------------------------------------------------------
+
+class _RecurringPlanSummary extends StatelessWidget {
+  const _RecurringPlanSummary({
+    required this.planAsync,
   });
 
-  final AsyncValue<MonthlySummary> summaryAsync;
+  final AsyncValue<List<RecurringPlanItem>> planAsync;
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
-
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(
-                  Icons.calendar_month_outlined,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'This Month',
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                      ),
-                      Text(
-                        _monthYearLabel(now),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            summaryAsync.when(
-              loading: () => const Center(
-                child: CircularProgressIndicator(),
-              ),
-              error: (error, stackTrace) => Text(
-                'Unable to load monthly summary.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.error,
-                    ),
-              ),
-              data: (summary) {
-                return Column(
-                  children: [
-                    _SummaryRow(
-                      label: 'Income',
-                      amount: summary.income,
-                    ),
-                    const SizedBox(height: 10),
-                    _SummaryRow(
-                      label: 'Expense',
-                      amount: summary.expense,
-                    ),
-                    const Divider(height: 24),
-                    _SummaryRow(
-                      label: 'Net',
-                      amount: summary.net,
-                      emphasized: true,
-                      showSign: true,
-                    ),
-                  ],
-                );
-              },
-            ),
-          ],
+    return AppSurfaceCard(
+      child: planAsync.when(
+        loading: () => const SizedBox(
+          height: 80,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
         ),
+        error: (error, stackTrace) => Text(
+          'Unable to load plan.',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.error,
+              ),
+        ),
+        data: (items) {
+          final paidCount = items.where(
+            (item) {
+              return item.isPaid;
+            },
+          ).length;
+
+          final unpaidCount = items.length - paidCount;
+
+          final progress = items.isEmpty ? 0.0 : paidCount / items.length;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      _monthYearLabel(
+                        DateTime.now(),
+                      ),
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ),
+                  Text(
+                    '$paidCount of ${items.length} paid',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: AppTheme.spaceMd,
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(
+                  AppTheme.radiusSm,
+                ),
+                child: LinearProgressIndicator(
+                  value: progress,
+                  minHeight: 8,
+                  backgroundColor: AppTheme.surfaceVariant,
+                ),
+              ),
+              const SizedBox(
+                height: AppTheme.spaceMd,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: _PlanStatus(
+                      label: 'Paid',
+                      count: paidCount,
+                      icon: Icons.check_circle_outline_rounded,
+                      color: AppTheme.success,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: AppTheme.spaceMd,
+                  ),
+                  Expanded(
+                    child: _PlanStatus(
+                      label: 'Unpaid',
+                      count: unpaidCount,
+                      icon: Icons.schedule_outlined,
+                      color: AppTheme.warning,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }
 }
 
-class _SummaryRow extends StatelessWidget {
-  const _SummaryRow({
+class _PlanStatus extends StatelessWidget {
+  const _PlanStatus({
     required this.label,
-    required this.amount,
-    this.emphasized = false,
-    this.showSign = false,
+    required this.count,
+    required this.icon,
+    required this.color,
   });
 
   final String label;
-  final int amount;
-  final bool emphasized;
-  final bool showSign;
+  final int count;
+  final IconData icon;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
-    final amountText = showSign && amount > 0
-        ? '+${_formatRupiah(amount)}'
-        : _formatRupiah(amount);
-
-    final style = emphasized
-        ? Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-            )
-        : Theme.of(context).textTheme.bodyLarge;
-
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            label,
-            style: style,
+    return Container(
+      padding: const EdgeInsets.all(
+        AppTheme.spaceSm,
+      ),
+      decoration: BoxDecoration(
+        color: color.withValues(
+          alpha: 0.08,
+        ),
+        borderRadius: BorderRadius.circular(
+          AppTheme.radiusMd,
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 19,
+            color: color,
           ),
-        ),
-        Text(
-          amountText,
-          style: style,
-        ),
-      ],
+          const SizedBox(
+            width: AppTheme.spaceSm,
+          ),
+          Expanded(
+            child: Text(
+              '$count $label',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
+
+// -----------------------------------------------------------------------------
+// Recent Transactions
+// -----------------------------------------------------------------------------
 
 class _RecentTransactionsCard extends StatelessWidget {
   const _RecentTransactionsCard({
@@ -563,17 +977,21 @@ class _RecentTransactionsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
+    return AppSurfaceCard(
+      padding: EdgeInsets.zero,
       child: transactionsAsync.when(
         loading: () => const Padding(
-          padding: EdgeInsets.all(24),
+          padding: EdgeInsets.all(
+            AppTheme.spaceLg,
+          ),
           child: Center(
             child: CircularProgressIndicator(),
           ),
         ),
         error: (error, stackTrace) => Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(
+            AppTheme.spaceMd,
+          ),
           child: Text(
             'Unable to load recent transactions.',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -584,7 +1002,9 @@ class _RecentTransactionsCard extends StatelessWidget {
         data: (items) {
           if (items.isEmpty) {
             return const Padding(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.all(
+                AppTheme.spaceMd,
+              ),
               child: Text(
                 'No transactions yet.',
               ),
@@ -621,25 +1041,52 @@ class _RecentTransactionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tone = _transactionTone(
+      item,
+    );
+
+    final color = switch (tone) {
+      AppAmountTone.positive => AppTheme.success,
+      AppAmountTone.negative => AppTheme.danger,
+      AppAmountTone.normal => Theme.of(context).colorScheme.primary,
+    };
+
     return InkWell(
       onTap: () {
         context.push(
-          '/history/${item.id}',
+          '/history/transaction',
+          extra: item,
         );
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 12,
+          horizontal: AppTheme.spaceMd,
+          vertical: 13,
         ),
         child: Row(
           children: [
-            CircleAvatar(
+            Container(
+              width: 42,
+              height: 42,
+              decoration: BoxDecoration(
+                color: color.withValues(
+                  alpha: 0.09,
+                ),
+                borderRadius: BorderRadius.circular(
+                  AppTheme.radiusMd,
+                ),
+              ),
               child: Icon(
-                _transactionIcon(item.type),
+                _transactionIcon(
+                  item.type,
+                ),
+                color: color,
+                size: 20,
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(
+              width: AppTheme.spaceMd,
+            ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -652,24 +1099,27 @@ class _RecentTransactionRow extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(
+                    height: 2,
+                  ),
                   Text(
                     item.subtitle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 12),
-            Text(
-              _transactionAmount(item),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+            const SizedBox(
+              width: AppTheme.spaceSm,
+            ),
+            AppAmountText(
+              text: _transactionAmount(
+                item,
+              ),
+              tone: tone,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
         ),
@@ -678,113 +1128,23 @@ class _RecentTransactionRow extends StatelessWidget {
   }
 }
 
-class _RecurringPlanSummary extends StatelessWidget {
-  const _RecurringPlanSummary({
-    required this.planAsync,
-  });
+// -----------------------------------------------------------------------------
+// Helpers
+// -----------------------------------------------------------------------------
 
-  final AsyncValue<List<RecurringPlanItem>> planAsync;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: planAsync.when(
-          loading: () => const Center(
-            child: CircularProgressIndicator(),
-          ),
-          error: (error, stackTrace) => Text(
-            'Unable to load plan.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.error,
-                ),
-          ),
-          data: (items) {
-            final paidCount = items
-                .where(
-                  (item) => item.isPaid,
-                )
-                .length;
-
-            final unpaidCount = items.length - paidCount;
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _monthYearLabel(
-                    DateTime.now(),
-                  ),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _PlanStatus(
-                        label: 'Paid',
-                        count: paidCount,
-                        icon: Icons.check_circle_outline,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _PlanStatus(
-                        label: 'Unpaid',
-                        count: unpaidCount,
-                        icon: Icons.schedule_outlined,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  '${items.length} recurring '
-                  '${items.length == 1 ? 'expense' : 'expenses'}',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class _PlanStatus extends StatelessWidget {
-  const _PlanStatus({
-    required this.label,
-    required this.count,
-    required this.icon,
-  });
-
-  final String label;
-  final int count;
-  final IconData icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          size: 20,
-        ),
-        const SizedBox(width: 8),
-        Text(
-          '$count $label',
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-        ),
-      ],
-    );
-  }
+AppAmountTone _transactionTone(
+  TransactionListItem item,
+) {
+  return switch (item.type) {
+    TransactionType.expense => AppAmountTone.negative,
+    TransactionType.income => AppAmountTone.positive,
+    TransactionType.transfer => AppAmountTone.normal,
+    TransactionType.adjustment => item.amount > 0
+        ? AppAmountTone.positive
+        : item.amount < 0
+            ? AppAmountTone.negative
+            : AppAmountTone.normal,
+  };
 }
 
 IconData _transactionIcon(
@@ -798,13 +1158,27 @@ IconData _transactionIcon(
   };
 }
 
-IconData _accountIcon(AccountType type) {
+IconData _accountIcon(
+  AccountType type,
+) {
   return switch (type) {
     AccountType.bank => Icons.account_balance_outlined,
     AccountType.eWallet => Icons.account_balance_wallet_outlined,
     AccountType.cash => Icons.payments_outlined,
     AccountType.saving => Icons.savings_outlined,
-    AccountType.investment => Icons.trending_up,
+    AccountType.investment => Icons.trending_up_rounded,
+  };
+}
+
+String _accountTypeLabel(
+  AccountType type,
+) {
+  return switch (type) {
+    AccountType.bank => 'Bank',
+    AccountType.eWallet => 'E-Wallet',
+    AccountType.cash => 'Cash',
+    AccountType.saving => 'Saving',
+    AccountType.investment => 'Investment',
   };
 }
 
@@ -812,14 +1186,26 @@ String _transactionAmount(
   TransactionListItem item,
 ) {
   return switch (item.type) {
-    TransactionType.expense => '-${_formatRupiah(item.amount)}',
-    TransactionType.income => '+${_formatRupiah(item.amount)}',
+    TransactionType.expense => '-${_formatRupiah(item.amount.abs())}',
+    TransactionType.income => '+${_formatRupiah(item.amount.abs())}',
     TransactionType.transfer => _formatRupiah(item.amount),
-    TransactionType.adjustment => _formatRupiah(item.amount),
+    TransactionType.adjustment => _signedRupiah(item.amount),
   };
 }
 
-String _monthYearLabel(DateTime date) {
+String _signedRupiah(
+  int amount,
+) {
+  if (amount > 0) {
+    return '+${_formatRupiah(amount)}';
+  }
+
+  return _formatRupiah(amount);
+}
+
+String _monthYearLabel(
+  DateTime date,
+) {
   const months = [
     'January',
     'February',
@@ -852,7 +1238,9 @@ String _greeting() {
   return 'Good evening';
 }
 
-String _formatRupiah(int amount) {
+String _formatRupiah(
+  int amount,
+) {
   final isNegative = amount < 0;
   final digits = amount.abs().toString();
   final buffer = StringBuffer();
@@ -860,7 +1248,9 @@ String _formatRupiah(int amount) {
   for (var i = 0; i < digits.length; i++) {
     final positionFromEnd = digits.length - i;
 
-    buffer.write(digits[i]);
+    buffer.write(
+      digits[i],
+    );
 
     if (positionFromEnd > 1 && positionFromEnd % 3 == 1) {
       buffer.write('.');
