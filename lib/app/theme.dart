@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AppTheme {
   AppTheme._();
 
-  static const Color primary = Color.fromARGB(255, 71, 71, 71);
+  static const Color primary = Color.fromARGB(255, 38, 151, 216);
   static const Color success = Color(0xFF16A34A);
   static const Color danger = Color(0xFFDC2626);
   static const Color warning = Color(0xFFF59E0B);

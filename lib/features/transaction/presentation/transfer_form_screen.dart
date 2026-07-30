@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/theme.dart';
+import '../../../app/widgets/app_surface_card.dart';
+
 import '../providers/transaction_repository_provider.dart';
 import '../providers/transaction_history_provider.dart';
 
@@ -101,9 +104,9 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        centerTitle: false,
-        title: const Text('Transfer'),
+        title: const Text(
+          'Transfer',
+        ),
       ),
       body: _buildBody(),
     );
@@ -117,161 +120,254 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
     }
 
     if (_errorMessage != null) {
-      return Center(
-        child: Text(_errorMessage!),
+      return _TransferErrorState(
+        message: _errorMessage!,
       );
     }
 
     if (_accounts.length < 2) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(24),
-          child: Text(
-            'You need at least two active accounts to make a transfer.',
-            textAlign: TextAlign.center,
-          ),
-        ),
+      return const _TransferErrorState(
+        message:
+            'You need at least two active accounts before making a transfer.',
       );
     }
 
     return Form(
       key: _formKey,
       child: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(
+          AppTheme.spaceMd,
+          AppTheme.spaceSm,
+          AppTheme.spaceMd,
+          AppTheme.spaceXl,
+        ),
         children: [
-          TextFormField(
+          //------------------------------------------------------------
+          // Header
+          //------------------------------------------------------------
+
+          const _FormHeader(),
+
+          const SizedBox(
+            height: AppTheme.spaceLg,
+          ),
+
+          //------------------------------------------------------------
+          // Amount
+          //------------------------------------------------------------
+
+          _AmountCard(
             controller: _amountController,
             enabled: !_isSaving,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Amount',
-              hintText: '0',
-              prefixText: 'Rp ',
-              border: OutlineInputBorder(),
-            ),
-            validator: (value) {
-              final text = value?.trim() ?? '';
-
-              if (text.isEmpty) {
-                return 'Amount is required.';
-              }
-
-              final amount = int.tryParse(text);
-
-              if (amount == null) {
-                return 'Enter a valid amount.';
-              }
-
-              if (amount <= 0) {
-                return 'Amount must be greater than zero.';
-              }
-
-              return null;
-            },
           ),
-          const SizedBox(height: 16),
-          DropdownButtonFormField<String>(
-            value: _sourceAccountId,
-            decoration: const InputDecoration(
-              labelText: 'From account',
-              border: OutlineInputBorder(),
-            ),
-            items: _accounts
-                .map(
-                  (account) => DropdownMenuItem(
-                    value: account.id,
-                    child: Text(account.name),
+
+          const SizedBox(
+            height: AppTheme.spaceLg,
+          ),
+
+          //------------------------------------------------------------
+          // Transfer Details
+          //------------------------------------------------------------
+
+          const _FormSectionTitle(
+            title: 'Transfer details',
+            subtitle: 'Choose the source and destination accounts.',
+          ),
+
+          const SizedBox(
+            height: AppTheme.spaceSm,
+          ),
+
+          AppSurfaceCard(
+            child: Column(
+              children: [
+                DropdownButtonFormField<String>(
+                  value: _sourceAccountId,
+                  isExpanded: true,
+                  decoration: const InputDecoration(
+                    labelText: 'From account',
+                    prefixIcon: Icon(
+                      Icons.logout_rounded,
+                    ),
                   ),
-                )
-                .toList(),
-            onChanged: _isSaving
-                ? null
-                : (value) {
-                    setState(() {
-                      _sourceAccountId = value;
-                    });
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Select a source account.';
+                    }
+
+                    return null;
                   },
-            validator: (value) {
-              if (value == null) {
-                return 'Select a source account.';
-              }
-
-              return null;
-            },
-          ),
-          const SizedBox(height: 16),
-          DropdownButtonFormField<String>(
-            value: _destinationAccountId,
-            decoration: const InputDecoration(
-              labelText: 'To account',
-              border: OutlineInputBorder(),
-            ),
-            items: _accounts
-                .map(
-                  (account) => DropdownMenuItem(
-                    value: account.id,
-                    child: Text(account.name),
-                  ),
-                )
-                .toList(),
-            onChanged: _isSaving
-                ? null
-                : (value) {
-                    setState(() {
-                      _destinationAccountId = value;
-                    });
-                  },
-            validator: (value) {
-              if (value == null) {
-                return 'Select a destination account.';
-              }
-
-              if (value == _sourceAccountId) {
-                return 'Source and destination must be different.';
-              }
-
-              return null;
-            },
-          ),
-          const SizedBox(height: 16),
-          InkWell(
-            onTap: _isSaving ? null : _selectDate,
-            child: InputDecorator(
-              decoration: const InputDecoration(
-                labelText: 'Date',
-                border: OutlineInputBorder(),
-                suffixIcon: Icon(
-                  Icons.calendar_today_outlined,
+                  items: _accounts
+                      .map(
+                        (account) => DropdownMenuItem(
+                          value: account.id,
+                          child: Text(
+                            account.name,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: _isSaving
+                      ? null
+                      : (value) {
+                          setState(() {
+                            _sourceAccountId = value;
+                          });
+                        },
                 ),
-              ),
-              child: Text(
-                _formatDate(_transactionDate),
-              ),
+                const SizedBox(
+                  height: AppTheme.spaceMd,
+                ),
+                DropdownButtonFormField<String>(
+                  value: _destinationAccountId,
+                  isExpanded: true,
+                  decoration: const InputDecoration(
+                    labelText: 'To account',
+                    prefixIcon: Icon(
+                      Icons.login_rounded,
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Select a destination account.';
+                    }
+
+                    if (value == _sourceAccountId) {
+                      return 'Source and destination must be different.';
+                    }
+
+                    return null;
+                  },
+                  items: _accounts
+                      .map(
+                        (account) => DropdownMenuItem(
+                          value: account.id,
+                          child: Text(
+                            account.name,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: _isSaving
+                      ? null
+                      : (value) {
+                          setState(() {
+                            _destinationAccountId = value;
+                          });
+                        },
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 16),
-          TextFormField(
-            controller: _descriptionController,
-            enabled: !_isSaving,
-            maxLines: 3,
-            decoration: const InputDecoration(
-              labelText: 'Description',
-              hintText: 'Optional',
-              border: OutlineInputBorder(),
+
+          const SizedBox(
+            height: AppTheme.spaceLg,
+          ),
+
+          //------------------------------------------------------------
+          // Additional Details
+          //------------------------------------------------------------
+
+          const _FormSectionTitle(
+            title: 'Additional details',
+            subtitle: 'Select a transfer date or leave a note.',
+          ),
+
+          const SizedBox(
+            height: AppTheme.spaceSm,
+          ),
+
+          AppSurfaceCard(
+            child: Column(
+              children: [
+                InkWell(
+                  onTap: _isSaving ? null : _selectDate,
+                  borderRadius: BorderRadius.circular(
+                    AppTheme.radiusMd,
+                  ),
+                  child: InputDecorator(
+                    decoration: const InputDecoration(
+                      labelText: 'Date',
+                      prefixIcon: Icon(
+                        Icons.calendar_today_outlined,
+                      ),
+                      suffixIcon: Icon(
+                        Icons.chevron_right_rounded,
+                      ),
+                    ),
+                    child: Text(
+                      _formatDate(
+                        _transactionDate,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: AppTheme.spaceMd,
+                ),
+                TextFormField(
+                  controller: _descriptionController,
+                  enabled: !_isSaving,
+                  minLines: 3,
+                  maxLines: 3,
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: const InputDecoration(
+                    labelText: 'Description',
+                    hintText: 'Optional note',
+                    alignLabelWithHint: true,
+                    prefixIcon: Padding(
+                      padding: EdgeInsets.only(
+                        bottom: 48,
+                      ),
+                      child: Icon(
+                        Icons.notes_rounded,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 24),
-          FilledButton(
+
+          const SizedBox(
+            height: AppTheme.spaceLg,
+          ),
+
+          //------------------------------------------------------------
+          // Save
+          //------------------------------------------------------------
+
+          FilledButton.icon(
             onPressed: _isSaving ? null : _save,
-            child: _isSaving
+            icon: _isSaving
                 ? const SizedBox(
-                    width: 20,
-                    height: 20,
+                    width: 18,
+                    height: 18,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
+                      color: Colors.white,
                     ),
                   )
-                : const Text('Save Transfer'),
+                : const Icon(
+                    Icons.swap_horiz_rounded,
+                  ),
+            label: Text(
+              _isSaving ? 'Saving...' : 'Save Transfer',
+            ),
+          ),
+
+          const SizedBox(
+            height: AppTheme.spaceSm,
+          ),
+
+          Text(
+            'This transfer moves money between your accounts without changing your total balance.',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppTheme.textSecondary,
+                ),
           ),
         ],
       ),
@@ -304,11 +400,9 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
       return;
     }
 
-    if (_sourceAccountId == _destinationAccountId) {
-      return;
-    }
-
-    final session = ref.read(appSessionProvider);
+    final session = ref.read(
+      appSessionProvider,
+    );
 
     if (session == null) {
       return;
@@ -336,9 +430,17 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
         userId: session.userId,
       );
 
-      ref.invalidate(accountListProvider);
-      ref.invalidate(transactionHistoryProvider);
-      ref.invalidate(dashboardTotalBalanceProvider);
+      ref.invalidate(
+        accountListProvider,
+      );
+
+      ref.invalidate(
+        transactionHistoryProvider,
+      );
+
+      ref.invalidate(
+        dashboardTotalBalanceProvider,
+      );
 
       if (!mounted) {
         return;
@@ -346,7 +448,9 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
 
       Navigator.of(context).pop();
     } catch (error) {
-      debugPrint('CREATE TRANSFER ERROR: $error');
+      debugPrint(
+        'CREATE TRANSFER ERROR: $error',
+      );
 
       if (!mounted) {
         return;
@@ -354,7 +458,9 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Unable to create transfer.'),
+          content: Text(
+            'Unable to create transfer.',
+          ),
         ),
       );
 
@@ -379,12 +485,263 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
   }
 }
 
-String _formatDate(DateTime date) {
-  final day = date.day.toString().padLeft(2, '0');
-  final month = date.month.toString().padLeft(2, '0');
+// -----------------------------------------------------------------------------
+// Header
+// -----------------------------------------------------------------------------
 
-  return '$day/$month/${date.year}';
+class _FormHeader extends StatelessWidget {
+  const _FormHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: AppTheme.primary.withValues(
+              alpha: 0.10,
+            ),
+            borderRadius: BorderRadius.circular(
+              AppTheme.radiusLg,
+            ),
+          ),
+          child: const Icon(
+            Icons.swap_horiz_rounded,
+            color: AppTheme.primary,
+          ),
+        ),
+        const SizedBox(
+          width: AppTheme.spaceMd,
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Transfer money',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(
+                height: AppTheme.spaceXs,
+              ),
+              Text(
+                'Move money safely between your accounts.',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppTheme.textSecondary,
+                    ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }
+
+// -----------------------------------------------------------------------------
+// Amount
+// -----------------------------------------------------------------------------
+
+class _AmountCard extends StatelessWidget {
+  const _AmountCard({
+    required this.controller,
+    required this.enabled,
+  });
+
+  final TextEditingController controller;
+  final bool enabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(
+        AppTheme.spaceLg,
+      ),
+      decoration: BoxDecoration(
+        color: AppTheme.primary.withValues(
+          alpha: 0.06,
+        ),
+        borderRadius: BorderRadius.circular(
+          AppTheme.radiusXl,
+        ),
+        border: Border.all(
+          color: AppTheme.primary.withValues(
+            alpha: 0.14,
+          ),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'AMOUNT',
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: AppTheme.primary,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.8,
+                ),
+          ),
+          const SizedBox(
+            height: AppTheme.spaceSm,
+          ),
+          TextFormField(
+            controller: controller,
+            enabled: enabled,
+            keyboardType: TextInputType.number,
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: AppTheme.textPrimary,
+                ),
+            validator: (value) {
+              final text = value?.trim() ?? '';
+
+              if (text.isEmpty) {
+                return 'Amount is required.';
+              }
+
+              final amount = int.tryParse(text);
+
+              if (amount == null) {
+                return 'Enter a valid amount.';
+              }
+
+              if (amount <= 0) {
+                return 'Amount must be greater than zero.';
+              }
+
+              return null;
+            },
+            decoration: const InputDecoration(
+              hintText: '0',
+              prefixText: 'Rp ',
+              filled: false,
+              contentPadding: EdgeInsets.zero,
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              focusedErrorBorder: InputBorder.none,
+            ),
+          ),
+          const SizedBox(
+            height: AppTheme.spaceXs,
+          ),
+          Text(
+            'Enter the amount to transfer.',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: AppTheme.textSecondary,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Section Title
+// -----------------------------------------------------------------------------
+
+class _FormSectionTitle extends StatelessWidget {
+  const _FormSectionTitle({
+    required this.title,
+    required this.subtitle,
+  });
+
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        const SizedBox(
+          height: AppTheme.spaceXs,
+        ),
+        Text(
+          subtitle,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: AppTheme.textSecondary,
+              ),
+        ),
+      ],
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Error State
+// -----------------------------------------------------------------------------
+
+class _TransferErrorState extends StatelessWidget {
+  const _TransferErrorState({
+    required this.message,
+  });
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(
+          AppTheme.spaceLg,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 64,
+              height: 64,
+              decoration: BoxDecoration(
+                color: AppTheme.danger.withValues(
+                  alpha: 0.10,
+                ),
+                borderRadius: BorderRadius.circular(
+                  AppTheme.radiusXl,
+                ),
+              ),
+              child: const Icon(
+                Icons.swap_horizontal_circle_rounded,
+                size: 30,
+                color: AppTheme.danger,
+              ),
+            ),
+            const SizedBox(
+              height: AppTheme.spaceMd,
+            ),
+            Text(
+              'Unable to load transfer',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(
+              height: AppTheme.spaceSm,
+            ),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppTheme.textSecondary,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Options
+// -----------------------------------------------------------------------------
 
 class _AccountOption {
   const _AccountOption({
@@ -394,4 +751,20 @@ class _AccountOption {
 
   final String id;
   final String name;
+}
+
+String _formatDate(
+  DateTime date,
+) {
+  final day = date.day.toString().padLeft(
+        2,
+        '0',
+      );
+
+  final month = date.month.toString().padLeft(
+        2,
+        '0',
+      );
+
+  return '$day/$month/${date.year}';
 }
