@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../providers/transaction_repository_provider.dart';
+import '../providers/transaction_history_provider.dart';
+
 import '../../account/providers/account_list_provider.dart';
 import '../../auth/providers/app_session_provider.dart';
-import '../providers/transaction_repository_provider.dart';
 
 class TransferFormScreen extends ConsumerStatefulWidget {
   const TransferFormScreen({super.key});
@@ -332,6 +334,7 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
       );
 
       ref.invalidate(accountListProvider);
+      ref.invalidate(transactionHistoryProvider);
 
       if (!mounted) {
         return;

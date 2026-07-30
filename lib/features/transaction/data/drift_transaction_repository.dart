@@ -20,6 +20,59 @@ class DriftTransactionRepository implements TransactionRepository {
   }
 
   @override
+  Future<List<Transaction>> getTransactions(
+    String householdId,
+  ) {
+    return (_database.select(_database.transactions)
+          ..where(
+            (transaction) =>
+                transaction.householdId.equals(householdId) &
+                transaction.isDeleted.equals(false),
+          )
+          ..orderBy([
+            (transaction) => OrderingTerm(
+                  expression: transaction.transactionDate,
+                  mode: OrderingMode.desc,
+                ),
+            (transaction) => OrderingTerm(
+                  expression: transaction.createdAt,
+                  mode: OrderingMode.desc,
+                ),
+          ]))
+        .get();
+  }
+
+  @override
+  Future<void> deleteTransaction({
+    required String id,
+    required String userId,
+  }) async {
+    final transaction = await getTransactionById(id);
+
+    if (transaction == null) {
+      throw StateError('Transaction not found.');
+    }
+
+    if (transaction.isDeleted) {
+      return;
+    }
+
+    final now = DateTime.now();
+
+    await (_database.update(_database.transactions)
+          ..where(
+            (row) => row.id.equals(id),
+          ))
+        .write(
+      TransactionsCompanion(
+        isDeleted: const Value(true),
+        updatedAt: Value(now),
+        updatedBy: Value(userId),
+      ),
+    );
+  }
+
+  @override
   Future<void> createExpense({
     required String id,
     required String householdId,

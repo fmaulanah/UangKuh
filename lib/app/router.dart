@@ -16,6 +16,8 @@ import '../features/transaction/presentation/transaction_history_screen.dart';
 import '../features/transaction/presentation/expense_form_screen.dart';
 import '../features/transaction/presentation/income_form_screen.dart';
 import '../features/transaction/presentation/transfer_form_screen.dart';
+import '../features/transaction/presentation/transaction_detail_screen.dart';
+import '../features/transaction/presentation/models/transaction_list_item.dart';
 
 import 'app_shell.dart';
 
@@ -74,6 +76,18 @@ class AppRouter {
                 builder: (context, state) {
                   return const TransactionHistoryScreen();
                 },
+                routes: [
+                  GoRoute(
+                    path: 'transaction',
+                    builder: (context, state) {
+                      final transaction = state.extra as TransactionListItem;
+
+                      return TransactionDetailScreen(
+                        transaction: transaction,
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),

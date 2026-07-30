@@ -4,6 +4,15 @@ import 'expense_type.dart';
 abstract class TransactionRepository {
   Future<Transaction?> getTransactionById(String id);
 
+  Future<List<Transaction>> getTransactions(
+    String householdId,
+  );
+
+  Future<void> deleteTransaction({
+    required String id,
+    required String userId,
+  });
+
   Future<void> createExpense({
     required String id,
     required String householdId,

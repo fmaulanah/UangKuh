@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../providers/transaction_repository_provider.dart';
+import '../providers/transaction_history_provider.dart';
+
 import '../../account/providers/account_list_provider.dart';
 import '../../auth/providers/app_session_provider.dart';
 import '../../category/domain/category_type.dart';
 import '../../category/providers/category_repository_provider.dart';
-import '../providers/transaction_repository_provider.dart';
 
 class IncomeFormScreen extends ConsumerStatefulWidget {
   const IncomeFormScreen({super.key});
@@ -344,6 +346,7 @@ class _IncomeFormScreenState extends ConsumerState<IncomeFormScreen> {
       );
 
       ref.invalidate(accountListProvider);
+      ref.invalidate(transactionHistoryProvider);
 
       if (!mounted) {
         return;

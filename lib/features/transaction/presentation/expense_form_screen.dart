@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../domain/expense_type.dart';
 import '../providers/transaction_repository_provider.dart';
+import '../providers/transaction_history_provider.dart';
 
 import '../../account/providers/account_list_provider.dart';
 import '../../auth/providers/app_session_provider.dart';
@@ -378,6 +379,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
 
       // Balance account berubah karena ledger transaction berubah.
       ref.invalidate(accountListProvider);
+      ref.invalidate(transactionHistoryProvider);
 
       if (!mounted) {
         return;
