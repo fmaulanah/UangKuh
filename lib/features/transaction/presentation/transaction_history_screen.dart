@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/theme.dart';
-import '../../../app/widgets/app_surface_card.dart';
 
 import '../providers/transaction_history_provider.dart';
 import '../domain/transaction_type.dart';
@@ -72,11 +71,10 @@ class _TransactionHistoryScreenState
         data: (transactions) {
           if (transactions.isEmpty) {
             return const Center(
-              child: const _HistoryEmptyState(
+              child: _HistoryEmptyState(
                 icon: Icons.receipt_long_outlined,
                 title: 'No transactions yet',
-                message:
-                    'Your transaction history will appear here.',
+                message: 'Your transaction history will appear here.',
               ),
             );
           }
@@ -107,7 +105,6 @@ class _TransactionHistoryScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const _HistoryHeader(),
-
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppTheme.spaceMd,
@@ -132,21 +129,18 @@ class _TransactionHistoryScreenState
                   ),
                 ),
               ),
-
               const SizedBox(
                 height: AppTheme.spaceMd,
               ),
-
               Expanded(
                 child: filteredTransactions.isEmpty
                     ? const Center(
                         child: Padding(
                           padding: EdgeInsets.all(24),
-                          child: const _HistoryEmptyState(
+                          child: _HistoryEmptyState(
                             icon: Icons.search_off_rounded,
                             title: 'No matching transactions',
-                            message:
-                                'Try changing or clearing the filters.',
+                            message: 'Try changing or clearing the filters.',
                           ),
                         ),
                       )
@@ -259,11 +253,9 @@ class _TransactionHistoryScreenState
                                               ),
                                             ),
                                           ),
-
                                           const SizedBox(
                                             width: AppTheme.spaceMd,
                                           ),
-
                                           Expanded(
                                             child: Column(
                                               crossAxisAlignment:
@@ -278,11 +270,9 @@ class _TransactionHistoryScreenState
                                                       .textTheme
                                                       .titleMedium,
                                                 ),
-
                                                 const SizedBox(
                                                   height: AppTheme.spaceXs,
                                                 ),
-
                                                 Text(
                                                   transaction.subtitle,
                                                   maxLines: 1,
@@ -292,14 +282,11 @@ class _TransactionHistoryScreenState
                                                       .textTheme
                                                       .bodySmall,
                                                 ),
-
                                                 if (transaction.description !=
                                                     null) ...[
                                                   const SizedBox(
-                                                    height:
-                                                        AppTheme.spaceXs,
+                                                    height: AppTheme.spaceXs,
                                                   ),
-
                                                   Text(
                                                     transaction.description!,
                                                     maxLines: 1,
@@ -313,11 +300,9 @@ class _TransactionHistoryScreenState
                                               ],
                                             ),
                                           ),
-
                                           const SizedBox(
                                             width: AppTheme.spaceMd,
                                           ),
-
                                           Text(
                                             _formatTransactionAmount(
                                               transaction.type,
@@ -332,8 +317,7 @@ class _TransactionHistoryScreenState
                                                     context,
                                                     transaction.type,
                                                   ),
-                                                  fontWeight:
-                                                      FontWeight.w700,
+                                                  fontWeight: FontWeight.w700,
                                                 ),
                                           ),
                                         ],
@@ -414,8 +398,6 @@ class _HistoryHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(
         AppTheme.spaceMd,
@@ -553,37 +535,26 @@ class _HistoryErrorState extends StatelessWidget {
               size: 64,
               color: AppTheme.danger,
             ),
-
             const SizedBox(
               height: AppTheme.spaceMd,
             ),
-
             Text(
               'Unable to load history',
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
-
             const SizedBox(
               height: AppTheme.spaceSm,
             ),
-
             Text(
               'Please try again.',
               textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppTheme.textSecondary,
                   ),
             ),
-
             const SizedBox(
               height: AppTheme.spaceLg,
             ),
-
             FilledButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
@@ -622,31 +593,21 @@ class _HistoryEmptyState extends StatelessWidget {
               size: 64,
               color: AppTheme.textSecondary,
             ),
-
             const SizedBox(
               height: AppTheme.spaceMd,
             ),
-
             Text(
               title,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
-
             const SizedBox(
               height: AppTheme.spaceSm,
             ),
-
             Text(
               message,
               textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(
-                    color:
-                        AppTheme.textSecondary,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppTheme.textSecondary,
                   ),
             ),
           ],

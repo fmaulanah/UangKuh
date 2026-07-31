@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/theme.dart';
+
 import '../providers/recurring_plan_provider.dart';
 import '../providers/recurring_repository_provider.dart';
 import '../../account/providers/account_list_provider.dart';
@@ -105,30 +107,45 @@ class _RecurringPaymentScreenState
         title: const Text('Pay Recurring Expense'),
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+          ? const _RecurringPaymentLoadingState()
           : _loadError != null
               ? const Center(
                   child: Padding(
-                    padding: EdgeInsets.all(24),
-                    child: Text(
-                      'Unable to load recurring expense.',
-                    ),
-                  ),
+                      padding: EdgeInsets.all(24), child: Text("Error.")),
                 )
               : Form(
                   key: _formKey,
                   child: ListView(
-                    padding: const EdgeInsets.all(16),
+                    padding: EdgeInsets.fromLTRB(
+                      AppTheme.spaceMd,
+                      AppTheme.spaceMd,
+                      AppTheme.spaceMd,
+                      AppTheme.spaceLg,
+                    ),
                     children: [
+                      const _RecurringPaymentHeader(),
+                      const SizedBox(
+                        height: AppTheme.spaceLg,
+                      ),
+                      Text(
+                        'Payment Information',
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                      ),
+                      const SizedBox(
+                        height: AppTheme.spaceMd,
+                      ),
                       TextFormField(
                         controller: _amountController,
                         keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
                           labelText: 'Amount',
+                          hintText: '0',
                           prefixText: 'Rp ',
                         ),
+                        textInputAction: TextInputAction.next,
                         validator: (value) {
                           final amount = int.tryParse(
                             value?.trim() ?? '',
@@ -141,7 +158,9 @@ class _RecurringPaymentScreenState
                           return null;
                         },
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(
+                        height: AppTheme.spaceLg,
+                      ),
                       accountsAsync.when(
                         loading: () => DropdownButtonFormField<String>(
                           items: const [],
@@ -163,9 +182,10 @@ class _RecurringPaymentScreenState
                         data: (accountItems) {
                           return DropdownButtonFormField<String>(
                             value: _selectedAccountId,
+                            isExpanded: true,
                             decoration: const InputDecoration(
                               labelText: 'Account',
-                              hintText: 'Select payment account',
+                              hintText: 'Choose payment account',
                             ),
                             items: accountItems
                                 .map(
@@ -193,35 +213,48 @@ class _RecurringPaymentScreenState
                         },
                       ),
                       const SizedBox(height: 16),
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: const Text(
-                          'Transaction date',
-                        ),
-                        subtitle: Text(
-                          _formatDate(
-                            _transactionDate,
+                      Card(
+                        elevation: 0,
+                        child: ListTile(
+                          contentPadding: EdgeInsets.fromLTRB(
+                            AppTheme.spaceMd,
+                            AppTheme.spaceMd,
+                            AppTheme.spaceMd,
+                            AppTheme.spaceLg,
                           ),
+                          title: const Text(
+                            'Transaction date',
+                          ),
+                          subtitle: Text(
+                            _formatDate(
+                              _transactionDate,
+                            ),
+                          ),
+                          trailing: const Icon(
+                            Icons.calendar_today_outlined,
+                          ),
+                          onTap: _selectTransactionDate,
                         ),
-                        trailing: const Icon(
-                          Icons.calendar_today_outlined,
-                        ),
-                        onTap: _selectTransactionDate,
                       ),
-                      const SizedBox(height: 32),
-                      FilledButton(
-                        onPressed: _isSaving ? null : _pay,
-                        child: _isSaving
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
+                      const SizedBox(
+                        height: AppTheme.spaceLg,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FilledButton(
+                          onPressed: _isSaving ? null : _pay,
+                          child: _isSaving
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text(
+                                  'Confirm Payment',
                                 ),
-                              )
-                            : const Text(
-                                'Confirm Payment',
-                              ),
+                        ),
                       ),
                     ],
                   ),
@@ -326,6 +359,48 @@ class _RecurringPaymentScreenState
         ),
       );
     }
+  }
+}
+
+class _RecurringPaymentHeader extends StatelessWidget {
+  const _RecurringPaymentHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Pay Recurring Expense',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+        const SizedBox(
+          height: AppTheme.spaceXs,
+        ),
+        Text(
+          'Record a payment for this recurring expense.',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: AppTheme.textSecondary,
+              ),
+        ),
+      ],
+    );
+  }
+}
+
+class _RecurringPaymentLoadingState extends StatelessWidget {
+  const _RecurringPaymentLoadingState();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Padding(
+        padding: EdgeInsets.all(
+          AppTheme.spaceLg,
+        ),
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 }
 

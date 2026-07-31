@@ -100,7 +100,6 @@ class RecurringScreen extends ConsumerWidget {
                     itemCount: planItems.length,
                     itemBuilder: (context, index) {
                       final item = planItems[index];
-                      final recurring = item.recurringExpense;
 
                       return _RecurringCard(
                         item: item,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/theme.dart';
+
 import '../providers/recurring_list_provider.dart';
 import '../providers/recurring_repository_provider.dart';
 
@@ -110,9 +112,7 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
         ),
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+          ? const _RecurringFormLoadingState()
           : _loadError != null
               ? _RecurringFormLoadError(
                   onRetry: _loadRecurringExpense,
@@ -121,14 +121,35 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                   key: _formKey,
                   child: ListView(
                     // isi form existing lu
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.fromLTRB(
+                      AppTheme.spaceMd,
+                      AppTheme.spaceMd,
+                      AppTheme.spaceMd,
+                      AppTheme.spaceLg,
+                    ),
                     children: [
+                      const _RecurringFormHeader(),
+                      const SizedBox(
+                        height: AppTheme.spaceLg,
+                      ),
+                      Text(
+                        'Basic Information',
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                      ),
+                      const SizedBox(
+                        height: AppTheme.spaceMd,
+                      ),
                       TextFormField(
+                        autofocus: !widget.isEditing,
                         controller: _nameController,
+                        textCapitalization: TextCapitalization.words,
                         textInputAction: TextInputAction.next,
                         decoration: const InputDecoration(
                           labelText: 'Name',
-                          hintText: 'e.g. Internet, Car Payment',
+                          hintText: 'e.g. Netflix Subscription',
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -146,6 +167,7 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                         decoration: const InputDecoration(
                           labelText: 'Default amount',
                           prefixText: 'Rp ',
+                          hintText: '0',
                         ),
                         validator: (value) {
                           final amount = int.tryParse(
@@ -197,7 +219,7 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                             value: _selectedCategoryId,
                             decoration: InputDecoration(
                               labelText: 'Category',
-                              hintText: 'Select expense category',
+                              hintText: 'Choose default account',
                             ),
                             items: expenseCategories
                                 .map(
@@ -217,7 +239,19 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                           );
                         },
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(
+                        height: AppTheme.spaceLg,
+                      ),
+                      Text(
+                        'Payment Settings',
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                      ),
+                      const SizedBox(
+                        height: AppTheme.spaceMd,
+                      ),
                       accountsAsync.when(
                         loading: () => DropdownButtonFormField<String>(
                           items: [],
@@ -285,7 +319,8 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                         textInputAction: TextInputAction.done,
                         decoration: const InputDecoration(
                           labelText: 'Due day',
-                          hintText: 'Optional, 1–31',
+                          hintText: 'e.g. 25',
+                          helperText: 'Leave empty if there is no due date.',
                         ),
                         validator: (value) {
                           final text = value?.trim() ?? '';
@@ -303,22 +338,34 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 32),
-                      FilledButton(
-                        onPressed: _isSaving ? null : _save,
-                        child: _isSaving
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
+                      const SizedBox(
+                        height: AppTheme.spaceLg,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FilledButton(
+                          onPressed: _isSaving ? null : _save,
+                          child: _isSaving
+                              ? const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 18,
+                                      height: 18,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    ),
+                                    SizedBox(width: AppTheme.spaceSm),
+                                    Text("Saving..."),
+                                  ],
+                                )
+                              : Text(
+                                  widget.isEditing
+                                      ? 'Save Changes'
+                                      : 'Create Recurring Expense',
                                 ),
-                              )
-                            : Text(
-                                widget.isEditing
-                                    ? 'Save Changes'
-                                    : 'Create Recurring Expense',
-                              ),
+                        ),
                       ),
                       if (widget.isEditing) ...[
                         const SizedBox(height: 16),
@@ -598,6 +645,48 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
         ),
       );
     }
+  }
+}
+
+class _RecurringFormHeader extends StatelessWidget {
+  const _RecurringFormHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Recurring Expense',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
+        const SizedBox(
+          height: AppTheme.spaceXs,
+        ),
+        Text(
+          'Create or update a recurring monthly expense.',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: AppTheme.textSecondary,
+              ),
+        ),
+      ],
+    );
+  }
+}
+
+class _RecurringFormLoadingState extends StatelessWidget {
+  const _RecurringFormLoadingState();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Padding(
+        padding: EdgeInsets.all(
+          AppTheme.spaceLg,
+        ),
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 }
 
