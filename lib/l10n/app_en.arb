@@ -1,0 +1,380 @@
+{
+  "@@locale": "en",
+
+  "appName": "UangKuh",
+
+  "expense": "Expense",
+  "income": "Income",
+  "adjustment": "Adjustment",
+
+  "account": "Account",
+  "category": "Category",
+
+  "type": "Type",
+  "from": "From",
+  "to": "To",
+
+  "yes": "Yes",
+  "no": "No",
+
+  "ok": "OK",
+  "close": "Close",
+
+  "create": "Create",
+  "edit": "Edit",
+  "save": "Save",
+  "delete": "Delete",
+  "cancel": "Cancel",
+
+  "search": "Search",
+  "filter": "Filter",
+
+  "loading": "Loading...",
+  "noData": "No data available.",
+
+  "daily": "Daily",
+  "recurring": "Recurring",
+
+  "dashboard": "Dashboard",
+  "quickActions": "Quick Actions",
+  "thisMonth": "This Month",
+  "accounts": "Accounts",
+  "plan": "Plan",
+  "viewPlan": "View Plan",
+  "recentTransactions": "Recent Transactions",
+  "viewAll": "View All",
+
+  "totalBalance": "Total Balance",
+  "acrossAllAccounts": "Across all your active accounts",
+
+  "expense": "Expense",
+  "income": "Income",
+  "transfer": "Transfer",
+  "adjust": "Adjust",
+
+  "netThisMonth": "Net this month",
+
+  "paid": "Paid",
+  "unpaid": "Unpaid",
+
+  "yourMoneyAtAGlance": "Your money at a glance.",
+
+  "unableToLoadBalance": "Unable to load balance.",
+  "unableToLoadMonthlySummary": "Unable to load monthly summary.",
+  "unableToLoadAccounts": "Unable to load accounts.",
+  "unableToLoadPlan": "Unable to load plan.",
+  "unableToLoadRecentTransactions": "Unable to load recent transactions.",
+
+  "noAccountsYet": "No accounts yet.",
+  "noTransactionsYet": "No transactions yet.",
+
+  "goodMorning": "Good morning",
+  "goodAfternoon": "Good afternoon",
+  "goodEvening": "Good evening",
+
+  "addExpense": "Add Expense",
+
+  "unableToLoadExpenseOptions": "Unable to load expense options.",
+
+  "recordExpense": "Record an expense",
+  "recordExpenseDescription": "Keep your spending and account balance up to date.",
+
+  "expenseDetails": "Expense details",
+  "expenseDetailsSubtitle": "Where did this money go?",
+
+  "fromAccount": "From account",
+  "selectAccount": "Select an account.",
+
+  "selectExpenseCategory": "Select an expense category.",
+
+  "expenseType": "Expense type",
+  "expenseTypeSubtitle": "Choose how this expense should be classified.",
+
+  "daily": "Daily",
+  "regularSpending": "Regular spending",
+
+  "recurring": "Recurring",
+  "plannedPayment": "Planned payment",
+
+  "additionalDetails": "Additional details",
+  "additionalDetailsSubtitle": "Add a date or note for this transaction.",
+
+  "amountRequired": "Amount is required.",
+  "enterValidAmount": "Enter a valid amount.",
+  "amountMustBeGreaterThanZero": "Amount must be greater than zero.",
+  "enterExpenseAmount": "Enter the amount you spent.",
+
+  "optionalNote": "Optional note",
+
+  "saveExpense": "Save Expense",
+
+  "expenseBalanceInformation": "This expense will reduce the balance of the selected account.",
+
+  "unableToCreateExpense": "Unable to create expense.",
+
+  "unableToLoadForm": "Unable to load form", 
+
+  "addIncome": "Add Income",
+
+  "unableToLoadIncomeOptions": "Unable to load income options.",
+
+  "recordIncome": "Record income",
+  "recordIncomeDescription": "Keep your income and account balance up to date.",
+
+  "incomeDetails": "Income details",
+  "incomeDetailsSubtitle": "Where should this money go?",
+
+  "toAccount": "To account",
+
+  "selectIncomeCategory": "Select an income category.",
+
+  "enterIncomeAmount": "Enter the amount you received.",
+
+  "saveIncome": "Save Income",
+
+  "incomeBalanceInformation": "This income will increase the balance of the selected account.",
+
+  "unableToCreateIncome": "Unable to create income.",
+
+  "transfer": "Transfer",
+
+  "unableToLoadAccounts": "Unable to load accounts.",
+
+  "transferMoney": "Transfer money",
+  "transferMoneyDescription": "Move money safely between your accounts.",
+
+  "transferDetails": "Transfer details",
+  "transferDetailsSubtitle": "Choose the source and destination accounts.",
+
+  "selectSourceAccount": "Select a source account.",
+  "selectDestinationAccount": "Select a destination account.",
+  "sourceAndDestinationMustBeDifferent": "Source and destination must be different.",
+
+  "transferRequiresTwoAccounts": "You need at least two active accounts before making a transfer.",
+
+  "transferAdditionalDetailsSubtitle": "Select a transfer date or leave a note.",
+
+  "enterTransferAmount": "Enter the amount to transfer.",
+
+  "saveTransfer": "Save Transfer",
+
+  "transferBalanceInformation": "This transfer moves money between your accounts without changing your total balance.",
+
+  "unableToCreateTransfer": "Unable to create transfer.",
+
+  "unableToLoadTransfer": "Unable to load transfer",
+
+  "addAdjustment": "Add Adjustment",
+
+  "correctBalance": "Correct a balance",
+  "correctBalanceDescription": "Adjust an account when its recorded balance needs correction.",
+
+  "balanceCorrection": "Balance correction",
+  "balanceCorrectionSubtitle": "Choose the sign based on how the balance should change.",
+
+  "adjustmentAmount": "Adjustment Amount",
+  "adjustmentAmountRequired": "Adjustment amount is required.",
+  "adjustmentCannotBeZero": "Adjustment cannot be zero.",
+  "adjustmentAmountHint": "Use + to increase or - to decrease the balance.",
+
+  "increase": "Increase",
+  "decrease": "Decrease",
+  "addToBalance": "Add to balance",
+  "reduceBalance": "Reduce balance",
+
+  "adjustmentAdditionalDetailsSubtitle": "Add a date or reason for this correction.",
+
+  "balanceCorrectionExample": "Example: Balance correction",
+
+  "saveAdjustment": "Save Adjustment",
+
+  "adjustmentBalanceInformation": "Adjustments directly correct the selected account balance.",
+
+  "unableToCreateAdjustment": "Unable to create adjustment.",
+
+  "unableToLoadAccountsDescription": "We could not load your accounts for this adjustment.",
+
+  "noAccountAvailable": "No account available",
+  "createAccountBeforeAdjustment": "Create an account before making an adjustment.",
+
+  "transactionHistory": "Transaction History",
+
+  "all": "All",
+  "allTime": "All time",
+  "reset": "Reset",
+
+  "today": "Today",
+  "yesterday": "Yesterday",
+
+  "retry": "Retry",
+
+  "unableToLoadHistory": "Unable to load history.",
+  "pleaseTryAgain": "Please try again.",
+
+  "noTransactionsYet": "No transactions yet",
+  "transactionHistoryWillAppear": "Your transaction history will appear here.",
+
+  "noMatchingTransactions": "No matching transactions",
+  "tryChangingFilters": "Try changing or clearing the filters.",
+
+  "transactionDetail": "Transaction Detail",
+
+  "type": "Type",
+  "from": "From",
+  "to": "To",
+
+  "deleteTransaction": "Delete Transaction",
+  "deleting": "Deleting...",
+
+  "deleteTransactionTitle": "Delete transaction?",
+  "deleteTransactionMessage": "This transaction will be removed from your history and its effect on the account balance will be reversed.",
+
+  "delete": "Delete",
+  "cancel": "Cancel",
+
+  "unableToDeleteTransaction": "Unable to delete transaction.",
+
+  "transactionDetail": "Transaction Detail",
+
+  "expenseType": "Expense type",
+
+  "deleteTransaction": "Delete Transaction",
+  "deleting": "Deleting...",
+
+  "deleteTransactionTitle": "Delete transaction?",
+  "deleteTransactionMessage": "This transaction will be removed from your history and its effect on the account balance will be reversed.",
+
+  "unableToDeleteTransaction": "Unable to delete transaction.",
+
+  "accounts": "Accounts",
+  "addAccount": "Add account",
+
+  "yourAccounts": "Your Accounts",
+
+  "totalBalance": "Total Balance",
+  "acrossAllActiveAccounts": "Across all active accounts",
+
+  "manageAccounts": "Manage all of your financial accounts.",
+
+  "noAccountsYet": "No accounts yet",
+  "createFirstAccount": "Create your first account to start managing your finances.",
+
+  "archive": "Archive",
+  "more": "More",
+
+  "archiveAccountTitle": "Archive account?",
+  "archiveAccountMessage": "This account will be hidden from your active accounts, but its transaction history will remain available.",
+
+  "unableToArchiveAccount": "Unable to archive account.",
+
+  "createAccount": "Create Account",
+  "editAccount": "Edit Account",
+
+  "createAccountDescription": "Create a new account to manage your money.",
+  "editAccountDescription": "Update your account information.",
+
+  "accountName": "Account name",
+  "accountNameHint": "e.g. BCA, GoPay, Cash",
+  "accountNameRequired": "Account name is required.",
+
+  "accountType": "Account type",
+
+  "purpose": "Purpose",
+
+  "initialBalance": "Initial balance",
+  "initialBalanceCannotBeNegative": "Initial balance cannot be negative.",
+  "initialBalanceDescription": "Use the balance this account has when you start using UangKuh.",
+
+  "saveAccount": "Save Account",
+  "saveChanges": "Save Changes",
+
+  "unableToCreateAccount": "Unable to create account.",
+  "unableToUpdateAccount": "Unable to update account.",
+
+  "bank": "Bank",
+  "eWallet": "E-Wallet",
+  "cash": "Cash",
+  "saving": "Saving",
+  "investment": "Investment",
+
+  "spending": "Spending",
+
+  "plan": "Plan",
+
+  "recurringPlan": "Recurring Plan",
+  "manageRecurringExpenses": "Manage your monthly recurring expenses.",
+
+  "addRecurringExpense": "Add recurring expense",
+
+  "newRecurringExpense": "New Recurring Expense",
+  "editRecurringExpense": "Edit Recurring Expense",
+
+  "recurringExpense": "Recurring Expense",
+
+  "createRecurringExpenseDescription": "Create a new recurring monthly expense.",
+  "updateRecurringExpenseDescription": "Create or update a recurring monthly expense.",
+
+  "basicInformation": "Basic Information",
+  "paymentSettings": "Payment Settings",
+  "paymentInformation": "Payment Information",
+
+  "name": "Name",
+  "nameRequired": "Name is required.",
+  "nameHintRecurring": "e.g. Netflix Subscription",
+
+  "defaultAmount": "Default amount",
+
+  "defaultAccount": "Default account",
+  "chooseDefaultAccount": "Choose default account",
+
+  "loadingCategories": "Loading categories...",
+  "unableToLoadCategories": "Unable to load categories",
+
+  "loadingAccounts": "Loading accounts...",
+  "choosePaymentAccount": "Choose payment account",
+
+  "optional": "Optional",
+
+  "noDefaultAccount": "No default account",
+  "clearDefaultAccount": "Clear default account",
+
+  "dueDay": "Due day",
+  "dueDayHint": "e.g. 25",
+  "noDueDate": "No due date",
+  "dueDayLabel": "Due day {day}",
+  "dueDayHelper": "Leave empty if there is no due date.",
+  "dueDayValidation": "Due day must be between 1 and 31.",
+
+  "createRecurringExpense": "Create Recurring Expense",
+
+  "deactivateRecurringExpense": "Deactivate Recurring Expense",
+  "deactivating": "Deactivating...",
+
+  "deactivateRecurringExpenseTitle": "Deactivate recurring expense?",
+  "deactivateRecurringExpenseMessage": "This recurring expense will be removed from your active plan. Existing transactions and payment history will not be deleted.",
+
+  "unableToLoadRecurringExpense": "Unable to load recurring expense.",
+  "unableToCreateRecurringExpense": "Unable to create recurring expense.",
+  "unableToUpdateRecurringExpense": "Unable to update recurring expense.",
+  "unableToDeactivateRecurringExpense": "Unable to deactivate recurring expense.",
+
+  "payRecurringExpense": "Pay Recurring Expense",
+  "payRecurringExpenseDescription": "Record a payment for this recurring expense.",
+
+  "transactionDate": "Transaction date",
+
+  "confirmPayment": "Confirm Payment",
+
+  "unableToPayRecurringExpense": "Unable to pay recurring expense.",
+
+  "paid": "Paid",
+  "unpaid": "Unpaid",
+
+  "pay": "Pay",
+
+  "totalPlan": "Total Plan",
+  "remaining": "Remaining",
+
+  "noRecurringPlansYet": "No recurring plans yet",
+  "createRecurringPlansDescription": "Create recurring expenses for bills, subscriptions, or monthly payments."
+}

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/extensions/context_extension.dart';
 import '../../../app/theme.dart';
 
 import '../providers/recurring_list_provider.dart';
@@ -19,10 +20,10 @@ class RecurringScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Plan'),
+        title: Text(context.l10n.plan),
         actions: [
           IconButton(
-            tooltip: 'Add recurring expense',
+            tooltip: context.l10n.addRecurringExpense,
             onPressed: () {
               context.push('/plan/new');
             },
@@ -136,13 +137,13 @@ class _RecurringError extends StatelessWidget {
               size: 48,
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Unable to load recurring expenses.',
+            Text(
+              context.l10n.unableToLoadRecurringExpense,
             ),
             const SizedBox(height: 16),
             FilledButton(
               onPressed: onRetry,
-              child: const Text('Retry'),
+              child: Text(context.l10n.retry),
             ),
           ],
         ),
@@ -178,7 +179,7 @@ class _PaymentStatusBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
-        isPaid ? 'Paid' : 'Unpaid',
+        isPaid ? context.l10n.paid : context.l10n.unpaid,
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: foregroundColor,
               fontWeight: FontWeight.w600,
@@ -274,8 +275,8 @@ class _RecurringCard extends StatelessWidget {
                             '/plan/${recurring.id}/pay',
                           );
                         },
-                        child: const Text(
-                          'Pay',
+                        child: Text(
+                          context.l10n.pay,
                         ),
                       ),
               )
@@ -313,12 +314,12 @@ class _RecurringHeaderContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Recurring Plan',
+          context.l10n.recurringPlan,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(height: AppTheme.spaceXs),
         Text(
-          'Manage your monthly recurring expenses.',
+          context.l10n.manageRecurringExpenses,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: AppTheme.textSecondary,
               ),
@@ -350,14 +351,14 @@ class _RecurringEmptyState extends StatelessWidget {
               height: AppTheme.spaceMd,
             ),
             Text(
-              'No recurring plans yet',
+              context.l10n.noRecurringPlansYet,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(
               height: AppTheme.spaceXs,
             ),
             Text(
-              'Create recurring expenses for bills,\nsubscriptions, or monthly payments.',
+              context.l10n.createRecurringExpense,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppTheme.textSecondary,
@@ -420,19 +421,19 @@ class _RecurringSummaryCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: _SummaryItem(
-                    title: 'Total Plan',
+                    title: context.l10n.totalPlan,
                     value: _formatRupiah(totalAmount),
                   ),
                 ),
                 Expanded(
                   child: _SummaryItem(
-                    title: 'Paid',
+                    title: context.l10n.paid,
                     value: '$paidCount',
                   ),
                 ),
                 Expanded(
                   child: _SummaryItem(
-                    title: 'Remaining',
+                    title: context.l10n.remaining,
                     value: '$unpaidCount',
                   ),
                 ),

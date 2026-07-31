@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/extensions/context_extension.dart';
 import '../../../app/theme.dart';
 
 import '../../auth/providers/app_session_provider.dart';
@@ -59,7 +60,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
     if (_isLoading) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('Edit Account'),
+          title: Text(context.l10n.editAccount),
         ),
         body: const _AccountLoadingState(),
       );
@@ -67,8 +68,8 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Account',
+        title: Text(
+          context.l10n.account,
         ),
       ),
       body: SafeArea(
@@ -99,14 +100,14 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
                         controller: _nameController,
                         textInputAction: TextInputAction.next,
                         enabled: !_isSaving,
-                        decoration: const InputDecoration(
-                          labelText: 'Account name',
+                        decoration: InputDecoration(
+                          labelText: context.l10n.accountName,
                           hintText: 'e.g. BCA, GoPay, Cash',
                           border: OutlineInputBorder(),
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'Account name is required.';
+                            return context.l10n.accountNameRequired;
                           }
 
                           return null;
@@ -115,8 +116,8 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
                       const SizedBox(height: 16),
                       DropdownButtonFormField<AccountType>(
                         value: _type,
-                        decoration: const InputDecoration(
-                          labelText: 'Account type',
+                        decoration: InputDecoration(
+                          labelText: context.l10n.accountType,
                           border: OutlineInputBorder(),
                         ),
                         items: AccountType.values
@@ -142,8 +143,8 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
                       const SizedBox(height: 16),
                       DropdownButtonFormField<AccountPurpose>(
                         value: _purpose,
-                        decoration: const InputDecoration(
-                          labelText: 'Purpose',
+                        decoration: InputDecoration(
+                          labelText: context.l10n.purpose,
                           border: OutlineInputBorder(),
                         ),
                         items: AccountPurpose.values
@@ -174,8 +175,8 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
                           controller: _initialBalanceController,
                           keyboardType: TextInputType.number,
                           enabled: !_isSaving,
-                          decoration: const InputDecoration(
-                            labelText: 'Initial balance',
+                          decoration: InputDecoration(
+                            labelText: context.l10n.initialBalance,
                             hintText: '0',
                             prefixText: 'Rp ',
                             border: OutlineInputBorder(),
@@ -190,11 +191,12 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
                             final amount = int.tryParse(text);
 
                             if (amount == null) {
-                              return 'Enter a valid amount.';
+                              return context.l10n.enterValidAmount;
                             }
 
                             if (amount < 0) {
-                              return 'Initial balance cannot be negative.';
+                              return context
+                                  .l10n.initialBalanceCannotBeNegative;
                             }
 
                             return null;
@@ -202,7 +204,7 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Use the balance this account has when you start using UangKuh.',
+                          context.l10n.initialBalanceDescription,
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ],
@@ -221,8 +223,8 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
                               )
                             : Text(
                                 widget.isEditing
-                                    ? 'Save Changes'
-                                    : 'Save Account',
+                                    ? context.l10n.saveChanges
+                                    : context.l10n.saveAccount,
                               ),
                       ),
                     ],
@@ -356,7 +358,7 @@ class _AccountHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          isEditing ? 'Edit Account' : 'Create Account',
+          isEditing ? context.l10n.editAccount : context.l10n.createAccount,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(

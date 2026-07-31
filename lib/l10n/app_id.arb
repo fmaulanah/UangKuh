@@ -1,0 +1,380 @@
+{
+  "@@locale": "id",
+
+  "appName": "UangKuh",
+
+  "expense": "Pengeluaran",
+  "income": "Pemasukan",
+  "adjustment": "Penyesuaian",
+
+  "account": "Akun",
+  "category": "Kategori",
+
+  "type": "Jenis",
+  "from": "Dari",
+  "to": "Ke",
+
+  "daily": "Harian",
+  "recurring": "Berulang",
+
+  "yes": "Ya",
+  "no": "Tidak",
+
+  "ok": "OK",
+  "close": "Tutup",
+
+  "create": "Tambah",
+  "edit": "Ubah",
+  "save": "Simpan",
+  "delete": "Hapus",
+  "cancel": "Batal",
+
+  "search": "Cari",
+  "filter": "Filter",
+
+  "loading": "Memuat...",
+  "noData": "Belum ada data.",
+
+  "dashboard": "Dashboard",
+  "quickActions": "Aksi Cepat",
+  "thisMonth": "Bulan Ini",
+  "accounts": "Akun",
+  "plan": "Rencana",
+  "viewPlan": "Lihat Rencana",
+  "recentTransactions": "Transaksi Terbaru",
+  "viewAll": "Lihat Semua",
+
+  "totalBalance": "Total Saldo",
+  "acrossAllAccounts": "Dari seluruh akun aktif Anda",
+
+  "expense": "Pengeluaran",
+  "income": "Pemasukan",
+  "transfer": "Transfer",
+  "adjust": "Penyesuaian",
+
+  "netThisMonth": "Selisih Bulan Ini",
+
+  "paid": "Lunas",
+  "unpaid": "Belum Lunas",
+
+  "yourMoneyAtAGlance": "Ringkasan keuangan Anda.",
+
+  "unableToLoadBalance": "Gagal memuat saldo.",
+  "unableToLoadMonthlySummary": "Gagal memuat ringkasan bulanan.",
+  "unableToLoadAccounts": "Gagal memuat akun.",
+  "unableToLoadPlan": "Gagal memuat rencana.",
+  "unableToLoadRecentTransactions": "Gagal memuat transaksi terbaru.",
+
+  "noAccountsYet": "Belum ada akun.",
+  "noTransactionsYet": "Belum ada transaksi.",
+
+  "goodMorning": "Selamat pagi",
+  "goodAfternoon": "Selamat siang",
+  "goodEvening": "Selamat malam",
+
+  "addExpense": "Tambah Pengeluaran",
+
+  "unableToLoadExpenseOptions": "Gagal memuat data pengeluaran.",
+
+  "recordExpense": "Catat Pengeluaran",
+  "recordExpenseDescription": "Catat pengeluaran agar saldo akun tetap akurat.",
+
+  "expenseDetails": "Detail Pengeluaran",
+  "expenseDetailsSubtitle": "Ke mana uang ini digunakan?",
+
+  "fromAccount": "Dari Akun",
+  "selectAccount": "Pilih akun.",
+
+  "selectExpenseCategory": "Pilih kategori pengeluaran.",
+
+  "expenseType": "Jenis Pengeluaran",
+  "expenseTypeSubtitle": "Pilih jenis pengeluaran ini.",
+
+  "daily": "Harian",
+  "regularSpending": "Pengeluaran rutin",
+
+  "recurring": "Berulang",
+  "plannedPayment": "Pembayaran terjadwal",
+
+  "additionalDetails": "Detail Tambahan",
+  "additionalDetailsSubtitle": "Tambahkan tanggal atau catatan untuk transaksi ini.",
+
+  "amountRequired": "Nominal wajib diisi.",
+  "enterValidAmount": "Masukkan nominal yang valid.",
+  "amountMustBeGreaterThanZero": "Nominal harus lebih dari nol.",
+  "enterExpenseAmount": "Masukkan jumlah pengeluaran.",
+
+  "optionalNote": "Catatan (opsional)",
+
+  "saveExpense": "Simpan Pengeluaran",
+
+  "expenseBalanceInformation": "Pengeluaran ini akan mengurangi saldo akun yang dipilih.",
+
+  "unableToCreateExpense": "Gagal menyimpan pengeluaran.",
+
+  "unableToLoadForm": "Gagal memuat formulir",
+  
+  "addIncome": "Tambah Pemasukan",
+
+  "unableToLoadIncomeOptions": "Gagal memuat data pemasukan.",
+
+  "recordIncome": "Catat Pemasukan",
+  "recordIncomeDescription": "Catat pemasukan agar saldo akun tetap akurat.",
+
+  "incomeDetails": "Detail Pemasukan",
+  "incomeDetailsSubtitle": "Ke akun mana uang ini akan masuk?",
+
+  "toAccount": "Ke Akun",
+
+  "selectIncomeCategory": "Pilih kategori pemasukan.",
+
+  "enterIncomeAmount": "Masukkan jumlah pemasukan.",
+
+  "saveIncome": "Simpan Pemasukan",
+
+  "incomeBalanceInformation": "Pemasukan ini akan menambah saldo akun yang dipilih.",
+
+  "unableToCreateIncome": "Gagal menyimpan pemasukan.",
+
+  "transfer": "Transfer",
+
+  "unableToLoadAccounts": "Gagal memuat daftar akun.",
+
+  "transferMoney": "Transfer Dana",
+  "transferMoneyDescription": "Pindahkan dana dengan aman antar akun Anda.",
+
+  "transferDetails": "Detail Transfer",
+  "transferDetailsSubtitle": "Pilih akun asal dan akun tujuan.",
+
+  "selectSourceAccount": "Pilih akun asal.",
+  "selectDestinationAccount": "Pilih akun tujuan.",
+  "sourceAndDestinationMustBeDifferent": "Akun asal dan akun tujuan harus berbeda.",
+
+  "transferRequiresTwoAccounts": "Anda memerlukan minimal dua akun aktif untuk melakukan transfer.",
+
+  "transferAdditionalDetailsSubtitle": "Pilih tanggal transfer atau tambahkan catatan.",
+
+  "enterTransferAmount": "Masukkan jumlah dana yang akan ditransfer.",
+
+  "saveTransfer": "Simpan Transfer",
+
+  "transferBalanceInformation": "Transfer ini memindahkan dana antar akun tanpa mengubah total saldo Anda.",
+
+  "unableToCreateTransfer": "Gagal menyimpan transfer.",
+
+  "unableToLoadTransfer": "Gagal memuat halaman transfer.",
+
+  "addAdjustment": "Tambah Penyesuaian",
+
+  "correctBalance": "Sesuaikan Saldo",
+  "correctBalanceDescription": "Sesuaikan saldo akun jika saldo yang tercatat perlu dikoreksi.",
+
+  "balanceCorrection": "Koreksi Saldo",
+  "balanceCorrectionSubtitle": "Pilih tanda sesuai perubahan saldo yang diinginkan.",
+
+  "adjustmentAmount": "Nominal Penyesuaian",
+  "adjustmentAmountRequired": "Nominal penyesuaian wajib diisi.",
+  "adjustmentCannotBeZero": "Nominal penyesuaian tidak boleh nol.",
+  "adjustmentAmountHint": "Gunakan + untuk menambah atau - untuk mengurangi saldo.",
+
+  "increase": "Tambah",
+  "decrease": "Kurangi",
+  "addToBalance": "Tambah saldo",
+  "reduceBalance": "Kurangi saldo",
+
+  "adjustmentAdditionalDetailsSubtitle": "Tambahkan tanggal atau alasan penyesuaian ini.",
+
+  "balanceCorrectionExample": "Contoh: Koreksi saldo",
+
+  "saveAdjustment": "Simpan Penyesuaian",
+
+  "adjustmentBalanceInformation": "Penyesuaian akan langsung mengoreksi saldo akun yang dipilih.",
+
+  "unableToCreateAdjustment": "Gagal menyimpan penyesuaian.",
+
+  "unableToLoadAccountsDescription": "Kami tidak dapat memuat akun untuk penyesuaian ini.",
+
+  "noAccountAvailable": "Belum ada akun",
+  "createAccountBeforeAdjustment": "Buat akun terlebih dahulu sebelum melakukan penyesuaian.",
+
+  "transactionHistory": "Riwayat Transaksi",
+
+  "all": "Semua",
+  "allTime": "Semua Waktu",
+  "reset": "Reset",
+
+  "today": "Hari Ini",
+  "yesterday": "Kemarin",
+
+  "retry": "Coba Lagi",
+
+  "unableToLoadHistory": "Gagal memuat riwayat transaksi.",
+  "pleaseTryAgain": "Silakan coba lagi.",
+
+  "noTransactionsYet": "Belum ada transaksi",
+  "transactionHistoryWillAppear": "Riwayat transaksi Anda akan muncul di sini.",
+
+  "noMatchingTransactions": "Tidak ada transaksi yang sesuai",
+  "tryChangingFilters": "Coba ubah atau hapus filter.",
+
+  "transactionDetail": "Detail Transaksi",
+
+  "type": "Jenis",
+  "from": "Dari",
+  "to": "Ke",
+
+  "deleteTransaction": "Hapus Transaksi",
+  "deleting": "Menghapus...",
+
+  "deleteTransactionTitle": "Hapus transaksi?",
+  "deleteTransactionMessage": "Transaksi ini akan dihapus dari riwayat dan pengaruhnya terhadap saldo akun akan dibatalkan.",
+
+  "delete": "Hapus",
+  "cancel": "Batal",
+
+  "unableToDeleteTransaction": "Gagal menghapus transaksi.",
+
+  "transactionDetail": "Detail Transaksi",
+
+  "expenseType": "Jenis Pengeluaran",
+
+  "deleteTransaction": "Hapus Transaksi",
+  "deleting": "Menghapus...",
+
+  "deleteTransactionTitle": "Hapus transaksi?",
+  "deleteTransactionMessage": "Transaksi ini akan dihapus dari riwayat dan pengaruhnya terhadap saldo akun akan dibatalkan.",
+
+  "unableToDeleteTransaction": "Gagal menghapus transaksi.",
+
+  "accounts": "Akun",
+  "addAccount": "Tambah Akun",
+
+  "yourAccounts": "Daftar Akun",
+
+  "totalBalance": "Total Saldo",
+  "acrossAllActiveAccounts": "Total saldo dari seluruh akun aktif",
+
+  "manageAccounts": "Kelola seluruh akun keuangan Anda.",
+
+  "noAccountsYet": "Belum ada akun",
+  "createFirstAccount": "Buat akun pertama Anda untuk mulai mengelola keuangan.",
+
+  "archive": "Arsipkan",
+  "more": "Lainnya",
+
+  "archiveAccountTitle": "Arsipkan akun?",
+  "archiveAccountMessage": "Akun ini akan disembunyikan dari daftar akun aktif, namun riwayat transaksinya tetap tersedia.",
+
+  "unableToArchiveAccount": "Gagal mengarsipkan akun.",
+
+  "createAccount": "Tambah Akun",
+  "editAccount": "Ubah Akun",
+
+  "createAccountDescription": "Buat akun baru untuk mengelola keuangan Anda.",
+  "editAccountDescription": "Perbarui informasi akun Anda.",
+
+  "accountName": "Nama Akun",
+  "accountNameHint": "contoh: BCA, GoPay, Tunai",
+  "accountNameRequired": "Nama akun wajib diisi.",
+
+  "accountType": "Jenis Akun",
+
+  "purpose": "Tujuan",
+
+  "initialBalance": "Saldo Awal",
+  "initialBalanceCannotBeNegative": "Saldo awal tidak boleh negatif.",
+  "initialBalanceDescription": "Gunakan saldo yang dimiliki akun ini saat mulai menggunakan UangKuh.",
+
+  "saveAccount": "Simpan Akun",
+  "saveChanges": "Simpan Perubahan",
+
+  "unableToCreateAccount": "Gagal membuat akun.",
+  "unableToUpdateAccount": "Gagal memperbarui akun.",
+
+  "bank": "Bank",
+  "eWallet": "Dompet Digital",
+  "cash": "Tunai",
+  "saving": "Tabungan",
+  "investment": "Investasi",
+
+  "spending": "Pengeluaran",
+
+  "plan": "Rencana",
+
+  "recurringPlan": "Rencana Tagihan",
+  "manageRecurringExpenses": "Kelola seluruh tagihan bulanan Anda.",
+
+  "addRecurringExpense": "Tambah Tagihan",
+
+  "newRecurringExpense": "Tambah Tagihan",
+  "editRecurringExpense": "Ubah Tagihan",
+
+  "recurringExpense": "Tagihan Berulang",
+
+  "createRecurringExpenseDescription": "Buat tagihan bulanan baru.",
+  "updateRecurringExpenseDescription": "Buat atau ubah tagihan bulanan.",
+
+  "basicInformation": "Informasi Dasar",
+  "paymentSettings": "Pengaturan Pembayaran",
+  "paymentInformation": "Informasi Pembayaran",
+
+  "name": "Nama",
+  "nameRequired": "Nama wajib diisi.",
+  "nameHintRecurring": "contoh: Netflix",
+
+  "defaultAmount": "Nominal Default",
+
+  "defaultAccount": "Akun Default",
+  "chooseDefaultAccount": "Pilih akun default",
+
+  "loadingCategories": "Memuat kategori...",
+  "unableToLoadCategories": "Gagal memuat kategori.",
+
+  "loadingAccounts": "Memuat akun...",
+  "choosePaymentAccount": "Pilih akun pembayaran",
+
+  "optional": "Opsional",
+
+  "noDefaultAccount": "Tidak ada akun default",
+  "clearDefaultAccount": "Hapus akun default",
+
+  "dueDay": "Tanggal Jatuh Tempo",
+  "dueDayHint": "contoh: 25",
+  "noDueDate": "Tidak ada tanggal jatuh tempo",
+  "dueDayLabel": "Jatuh tempo tanggal {day}",
+  "dueDayHelper": "Kosongkan jika tidak memiliki tanggal jatuh tempo.",
+  "dueDayValidation": "Tanggal jatuh tempo harus antara 1 sampai 31.",
+
+  "createRecurringExpense": "Simpan Tagihan",
+
+  "deactivateRecurringExpense": "Nonaktifkan Tagihan",
+  "deactivating": "Menonaktifkan...",
+
+  "deactivateRecurringExpenseTitle": "Nonaktifkan tagihan?",
+  "deactivateRecurringExpenseMessage": "Tagihan ini akan dihapus dari daftar aktif. Riwayat pembayaran dan transaksi tidak akan dihapus.",
+
+  "unableToLoadRecurringExpense": "Gagal memuat tagihan.",
+  "unableToCreateRecurringExpense": "Gagal membuat tagihan.",
+  "unableToUpdateRecurringExpense": "Gagal memperbarui tagihan.",
+  "unableToDeactivateRecurringExpense": "Gagal menonaktifkan tagihan.",
+
+  "payRecurringExpense": "Bayar Tagihan",
+  "payRecurringExpenseDescription": "Catat pembayaran untuk tagihan ini.",
+
+  "transactionDate": "Tanggal Transaksi",
+
+  "confirmPayment": "Konfirmasi Pembayaran",
+
+  "unableToPayRecurringExpense": "Gagal mencatat pembayaran.",
+
+  "paid": "Lunas",
+  "unpaid": "Belum Lunas",
+
+  "pay": "Bayar",
+
+  "totalPlan": "Total Tagihan",
+  "remaining": "Sisa",
+
+  "noRecurringPlansYet": "Belum ada tagihan berulang",
+  "createRecurringPlansDescription": "Buat tagihan rutin untuk listrik, internet, langganan, atau pembayaran bulanan lainnya."
+}

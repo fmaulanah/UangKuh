@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/extensions/context_extension.dart';
+
 import '../../../app/theme.dart';
 
 import '../providers/transaction_history_provider.dart';
@@ -33,7 +35,7 @@ class _TransactionHistoryScreenState
       appBar: AppBar(
         elevation: 0,
         centerTitle: false,
-        title: const Text('Transaction History'),
+        title: Text(context.l10n.transactionHistory),
       ),
       body: transactionsAsync.when(
         loading: () => const _HistoryLoadingState(),
@@ -70,11 +72,11 @@ class _TransactionHistoryScreenState
         ),
         data: (transactions) {
           if (transactions.isEmpty) {
-            return const Center(
+            return Center(
               child: _HistoryEmptyState(
                 icon: Icons.receipt_long_outlined,
-                title: 'No transactions yet',
-                message: 'Your transaction history will appear here.',
+                title: context.l10n.noMatchingTransactions,
+                message: context.l10n.tryChangingFilters,
               ),
             );
           }
@@ -134,13 +136,13 @@ class _TransactionHistoryScreenState
               ),
               Expanded(
                 child: filteredTransactions.isEmpty
-                    ? const Center(
+                    ? Center(
                         child: Padding(
                           padding: EdgeInsets.all(24),
                           child: _HistoryEmptyState(
                             icon: Icons.search_off_rounded,
-                            title: 'No matching transactions',
-                            message: 'Try changing or clearing the filters.',
+                            title: context.l10n.noMatchingTransactions,
+                            message: context.l10n.tryChangingFilters,
                           ),
                         ),
                       )
@@ -202,6 +204,7 @@ class _TransactionHistoryScreenState
                                     ),
                                     child: Text(
                                       _dateGroupLabel(
+                                        context,
                                         transaction.transactionDate,
                                       ).toUpperCase(),
                                       style: Theme.of(context)
@@ -456,7 +459,7 @@ class _HistoryFilterBar extends StatelessWidget {
         children: [
           ChoiceChip(
             showCheckmark: false,
-            label: const Text('All'),
+            label: Text(context.l10n.all),
             selected: selectedType == null,
             onSelected: (_) {
               onTypeChanged(null);
@@ -471,7 +474,7 @@ class _HistoryFilterBar extends StatelessWidget {
               child: ChoiceChip(
                 showCheckmark: false,
                 label: Text(
-                  _transactionTypeLabel(type),
+                  _transactionTypeLabel(context, type),
                 ),
                 selected: selectedType == type,
                 onSelected: (_) {
@@ -489,6 +492,7 @@ class _HistoryFilterBar extends StatelessWidget {
             ),
             label: Text(
               _dateRangeLabel(
+                context,
                 startDate,
                 endDate,
               ),
@@ -633,12 +637,12 @@ class _HistoryLoadingState extends StatelessWidget {
   }
 }
 
-String _transactionTypeLabel(TransactionType type) {
+String _transactionTypeLabel(BuildContext context, TransactionType type) {
   return switch (type) {
-    TransactionType.expense => 'Expense',
-    TransactionType.income => 'Income',
-    TransactionType.transfer => 'Transfer',
-    TransactionType.adjustment => 'Adjustment',
+    TransactionType.expense => context.l10n.expense,
+    TransactionType.income => context.l10n.income,
+    TransactionType.transfer => context.l10n.transfer,
+    TransactionType.adjustment => context.l10n.adjustment,
   };
 }
 
@@ -716,7 +720,7 @@ bool _isSameDate(DateTime first, DateTime second) {
       first.day == second.day;
 }
 
-String _dateGroupLabel(DateTime date) {
+String _dateGroupLabel(BuildContext context, DateTime date) {
   final now = DateTime.now();
 
   final today = DateTime(
@@ -738,11 +742,11 @@ String _dateGroupLabel(DateTime date) {
       .inDays;
 
   if (difference == 0) {
-    return 'Today';
+    return context.l10n.today;
   }
 
   if (difference == 1) {
-    return 'Yesterday';
+    return context.l10n.yesterday;
   }
 
   return _formatGroupDate(date);
@@ -768,11 +772,12 @@ String _formatGroupDate(DateTime date) {
 }
 
 String _dateRangeLabel(
+  BuildContext context,
   DateTime? startDate,
   DateTime? endDate,
 ) {
   if (startDate == null || endDate == null) {
-    return 'All time';
+    return context.l10n.allTime;
   }
 
   return '${_shortDate(startDate)} – ${_shortDate(endDate)}';

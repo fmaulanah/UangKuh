@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/extensions/context_extension.dart';
 import '../../../app/theme.dart';
 
 import '../../../core/utils/currency_formatter.dart';
@@ -23,7 +24,7 @@ class AccountScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Accounts'),
+        title: Text(context.l10n.accounts),
         actions: [
           IconButton(
             tooltip: 'Add account',
@@ -80,7 +81,7 @@ class AccountScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Your Accounts',
+                  context.l10n.yourAccounts,
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(
@@ -179,8 +180,8 @@ class AccountScreen extends ConsumerWidget {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Unable to archive account.'),
+        SnackBar(
+          content: Text(context.l10n.unableToArchiveAccount),
         ),
       );
     }
@@ -205,7 +206,7 @@ class _TotalBalanceCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'TOTAL BALANCE',
+              context.l10n.totalBalance,
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     color: AppTheme.textSecondary,
                     letterSpacing: 1,
@@ -223,7 +224,7 @@ class _TotalBalanceCard extends StatelessWidget {
               height: AppTheme.spaceSm,
             ),
             Text(
-              'Across all active accounts',
+              context.l10n.acrossAllActiveAccounts,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppTheme.textSecondary,
                   ),
@@ -366,7 +367,7 @@ class _EmptyAccounts extends StatelessWidget {
               height: AppTheme.spaceMd,
             ),
             Text(
-              'No accounts yet',
+              context.l10n.noAccountsYet,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(
@@ -408,7 +409,7 @@ class _AccountError extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Unable to load accounts',
+              context.l10n.unableToLoadAccounts,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(
@@ -442,14 +443,14 @@ class _AccountHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Accounts',
+          context.l10n.accounts,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(
           height: AppTheme.spaceXs,
         ),
         Text(
-          'Manage all of your financial accounts.',
+          context.l10n.manageAccounts,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: AppTheme.textSecondary,
               ),

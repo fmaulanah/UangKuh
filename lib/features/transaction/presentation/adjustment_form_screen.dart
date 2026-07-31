@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/extensions/context_extension.dart';
+
 import '../../../app/theme.dart';
 import '../../../app/widgets/app_surface_card.dart';
 
@@ -52,8 +54,8 @@ class _AdjustmentFormScreenState extends ConsumerState<AdjustmentFormScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Add Adjustment',
+        title: Text(
+          context.l10n.addAdjustment,
         ),
       ),
       body: accountListAsync.when(
@@ -114,8 +116,8 @@ class _AdjustmentFormScreenState extends ConsumerState<AdjustmentFormScreen> {
           // Account
           // ---------------------------------------------------------------
 
-          const _FormSectionTitle(
-            title: 'Account',
+          _FormSectionTitle(
+            title: context.l10n.accounts,
             subtitle: 'Choose the balance you want to correct.',
           ),
 
@@ -127,8 +129,8 @@ class _AdjustmentFormScreenState extends ConsumerState<AdjustmentFormScreen> {
             child: DropdownButtonFormField<String>(
               value: _accountId,
               isExpanded: true,
-              decoration: const InputDecoration(
-                labelText: 'Account',
+              decoration: InputDecoration(
+                labelText: context.l10n.selectAccount,
                 prefixIcon: Icon(
                   Icons.account_balance_wallet_outlined,
                 ),
@@ -169,9 +171,9 @@ class _AdjustmentFormScreenState extends ConsumerState<AdjustmentFormScreen> {
           // Adjustment Guide
           // ---------------------------------------------------------------
 
-          const _FormSectionTitle(
-            title: 'Balance correction',
-            subtitle: 'Choose the sign based on how the balance should change.',
+          _FormSectionTitle(
+            title: context.l10n.balanceCorrection,
+            subtitle: context.l10n.balanceCorrectionSubtitle,
           ),
 
           const SizedBox(
@@ -188,9 +190,9 @@ class _AdjustmentFormScreenState extends ConsumerState<AdjustmentFormScreen> {
           // Additional Details
           // ---------------------------------------------------------------
 
-          const _FormSectionTitle(
-            title: 'Additional details',
-            subtitle: 'Add a date or reason for this correction.',
+          _FormSectionTitle(
+            title: context.l10n.additionalDetails,
+            subtitle: context.l10n.additionalDetailsSubtitle,
           ),
 
           const SizedBox(
@@ -273,7 +275,7 @@ class _AdjustmentFormScreenState extends ConsumerState<AdjustmentFormScreen> {
                     Icons.check_rounded,
                   ),
             label: Text(
-              _isSaving ? 'Saving...' : 'Save Adjustment',
+              _isSaving ? 'Saving...' : context.l10n.saveAdjustment,
             ),
           ),
 
@@ -282,7 +284,7 @@ class _AdjustmentFormScreenState extends ConsumerState<AdjustmentFormScreen> {
           ),
 
           Text(
-            'Adjustments directly correct the selected account balance.',
+            context.l10n.adjustmentAdditionalDetailsSubtitle,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppTheme.textSecondary,
@@ -383,9 +385,9 @@ class _AdjustmentFormScreenState extends ConsumerState<AdjustmentFormScreen> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'Unable to create adjustment.',
+            context.l10n.unableToCreateAdjustment,
           ),
         ),
       );
@@ -440,14 +442,14 @@ class _FormHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Correct a balance',
+                context.l10n.correctBalance,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(
                 height: AppTheme.spaceXs,
               ),
               Text(
-                'Adjust an account when its recorded balance needs correction.',
+                context.l10n.correctBalanceDescription,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppTheme.textSecondary,
                     ),
@@ -499,7 +501,7 @@ class _AmountCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'ADJUSTMENT AMOUNT',
+            context.l10n.adjustmentAmount,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: primary,
                   fontWeight: FontWeight.w700,
@@ -556,7 +558,7 @@ class _AmountCard extends StatelessWidget {
             height: AppTheme.spaceXs,
           ),
           Text(
-            'Use + to increase or - to decrease the balance.',
+            context.l10n.adjustmentAmountHint,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppTheme.textSecondary,
                 ),
@@ -579,12 +581,12 @@ class _AdjustmentGuide extends StatelessWidget {
     return AppSurfaceCard(
       child: Row(
         children: [
-          const Expanded(
+          Expanded(
             child: _AdjustmentGuideItem(
               icon: Icons.add_rounded,
-              title: 'Increase',
+              title: context.l10n.increase,
               example: '+100000',
-              description: 'Add to balance',
+              description: context.l10n.addToBalance,
               color: AppTheme.success,
             ),
           ),
@@ -593,12 +595,12 @@ class _AdjustmentGuide extends StatelessWidget {
             height: 72,
             color: AppTheme.border,
           ),
-          const Expanded(
+          Expanded(
             child: _AdjustmentGuideItem(
               icon: Icons.remove_rounded,
-              title: 'Decrease',
+              title: context.l10n.decrease,
               example: '-100000',
-              description: 'Reduce balance',
+              description: context.l10n.reduceBalance,
               color: AppTheme.danger,
             ),
           ),
@@ -763,7 +765,7 @@ class _AdjustmentErrorState extends StatelessWidget {
               height: AppTheme.spaceMd,
             ),
             Text(
-              'Unable to load accounts',
+              context.l10n.unableToLoadAccounts,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(

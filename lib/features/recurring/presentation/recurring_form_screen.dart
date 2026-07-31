@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/extensions/context_extension.dart';
 import '../../../app/theme.dart';
 
 import '../providers/recurring_list_provider.dart';
@@ -46,13 +47,13 @@ class _RecurringFormLoadError extends StatelessWidget {
               size: 48,
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Unable to load recurring expense.',
+            Text(
+              context.l10n.unableToLoadRecurringExpense,
             ),
             const SizedBox(height: 16),
             FilledButton(
               onPressed: onRetry,
-              child: const Text('Retry'),
+              child: Text(context.l10n.retry),
             ),
           ],
         ),
@@ -108,7 +109,9 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.isEditing ? 'Edit Recurring Expense' : 'New Recurring Expense',
+          widget.isEditing
+              ? context.l10n.editRecurringExpense
+              : context.l10n.newRecurringExpense,
         ),
       ),
       body: _isLoading
@@ -133,7 +136,7 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                         height: AppTheme.spaceLg,
                       ),
                       Text(
-                        'Basic Information',
+                        context.l10n.basicInformation,
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
@@ -147,13 +150,13 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                         controller: _nameController,
                         textCapitalization: TextCapitalization.words,
                         textInputAction: TextInputAction.next,
-                        decoration: const InputDecoration(
-                          labelText: 'Name',
+                        decoration: InputDecoration(
+                          labelText: context.l10n.name,
                           hintText: 'e.g. Netflix Subscription',
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'Name is required.';
+                            return context.l10n.nameRequired;
                           }
 
                           return null;
@@ -164,8 +167,8 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                         controller: _amountController,
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.next,
-                        decoration: const InputDecoration(
-                          labelText: 'Default amount',
+                        decoration: InputDecoration(
+                          labelText: context.l10n.defaultAmount,
                           prefixText: 'Rp ',
                           hintText: '0',
                         ),
@@ -175,7 +178,7 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                           );
 
                           if (amount == null || amount <= 0) {
-                            return 'Enter a valid amount.';
+                            return context.l10n.enterValidAmount;
                           }
 
                           return null;
@@ -187,8 +190,8 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                           items: [],
                           onChanged: null,
                           decoration: InputDecoration(
-                            labelText: 'Category',
-                            hintText: 'Loading categories...',
+                            labelText: context.l10n.category,
+                            hintText: context.l10n.loadingCategories,
                           ),
                           validator: (value) {
                             if (value == null) {
@@ -203,8 +206,8 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                           items: [],
                           onChanged: null,
                           decoration: InputDecoration(
-                            labelText: 'Category',
-                            hintText: 'Unable to load categories',
+                            labelText: context.l10n.category,
+                            hintText: context.l10n.unableToLoadCategories,
                           ),
                         ),
                         data: (categories) {
@@ -218,8 +221,8 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                           return DropdownButtonFormField<String>(
                             value: _selectedCategoryId,
                             decoration: InputDecoration(
-                              labelText: 'Category',
-                              hintText: 'Choose default account',
+                              labelText: context.l10n.category,
+                              hintText: context.l10n.chooseDefaultAccount,
                             ),
                             items: expenseCategories
                                 .map(
@@ -243,7 +246,7 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                         height: AppTheme.spaceLg,
                       ),
                       Text(
-                        'Payment Settings',
+                        context.l10n.paymentSettings,
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
@@ -257,8 +260,8 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                           items: [],
                           onChanged: null,
                           decoration: InputDecoration(
-                            labelText: 'Default account',
-                            hintText: 'Loading accounts...',
+                            labelText: context.l10n.defaultAccount,
+                            hintText: context.l10n.loadingAccounts,
                           ),
                         ),
                         error: (error, stackTrace) =>
@@ -266,20 +269,20 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                           items: [],
                           onChanged: null,
                           decoration: InputDecoration(
-                            labelText: 'Default account',
-                            hintText: 'Unable to load accounts',
+                            labelText: context.l10n.defaultAccount,
+                            hintText: context.l10n.unableToLoadAccounts,
                           ),
                         ),
                         data: (accountItems) {
                           return DropdownButtonFormField<String>(
                             value: _selectedAccountId,
                             decoration: InputDecoration(
-                              labelText: 'Default account',
-                              hintText: 'Optional',
+                              labelText: context.l10n.defaultAccount,
+                              hintText: context.l10n.optional,
                               suffixIcon: _selectedAccountId == null
                                   ? null
                                   : IconButton(
-                                      tooltip: 'Clear default account',
+                                      tooltip: context.l10n.clearDefaultAccount,
                                       onPressed: () {
                                         setState(() {
                                           _selectedAccountId = null;
@@ -291,9 +294,9 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                                     ),
                             ),
                             items: [
-                              const DropdownMenuItem<String>(
+                              DropdownMenuItem<String>(
                                 value: null,
-                                child: Text('No default account'),
+                                child: Text(context.l10n.noDefaultAccount),
                               ),
                               ...accountItems.map(
                                 (item) => DropdownMenuItem<String>(
@@ -317,8 +320,8 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                         controller: _dueDayController,
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.done,
-                        decoration: const InputDecoration(
-                          labelText: 'Due day',
+                        decoration: InputDecoration(
+                          labelText: context.l10n.dueDay,
                           hintText: 'e.g. 25',
                           helperText: 'Leave empty if there is no due date.',
                         ),
@@ -332,7 +335,7 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                           final dueDay = int.tryParse(text);
 
                           if (dueDay == null || dueDay < 1 || dueDay > 31) {
-                            return 'Due day must be between 1 and 31.';
+                            return context.l10n.dueDayValidation;
                           }
 
                           return null;
@@ -362,8 +365,8 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                                 )
                               : Text(
                                   widget.isEditing
-                                      ? 'Save Changes'
-                                      : 'Create Recurring Expense',
+                                      ? context.l10n.saveChanges
+                                      : context.l10n.createRecurringExpense,
                                 ),
                         ),
                       ),
@@ -386,8 +389,8 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
                                 ),
                           label: Text(
                             _isDeactivating
-                                ? 'Deactivating...'
-                                : 'Deactivate Recurring Expense',
+                                ? context.l10n.deactivating
+                                : context.l10n.deactivateRecurringExpense,
                           ),
                           style: OutlinedButton.styleFrom(
                             foregroundColor:
@@ -484,8 +487,8 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
         SnackBar(
           content: Text(
             widget.isEditing
-                ? 'Unable to update recurring expense.'
-                : 'Unable to create recurring expense.',
+                ? context.l10n.unableToUpdateRecurringExpense
+                : context.l10n.unableToCreateRecurringExpense,
           ),
         ),
       );
@@ -557,26 +560,24 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text(
-            'Deactivate recurring expense?',
+          title: Text(
+            context.l10n.deactivateRecurringExpenseTitle,
           ),
-          content: const Text(
-            'This recurring expense will be removed from '
-            'your active plan. Existing transactions and '
-            'payment history will not be deleted.',
+          content: Text(
+            context.l10n.deactivateRecurringExpenseMessage,
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: const Text('Cancel'),
+              child: Text(context.l10n.cancel),
             ),
             FilledButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: const Text('Deactivate'),
+              child: Text(context.l10n.deactivateRecurringExpense),
             ),
           ],
         );
@@ -657,14 +658,14 @@ class _RecurringFormHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Recurring Expense',
+          context.l10n.recurringExpense,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         const SizedBox(
           height: AppTheme.spaceXs,
         ),
         Text(
-          'Create or update a recurring monthly expense.',
+          context.l10n.createRecurringPlansDescription,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: AppTheme.textSecondary,
               ),

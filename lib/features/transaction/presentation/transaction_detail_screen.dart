@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/extensions/context_extension.dart';
+
 import '../../recurring/providers/recurring_plan_provider.dart';
 import '../../account/providers/account_list_provider.dart';
 import '../../auth/providers/app_session_provider.dart';
@@ -34,7 +36,7 @@ class _TransactionDetailScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Transaction Detail'),
+        title: Text(context.l10n.transactionDetail),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -82,7 +84,7 @@ class _TransactionDetailScreenState
           ),
           const SizedBox(height: 32),
           _DetailRow(
-            label: 'Type',
+            label: context.l10n.type,
             value: _transactionTypeLabel(
               transaction.type,
             ),
@@ -90,7 +92,7 @@ class _TransactionDetailScreenState
           if (transaction.type == TransactionType.expense &&
               transaction.expenseType != null)
             _DetailRow(
-              label: 'Expense type',
+              label: context.l10n.expenseType,
               value: _expenseTypeLabel(
                 transaction.expenseType!,
               ),
@@ -98,20 +100,20 @@ class _TransactionDetailScreenState
           if (transaction.sourceAccountName != null)
             _DetailRow(
               label: transaction.type == TransactionType.transfer
-                  ? 'From'
-                  : 'Account',
+                  ? context.l10n.from
+                  : context.l10n.account,
               value: transaction.sourceAccountName!,
             ),
           if (transaction.destinationAccountName != null)
             _DetailRow(
               label: transaction.type == TransactionType.transfer
-                  ? 'To'
-                  : 'Account',
+                  ? context.l10n.to
+                  : context.l10n.account,
               value: transaction.destinationAccountName!,
             ),
           if (transaction.categoryName != null)
             _DetailRow(
-              label: 'Category',
+              label: context.l10n.category,
               value: transaction.categoryName!,
             ),
           _DetailRow(
@@ -138,7 +140,7 @@ class _TransactionDetailScreenState
                   )
                 : const Icon(Icons.delete_outline),
             label: Text(
-              _isDeleting ? 'Deleting...' : 'Delete Transaction',
+              _isDeleting ? 'Deleting...' : context.l10n.deleteTransaction,
             ),
             style: OutlinedButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.error,
@@ -154,23 +156,23 @@ class _TransactionDetailScreenState
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Delete transaction?'),
-          content: const Text(
-            'This transaction will be removed from your history '
-            'and its effect on the account balance will be reversed.',
+          title: Text(context.l10n.deleteTransactionTitle),
+          content: Text(
+            context.l10n.deleteTransactionMessage,
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
-              child: const Text('Cancel'),
+              child: Text(context.l10n.cancel),
             ),
+            const SizedBox(height: 8),
             FilledButton(
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
-              child: const Text('Delete'),
+              child: Text(context.l10n.delete),
             ),
           ],
         );

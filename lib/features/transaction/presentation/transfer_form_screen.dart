@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/extensions/context_extension.dart';
 import '../../../app/theme.dart';
 import '../../../app/widgets/app_surface_card.dart';
 
@@ -94,7 +95,7 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
       }
 
       setState(() {
-        _errorMessage = 'Unable to load accounts.';
+        _errorMessage = context.l10n.unableToLoadAccounts;
         _isLoading = false;
       });
     }
@@ -104,8 +105,8 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Transfer',
+        title: Text(
+          context.l10n.transfer,
         ),
       ),
       body: _buildBody(),
@@ -169,9 +170,9 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
           // Transfer Details
           //------------------------------------------------------------
 
-          const _FormSectionTitle(
-            title: 'Transfer details',
-            subtitle: 'Choose the source and destination accounts.',
+          _FormSectionTitle(
+            title: context.l10n.transferDetails,
+            subtitle: context.l10n.transferDetailsSubtitle,
           ),
 
           const SizedBox(
@@ -184,15 +185,15 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
                 DropdownButtonFormField<String>(
                   value: _sourceAccountId,
                   isExpanded: true,
-                  decoration: const InputDecoration(
-                    labelText: 'From account',
+                  decoration: InputDecoration(
+                    labelText: context.l10n.fromAccount,
                     prefixIcon: Icon(
                       Icons.logout_rounded,
                     ),
                   ),
                   validator: (value) {
                     if (value == null) {
-                      return 'Select a source account.';
+                      return context.l10n.selectSourceAccount;
                     }
 
                     return null;
@@ -222,8 +223,8 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
                 DropdownButtonFormField<String>(
                   value: _destinationAccountId,
                   isExpanded: true,
-                  decoration: const InputDecoration(
-                    labelText: 'To account',
+                  decoration: InputDecoration(
+                    labelText: context.l10n.toAccount,
                     prefixIcon: Icon(
                       Icons.login_rounded,
                     ),
@@ -270,9 +271,9 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
           // Additional Details
           //------------------------------------------------------------
 
-          const _FormSectionTitle(
-            title: 'Additional details',
-            subtitle: 'Select a transfer date or leave a note.',
+          _FormSectionTitle(
+            title: context.l10n.additionalDetails,
+            subtitle: context.l10n.transferAdditionalDetailsSubtitle,
           ),
 
           const SizedBox(
@@ -354,7 +355,7 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
                     Icons.swap_horiz_rounded,
                   ),
             label: Text(
-              _isSaving ? 'Saving...' : 'Save Transfer',
+              _isSaving ? 'Saving...' : context.l10n.saveTransfer,
             ),
           ),
 
@@ -363,7 +364,7 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
           ),
 
           Text(
-            'This transfer moves money between your accounts without changing your total balance.',
+            context.l10n.transferAdditionalDetailsSubtitle,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppTheme.textSecondary,
@@ -457,9 +458,9 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'Unable to create transfer.',
+            context.l10n.unableToCreateTransfer,
           ),
         ),
       );
@@ -520,14 +521,14 @@ class _FormHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Transfer money',
+                context.l10n.transferMoney,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(
                 height: AppTheme.spaceXs,
               ),
               Text(
-                'Move money safely between your accounts.',
+                context.l10n.transferMoneyDescription,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppTheme.textSecondary,
                     ),
@@ -630,7 +631,7 @@ class _AmountCard extends StatelessWidget {
             height: AppTheme.spaceXs,
           ),
           Text(
-            'Enter the amount to transfer.',
+            context.l10n.enterTransferAmount,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppTheme.textSecondary,
                 ),
@@ -719,7 +720,7 @@ class _TransferErrorState extends StatelessWidget {
               height: AppTheme.spaceMd,
             ),
             Text(
-              'Unable to load transfer',
+              context.l10n.unableToLoadTransfer,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/extensions/context_extension.dart';
+
 import '../../../app/theme.dart';
 import '../../../app/widgets/app_surface_card.dart';
 
@@ -115,7 +117,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
       }
 
       setState(() {
-        _errorMessage = 'Unable to load expense options.';
+        _errorMessage = context.l10n.unableToLoadExpenseOptions;
         _isLoading = false;
       });
     }
@@ -125,7 +127,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Expense'),
+        title: Text(context.l10n.addExpense),
       ),
       body: _buildBody(),
     );
@@ -181,9 +183,9 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
           // Details
           // ---------------------------------------------------------------
 
-          const _FormSectionTitle(
-            title: 'Expense details',
-            subtitle: 'Where did this money go?',
+          _FormSectionTitle(
+            title: context.l10n.expenseDetails,
+            subtitle: context.l10n.expenseDetailsSubtitle,
           ),
 
           const SizedBox(
@@ -203,8 +205,8 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
 
                     return null;
                   },
-                  decoration: const InputDecoration(
-                    labelText: 'From account',
+                  decoration: InputDecoration(
+                    labelText: context.l10n.fromAccount,
                     prefixIcon: Icon(
                       Icons.account_balance_wallet_outlined,
                     ),
@@ -241,8 +243,8 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
 
                     return null;
                   },
-                  decoration: const InputDecoration(
-                    labelText: 'Category',
+                  decoration: InputDecoration(
+                    labelText: context.l10n.selectExpenseCategory,
                     prefixIcon: Icon(
                       Icons.category_outlined,
                     ),
@@ -278,9 +280,9 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
           // Expense Type
           // ---------------------------------------------------------------
 
-          const _FormSectionTitle(
-            title: 'Expense type',
-            subtitle: 'Choose how this expense should be classified.',
+          _FormSectionTitle(
+            title: context.l10n.expenseType,
+            subtitle: context.l10n.expenseTypeSubtitle,
           ),
 
           const SizedBox(
@@ -307,9 +309,9 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
           // Additional Details
           // ---------------------------------------------------------------
 
-          const _FormSectionTitle(
-            title: 'Additional details',
-            subtitle: 'Add a date or note for this transaction.',
+          _FormSectionTitle(
+            title: context.l10n.additionalDetails,
+            subtitle: context.l10n.additionalDetailsSubtitle,
           ),
 
           const SizedBox(
@@ -391,7 +393,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
                     Icons.check_rounded,
                   ),
             label: Text(
-              _isSaving ? 'Saving...' : 'Save Expense',
+              _isSaving ? 'Saving...' : context.l10n.saveExpense,
             ),
           ),
 
@@ -400,7 +402,7 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
           ),
 
           Text(
-            'This expense will reduce the balance of the selected account.',
+            context.l10n.expenseBalanceInformation,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppTheme.textSecondary,
@@ -495,9 +497,9 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'Unable to create expense.',
+            context.l10n.unableToCreateExpense,
           ),
         ),
       );
@@ -552,14 +554,14 @@ class _FormHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Record an expense',
+                context.l10n.recordExpense,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(
                 height: AppTheme.spaceXs,
               ),
               Text(
-                'Keep your spending and account balance up to date.',
+                context.l10n.recordExpenseDescription,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppTheme.textSecondary,
                     ),
@@ -664,7 +666,7 @@ class _AmountCard extends StatelessWidget {
             height: AppTheme.spaceXs,
           ),
           Text(
-            'Enter the amount you spent.',
+            context.l10n.enterExpenseAmount,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppTheme.textSecondary,
                 ),
@@ -697,8 +699,8 @@ class _ExpenseTypeSelector extends StatelessWidget {
         Expanded(
           child: _ExpenseTypeOption(
             icon: Icons.shopping_bag_outlined,
-            label: 'Daily',
-            description: 'Regular spending',
+            label: context.l10n.daily,
+            description: context.l10n.regularSpending,
             selected: value == ExpenseType.daily,
             enabled: enabled,
             onTap: () {
@@ -714,8 +716,8 @@ class _ExpenseTypeSelector extends StatelessWidget {
         Expanded(
           child: _ExpenseTypeOption(
             icon: Icons.event_repeat_rounded,
-            label: 'Recurring',
-            description: 'Planned payment',
+            label: context.l10n.recurring,
+            description: context.l10n.plannedPayment,
             selected: value == ExpenseType.recurring,
             enabled: enabled,
             onTap: () {
@@ -904,7 +906,7 @@ class _ExpenseErrorState extends StatelessWidget {
               height: AppTheme.spaceMd,
             ),
             Text(
-              'Unable to load form',
+              context.l10n.unableToLoadForm,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(

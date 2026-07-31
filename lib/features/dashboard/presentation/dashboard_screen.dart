@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+
+import '../../../core/extensions/context_extension.dart';
 
 import '../../../app/theme.dart';
 import '../../../app/widgets/app_amount_text.dart';
@@ -111,8 +114,8 @@ class DashboardScreen extends ConsumerWidget {
             ),
 
             // Quick Actions
-            const AppSectionHeader(
-              title: 'Quick Actions',
+            AppSectionHeader(
+              title: context.l10n.quickActions,
             ),
             const SizedBox(
               height: AppTheme.spaceSm,
@@ -124,8 +127,8 @@ class DashboardScreen extends ConsumerWidget {
             ),
 
             // Monthly Summary
-            const AppSectionHeader(
-              title: 'This Month',
+            AppSectionHeader(
+              title: context.l10n.thisMonth,
             ),
             const SizedBox(
               height: AppTheme.spaceSm,
@@ -139,8 +142,8 @@ class DashboardScreen extends ConsumerWidget {
             ),
 
             // Accounts
-            const AppSectionHeader(
-              title: 'Accounts',
+            AppSectionHeader(
+              title: context.l10n.accounts,
             ),
             const SizedBox(
               height: AppTheme.spaceSm,
@@ -155,8 +158,8 @@ class DashboardScreen extends ConsumerWidget {
 
             // Plan
             AppSectionHeader(
-              title: 'Plan',
-              actionLabel: 'View plan',
+              title: context.l10n.plan,
+              actionLabel: context.l10n.viewPlan,
               onActionPressed: () {
                 context.go('/plan');
               },
@@ -174,8 +177,8 @@ class DashboardScreen extends ConsumerWidget {
 
             // Recent Transactions
             AppSectionHeader(
-              title: 'Recent Transactions',
-              actionLabel: 'View all',
+              title: context.l10n.recentTransactions,
+              actionLabel: context.l10n.viewAll,
               onActionPressed: () {
                 context.go('/history');
               },
@@ -208,14 +211,14 @@ class _DashboardHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _greeting(),
+                _greeting(context),
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(
                 height: AppTheme.spaceXs,
               ),
               Text(
-                'Your money at a glance.',
+                context.l10n.yourMoneyAtAGlance,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AppTheme.textSecondary,
                     ),
@@ -294,9 +297,9 @@ class _DashboardBalanceCard extends StatelessWidget {
               const SizedBox(
                 width: AppTheme.spaceMd,
               ),
-              const Expanded(
+              Expanded(
                 child: Text(
-                  'Total Balance',
+                  context.l10n.totalBalance,
                   style: TextStyle(
                     color: Colors.white70,
                     fontWeight: FontWeight.w500,
@@ -317,8 +320,8 @@ class _DashboardBalanceCard extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            error: (error, stackTrace) => const Text(
-              'Unable to load balance.',
+            error: (error, stackTrace) => Text(
+              context.l10n.unableToLoadBalance,
               style: TextStyle(
                 color: Colors.white,
               ),
@@ -338,8 +341,8 @@ class _DashboardBalanceCard extends StatelessWidget {
           const SizedBox(
             height: AppTheme.spaceSm,
           ),
-          const Text(
-            'Across all your active accounts',
+          Text(
+            context.l10n.acrossAllAccounts,
             style: TextStyle(
               color: Colors.white70,
               fontSize: 13,
@@ -363,7 +366,7 @@ class _QuickActions extends StatelessWidget {
         Expanded(
           child: _QuickActionButton(
             icon: Icons.arrow_upward_rounded,
-            label: 'Expense',
+            label: context.l10n.expense,
             tone: _QuickActionTone.expense,
             onPressed: () {
               context.push('/expense/new');
@@ -376,7 +379,7 @@ class _QuickActions extends StatelessWidget {
         Expanded(
           child: _QuickActionButton(
             icon: Icons.arrow_downward_rounded,
-            label: 'Income',
+            label: context.l10n.income,
             tone: _QuickActionTone.income,
             onPressed: () {
               context.push('/income/new');
@@ -389,7 +392,7 @@ class _QuickActions extends StatelessWidget {
         Expanded(
           child: _QuickActionButton(
             icon: Icons.swap_horiz_rounded,
-            label: 'Transfer',
+            label: context.l10n.transfer,
             tone: _QuickActionTone.normal,
             onPressed: () {
               context.push('/transfer/new');
@@ -402,7 +405,7 @@ class _QuickActions extends StatelessWidget {
         Expanded(
           child: _QuickActionButton(
             icon: Icons.tune_rounded,
-            label: 'Adjust',
+            label: context.l10n.adjust,
             tone: _QuickActionTone.normal,
             onPressed: () {
               context.push('/adjustment/new');
@@ -509,6 +512,7 @@ class _MonthlySummaryCard extends StatelessWidget {
         children: [
           Text(
             _monthYearLabel(
+              context,
               DateTime.now(),
             ),
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -526,7 +530,7 @@ class _MonthlySummaryCard extends StatelessWidget {
               ),
             ),
             error: (error, stackTrace) => Text(
-              'Unable to load monthly summary.',
+              context.l10n.unableToLoadMonthlySummary,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).colorScheme.error,
                   ),
@@ -539,7 +543,7 @@ class _MonthlySummaryCard extends StatelessWidget {
                       Expanded(
                         child: _MonthlyMetric(
                           icon: Icons.arrow_downward_rounded,
-                          label: 'Income',
+                          label: context.l10n.income,
                           amount: summary.income,
                           tone: AppAmountTone.positive,
                         ),
@@ -552,7 +556,7 @@ class _MonthlySummaryCard extends StatelessWidget {
                       Expanded(
                         child: _MonthlyMetric(
                           icon: Icons.arrow_upward_rounded,
-                          label: 'Expense',
+                          label: context.l10n.expense,
                           amount: summary.expense,
                           tone: AppAmountTone.negative,
                         ),
@@ -566,7 +570,7 @@ class _MonthlySummaryCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          'Net this month',
+                          context.l10n.netThisMonth,
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     fontWeight: FontWeight.w600,
@@ -686,7 +690,7 @@ class _AccountOverview extends StatelessWidget {
             AppTheme.spaceMd,
           ),
           child: Text(
-            'Unable to load accounts.',
+            context.l10n.unableToLoadAccounts,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.error,
                 ),
@@ -694,12 +698,12 @@ class _AccountOverview extends StatelessWidget {
         ),
         data: (items) {
           if (items.isEmpty) {
-            return const Padding(
+            return Padding(
               padding: EdgeInsets.all(
                 AppTheme.spaceMd,
               ),
               child: Text(
-                'No accounts yet.',
+                context.l10n.noAccountsYet,
               ),
             );
           }
@@ -851,6 +855,7 @@ class _RecurringPlanSummary extends StatelessWidget {
                   Expanded(
                     child: Text(
                       _monthYearLabel(
+                        context,
                         DateTime.now(),
                       ),
                       style: Theme.of(context).textTheme.bodySmall,
@@ -884,7 +889,7 @@ class _RecurringPlanSummary extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _PlanStatus(
-                      label: 'Paid',
+                      label: context.l10n.paid,
                       count: paidCount,
                       icon: Icons.check_circle_outline_rounded,
                       color: AppTheme.success,
@@ -895,7 +900,7 @@ class _RecurringPlanSummary extends StatelessWidget {
                   ),
                   Expanded(
                     child: _PlanStatus(
-                      label: 'Unpaid',
+                      label: context.l10n.unpaid,
                       count: unpaidCount,
                       icon: Icons.schedule_outlined,
                       color: AppTheme.warning,
@@ -1001,12 +1006,12 @@ class _RecentTransactionsCard extends StatelessWidget {
         ),
         data: (items) {
           if (items.isEmpty) {
-            return const Padding(
+            return Padding(
               padding: EdgeInsets.all(
                 AppTheme.spaceMd,
               ),
               child: Text(
-                'No transactions yet.',
+                context.l10n.noTransactionsYet,
               ),
             );
           }
@@ -1204,38 +1209,26 @@ String _signedRupiah(
 }
 
 String _monthYearLabel(
+  BuildContext context,
   DateTime date,
 ) {
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-
-  return '${months[date.month - 1]} ${date.year}';
+  return DateFormat.yMMMM(
+    Localizations.localeOf(context).languageCode,
+  ).format(date);
 }
 
-String _greeting() {
+String _greeting(BuildContext context) {
   final hour = DateTime.now().hour;
 
   if (hour < 12) {
-    return 'Good morning';
+    return context.l10n.goodMorning;
   }
 
   if (hour < 18) {
-    return 'Good afternoon';
+    return context.l10n.goodAfternoon;
   }
 
-  return 'Good evening';
+  return context.l10n.goodEvening;
 }
 
 String _formatRupiah(

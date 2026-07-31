@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/extensions/context_extension.dart';
 import '../../../app/theme.dart';
 import '../../../app/widgets/app_surface_card.dart';
 
@@ -119,7 +120,7 @@ class _IncomeFormScreenState extends ConsumerState<IncomeFormScreen> {
       }
 
       setState(() {
-        _errorMessage = 'Unable to load income options.';
+        _errorMessage = context.l10n.unableToLoadIncomeOptions;
 
         _isLoading = false;
       });
@@ -130,8 +131,8 @@ class _IncomeFormScreenState extends ConsumerState<IncomeFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Add Income',
+        title: Text(
+          context.l10n.addIncome,
         ),
       ),
       body: _buildBody(),
@@ -188,9 +189,9 @@ class _IncomeFormScreenState extends ConsumerState<IncomeFormScreen> {
           // Income Details
           // ---------------------------------------------------------------
 
-          const _FormSectionTitle(
-            title: 'Income details',
-            subtitle: 'Where should this money go?',
+          _FormSectionTitle(
+            title: context.l10n.incomeDetails,
+            subtitle: context.l10n.incomeDetailsSubtitle,
           ),
 
           const SizedBox(
@@ -210,8 +211,8 @@ class _IncomeFormScreenState extends ConsumerState<IncomeFormScreen> {
 
                     return null;
                   },
-                  decoration: const InputDecoration(
-                    labelText: 'To account',
+                  decoration: InputDecoration(
+                    labelText: context.l10n.toAccount,
                     prefixIcon: Icon(
                       Icons.account_balance_wallet_outlined,
                     ),
@@ -248,8 +249,8 @@ class _IncomeFormScreenState extends ConsumerState<IncomeFormScreen> {
 
                     return null;
                   },
-                  decoration: const InputDecoration(
-                    labelText: 'Category',
+                  decoration: InputDecoration(
+                    labelText: context.l10n.selectIncomeCategory,
                     prefixIcon: Icon(
                       Icons.category_outlined,
                     ),
@@ -285,9 +286,9 @@ class _IncomeFormScreenState extends ConsumerState<IncomeFormScreen> {
           // Additional Details
           // ---------------------------------------------------------------
 
-          const _FormSectionTitle(
-            title: 'Additional details',
-            subtitle: 'Add a date or note for this income.',
+          _FormSectionTitle(
+            title: context.l10n.additionalDetails,
+            subtitle: context.l10n.additionalDetailsSubtitle,
           ),
 
           const SizedBox(
@@ -369,7 +370,7 @@ class _IncomeFormScreenState extends ConsumerState<IncomeFormScreen> {
                     Icons.check_rounded,
                   ),
             label: Text(
-              _isSaving ? 'Saving...' : 'Save Income',
+              _isSaving ? 'Saving...' : context.l10n.saveIncome,
             ),
           ),
 
@@ -378,7 +379,7 @@ class _IncomeFormScreenState extends ConsumerState<IncomeFormScreen> {
           ),
 
           Text(
-            'This income will increase the balance of the selected account.',
+            context.l10n.incomeBalanceInformation,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppTheme.textSecondary,
@@ -472,9 +473,9 @@ class _IncomeFormScreenState extends ConsumerState<IncomeFormScreen> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'Unable to create income.',
+            context.l10n.unableToCreateIncome,
           ),
         ),
       );
@@ -531,14 +532,14 @@ class _FormHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Record income',
+                context.l10n.recordIncome,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(
                 height: AppTheme.spaceXs,
               ),
               Text(
-                'Keep your income and account balance up to date.',
+                context.l10n.recordIncomeDescription,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: AppTheme.textSecondary,
                     ),
@@ -643,7 +644,7 @@ class _AmountCard extends StatelessWidget {
             height: AppTheme.spaceXs,
           ),
           Text(
-            'Enter the amount you received.',
+            context.l10n.enterIncomeAmount,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: AppTheme.textSecondary,
                 ),
@@ -732,7 +733,7 @@ class _IncomeErrorState extends StatelessWidget {
               height: AppTheme.spaceMd,
             ),
             Text(
-              'Unable to load form',
+              context.l10n.unableToLoadForm,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(
