@@ -25,11 +25,6 @@ class UangKuhApp extends ConsumerWidget {
       supportedLocales: AppLocalizations.supportedLocales,
       locale: locale,
       routerConfig: AppRouter.router,
-      builder: (context, child) {
-        return SessionGate(
-          child: child ?? const SizedBox.shrink(),
-        );
-      },
     );
   }
 }

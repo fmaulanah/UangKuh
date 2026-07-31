@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "339527991823",
+    "project_id": "uangkuh-app",
+    "storage_bucket": "uangkuh-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:339527991823:android:b9d14a921a60658b65597a",
+        "android_client_info": {
+          "package_name": "com.fikri.uangkuh"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1MpHOFkwjHtR8zodL-SRZJ_ol6FQnWfE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

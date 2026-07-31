@@ -10,7 +10,6 @@ class LocalSessionBootstrap {
 
   final AppDatabase _database;
 
-  static const String _localUserId = 'local-user';
   static const String _localHouseholdId = 'local-household';
   static const String _localMemberId = 'local-member';
 
@@ -101,8 +100,17 @@ class LocalSessionBootstrap {
     ),
   ];
 
-  Future<AppSession> bootstrap() async {
-    final user = await _resolveLocalUser();
+  Future<AppSession> bootstrap({
+    required String userId,
+    required String email,
+    required String displayName,
+  }) async {
+    final user = await _resolveLocalUser(
+      userId: userId,
+      email: email,
+      displayName: displayName,
+    );
+
     final household = await _resolveLocalHousehold(user.id);
 
     await _seedDefaultCategories(
@@ -118,9 +126,13 @@ class LocalSessionBootstrap {
     );
   }
 
-  Future<User> _resolveLocalUser() async {
+  Future<User> _resolveLocalUser({
+    required String userId,
+    required String email,
+    required String displayName,
+  }) async {
     final existingUser = await (_database.select(_database.users)
-          ..where((user) => user.id.equals(_localUserId)))
+          ..where((user) => user.id.equals(userId)))
         .getSingleOrNull();
 
     if (existingUser != null) {
@@ -130,9 +142,9 @@ class LocalSessionBootstrap {
     final now = DateTime.now();
 
     final user = UsersCompanion.insert(
-      id: _localUserId,
-      email: 'local@uangkuh.app',
-      displayName: 'Local User',
+      id: userId,
+      email: email,
+      displayName: displayName,
       createdAt: now,
       updatedAt: now,
     );
@@ -140,7 +152,7 @@ class LocalSessionBootstrap {
     await _database.into(_database.users).insert(user);
 
     return (_database.select(_database.users)
-          ..where((user) => user.id.equals(_localUserId)))
+          ..where((user) => user.id.equals(userId)))
         .getSingle();
   }
 

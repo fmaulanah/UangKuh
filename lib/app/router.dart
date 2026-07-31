@@ -1,4 +1,8 @@
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../features/auth/presentation/login_page.dart';
+import '../features/auth/presentation/register_page.dart';
 
 import '../features/account/presentation/account_form_screen.dart';
 import '../features/account/presentation/account_screen.dart';
@@ -27,6 +31,9 @@ import 'app_shell.dart';
 class AppRouter {
   AppRouter._();
 
+  static const String loginPath = '/login';
+  static const String registerPath = '/register';
+
   static const String dashboardPath = '/';
   static const String historyPath = '/history';
   static const String planPath = '/plan';
@@ -34,7 +41,35 @@ class AppRouter {
 
   static final GoRouter router = GoRouter(
     initialLocation: dashboardPath,
+    redirect: (context, state) {
+      final user = FirebaseAuth.instance.currentUser;
+
+      final isAuthPage = state.matchedLocation == loginPath ||
+          state.matchedLocation == registerPath;
+
+      if (user == null) {
+        return isAuthPage ? null : loginPath;
+      }
+
+      if (isAuthPage) {
+        return dashboardPath;
+      }
+
+      return null;
+    },
     routes: [
+      GoRoute(
+        path: loginPath,
+        builder: (context, state) {
+          return const LoginPage();
+        },
+      ),
+      GoRoute(
+        path: registerPath,
+        builder: (context, state) {
+          return const RegisterPage();
+        },
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return AppShell(
