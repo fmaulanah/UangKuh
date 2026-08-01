@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../domain/app_session.dart';
 import '../providers/app_session_provider.dart';
 import '../providers/auth_provider.dart';
-import 'login_page.dart';
 
 class SessionGate extends ConsumerStatefulWidget {
   const SessionGate({
@@ -22,87 +23,91 @@ class _SessionGateState extends ConsumerState<SessionGate> {
   Object? _error;
   bool _initialized = false;
 
-  Future<void> _initializeSession(AppSession firebaseSession) async {
-    try {
-      final bootstrap = ref.read(localSessionBootstrapProvider);
+  StreamSubscription<AppSession?>? _authSubscription;
 
-      final session = await bootstrap.bootstrap(
-        userId: firebaseSession.userId,
-        email: firebaseSession.email,
-        displayName: firebaseSession.displayName,
-      );
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(_listenAuthState);
+  }
+
+  @override
+  void dispose() {
+    _authSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _listenAuthState() {
+    final authRepository = ref.read(authRepositoryProvider);
+
+    _authSubscription =
+        authRepository.authStateChanges().listen((firebaseSession) async {
+      debugPrint("========== BOOTSTRAP ==========");
+      debugPrint("USER ID : ${firebaseSession?.userId}");
+      debugPrint("EMAIL   : ${firebaseSession?.email}");
 
       if (!mounted) return;
 
-      ref.read(appSessionProvider.notifier).state = session;
-    } catch (error) {
-      debugPrint('SESSION BOOTSTRAP ERROR: $error');
-
-      if (!mounted) return;
-
-      setState(() {
-        _error = error;
+      if (firebaseSession == null) {
+        ref.read(appSessionProvider.notifier).state = null;
         _initialized = false;
-      });
-    }
+        return;
+      }
+
+      if (_initialized) return;
+
+      _initialized = true;
+
+      try {
+        final bootstrap = ref.read(localSessionBootstrapProvider);
+
+        final session = await bootstrap.bootstrap(
+          userId: firebaseSession.userId,
+          email: firebaseSession.email,
+          displayName: firebaseSession.displayName,
+        );
+
+        debugPrint("BOOTSTRAP DONE");
+
+        if (!mounted) return;
+
+        ref.read(appSessionProvider.notifier).state = session;
+      } catch (e) {
+        debugPrint(e.toString());
+
+        if (!mounted) return;
+
+        setState(() {
+          _error = e;
+          _initialized = false;
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final authRepository = ref.watch(authRepositoryProvider);
     final session = ref.watch(appSessionProvider);
 
-    return StreamBuilder<AppSession?>(
-      stream: authRepository.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const _SessionLoading();
-        }
-
-        final firebaseSession = snapshot.data;
-
-        // ==========================
-        // Belum Login
-        // ==========================
-        if (firebaseSession == null) {
-          _initialized = false;
-
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ref.read(appSessionProvider.notifier).state = null;
+    if (_error != null) {
+      return _SessionError(
+        onRetry: () {
+          setState(() {
+            _error = null;
+            _initialized = false;
           });
 
-          return const LoginPage();
-        }
+          _listenAuthState();
+        },
+      );
+    }
 
-        // ==========================
-        // Sudah Login
-        // ==========================
-        if (!_initialized) {
-          _initialized = true;
+    if (FirebaseAuth.instance.currentUser != null && session == null) {
+      return const _SessionLoading();
+    }
 
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _initializeSession(firebaseSession);
-          });
-        }
-
-        if (_error != null) {
-          return _SessionError(
-            onRetry: () {
-              setState(() {
-                _error = null;
-                _initialized = false;
-              });
-            },
-          );
-        }
-
-        if (session == null) {
-          return const _SessionLoading();
-        }
-
-        return widget.child;
-      },
-    );
+    return widget.child;
   }
 }
 

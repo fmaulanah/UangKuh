@@ -1,6 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../core/router/go_router_refresh_stream.dart';
+
 import '../features/auth/presentation/login_page.dart';
 import '../features/auth/presentation/register_page.dart';
 
@@ -41,6 +43,9 @@ class AppRouter {
 
   static final GoRouter router = GoRouter(
     initialLocation: dashboardPath,
+    refreshListenable: GoRouterRefreshStream(
+      FirebaseAuth.instance.authStateChanges(),
+    ),
     redirect: (context, state) {
       final user = FirebaseAuth.instance.currentUser;
 
