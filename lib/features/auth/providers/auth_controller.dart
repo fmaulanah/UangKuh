@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'auth_provider.dart';
 
+import '../../../core/firebase/firestore_repository_provider.dart';
+
 final authControllerProvider = Provider<AuthController>((ref) {
   return AuthController(ref);
 });
@@ -25,12 +27,36 @@ class AuthController {
     required String email,
     required String password,
     required String displayName,
-  }) {
-    return _ref.read(authRepositoryProvider).register(
-          email: email,
-          password: password,
-          displayName: displayName,
-        );
+  }) async {
+    final authRepository = _ref.read(authRepositoryProvider);
+    final firestoreRepository = _ref.read(firestoreRepositoryProvider);
+
+    final session = await authRepository.register(
+      email: email,
+      password: password,
+      displayName: displayName,
+    );
+
+    await firestoreRepository.createUser(
+      uid: session.userId,
+      email: session.email,
+      displayName: session.displayName,
+    );
+
+    final householdId = await firestoreRepository.createHousehold(
+      ownerId: session.userId,
+      householdName: "${session.displayName}'s Household",
+    );
+
+    await firestoreRepository.createHouseholdMember(
+      householdId: householdId,
+      userId: session.userId,
+    );
+
+    await firestoreRepository.updateDefaultHousehold(
+      uid: session.userId,
+      householdId: householdId,
+    );
   }
 
   Future<void> signOut() {
