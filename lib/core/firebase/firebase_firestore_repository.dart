@@ -102,4 +102,35 @@ class FirebaseFirestoreRepository implements FirestoreRepository {
       'version': FieldValue.increment(1),
     });
   }
+
+  @override
+  Future<Map<String, dynamic>?> getUser({
+    required String uid,
+  }) async {
+    final snapshot = await _firestore.collection('users').doc(uid).get();
+
+    return snapshot.data();
+  }
+
+  @override
+  Future<Map<String, dynamic>?> getHousehold({
+    required String householdId,
+  }) async {
+    final snapshot =
+        await _firestore.collection('households').doc(householdId).get();
+
+    return snapshot.data();
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getHouseholdMembers({
+    required String householdId,
+  }) async {
+    final snapshot = await _firestore
+        .collection('household_members')
+        .where('householdId', isEqualTo: householdId)
+        .get();
+
+    return snapshot.docs.map((doc) => doc.data()).toList();
+  }
 }

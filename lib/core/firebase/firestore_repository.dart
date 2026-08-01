@@ -19,4 +19,16 @@ abstract class FirestoreRepository {
     required String uid,
     required String householdId,
   });
+
+  Future<Map<String, dynamic>?> getUser({
+    required String uid,
+  });
+
+  Future<Map<String, dynamic>?> getHousehold({
+    required String householdId,
+  });
+
+  Future<List<Map<String, dynamic>>> getHouseholdMembers({
+    required String householdId,
+  });
 }
