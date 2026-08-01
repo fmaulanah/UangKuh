@@ -43,10 +43,6 @@ class _SessionGateState extends ConsumerState<SessionGate> {
 
     _authSubscription =
         authRepository.authStateChanges().listen((firebaseSession) async {
-      debugPrint("========== BOOTSTRAP ==========");
-      debugPrint("USER ID : ${firebaseSession?.userId}");
-      debugPrint("EMAIL   : ${firebaseSession?.email}");
-
       if (!mounted) return;
 
       if (firebaseSession == null) {
@@ -67,8 +63,6 @@ class _SessionGateState extends ConsumerState<SessionGate> {
           email: firebaseSession.email,
           displayName: firebaseSession.displayName,
         );
-
-        debugPrint("BOOTSTRAP DONE");
 
         if (!mounted) return;
 

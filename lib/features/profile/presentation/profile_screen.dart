@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/locale_provider.dart';
+import '../../auth/providers/auth_controller.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -58,6 +59,46 @@ class ProfileScreen extends ConsumerWidget {
               context,
               ref,
             );
+          },
+        ),
+        const Divider(),
+        ListTile(
+          leading: const Icon(
+            Icons.logout_rounded,
+            color: Colors.red,
+          ),
+          title: const Text('Logout'),
+          subtitle: const Text('Sign out from this device'),
+          textColor: Colors.red,
+          iconColor: Colors.red,
+          onTap: () async {
+            final confirm = await showDialog<bool>(
+              context: context,
+              builder: (dialogContext) {
+                return AlertDialog(
+                  title: const Text('Logout'),
+                  content: const Text(
+                    'Are you sure you want to logout?',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(dialogContext).pop(false),
+                      child: const Text('Cancel'),
+                    ),
+                    FilledButton(
+                      onPressed: () => Navigator.of(dialogContext).pop(true),
+                      child: const Text('Logout'),
+                    ),
+                  ],
+                );
+              },
+            );
+
+            if (confirm != true || !context.mounted) {
+              return;
+            }
+
+            await ref.read(authControllerProvider).signOut();
           },
         ),
       ],
