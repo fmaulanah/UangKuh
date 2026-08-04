@@ -7,6 +7,8 @@ import '../domain/app_session.dart';
 import '../providers/app_session_provider.dart';
 import '../providers/auth_provider.dart';
 
+import '../providers/provisioning_provider.dart';
+
 class SessionGate extends ConsumerStatefulWidget {
   const SessionGate({
     required this.child,
@@ -56,6 +58,12 @@ class _SessionGateState extends ConsumerState<SessionGate> {
       _initialized = true;
 
       try {
+        final isProvisioning = ref.read(isProvisioningProvider);
+
+        if (isProvisioning) {
+          return;
+        }
+
         final bootstrap = ref.read(sessionBootstrapProvider);
 
         final session = await bootstrap.bootstrap(
@@ -67,8 +75,10 @@ class _SessionGateState extends ConsumerState<SessionGate> {
         if (!mounted) return;
 
         ref.read(appSessionProvider.notifier).state = session;
-      } catch (e) {
+      } catch (e, stackTrace) {
+        debugPrint('========== SESSION ERROR ==========');
         debugPrint(e.toString());
+        debugPrint(stackTrace.toString());
 
         if (!mounted) return;
 

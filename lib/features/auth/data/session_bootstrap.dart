@@ -17,93 +17,6 @@ class SessionBootstrap {
   final AppDatabase _database;
   final FirestoreRepository _firestoreRepository;
 
-  static const List<
-      ({
-        String id,
-        String name,
-        CategoryType type,
-        String iconKey,
-      })> _defaultCategories = [
-    (
-      id: 'default-expense-food-drink',
-      name: 'Food & Drink',
-      type: CategoryType.expense,
-      iconKey: 'food_drink',
-    ),
-    (
-      id: 'default-expense-transport',
-      name: 'Transport',
-      type: CategoryType.expense,
-      iconKey: 'transport',
-    ),
-    (
-      id: 'default-expense-household',
-      name: 'Household',
-      type: CategoryType.expense,
-      iconKey: 'household',
-    ),
-    (
-      id: 'default-expense-bills',
-      name: 'Bills',
-      type: CategoryType.expense,
-      iconKey: 'bills',
-    ),
-    (
-      id: 'default-expense-shopping',
-      name: 'Shopping',
-      type: CategoryType.expense,
-      iconKey: 'shopping',
-    ),
-    (
-      id: 'default-expense-health',
-      name: 'Health',
-      type: CategoryType.expense,
-      iconKey: 'health',
-    ),
-    (
-      id: 'default-expense-entertainment',
-      name: 'Entertainment',
-      type: CategoryType.expense,
-      iconKey: 'entertainment',
-    ),
-    (
-      id: 'default-expense-personal',
-      name: 'Personal',
-      type: CategoryType.expense,
-      iconKey: 'personal',
-    ),
-    (
-      id: 'default-expense-other',
-      name: 'Other',
-      type: CategoryType.expense,
-      iconKey: 'other',
-    ),
-    (
-      id: 'default-income-salary',
-      name: 'Salary',
-      type: CategoryType.income,
-      iconKey: 'salary',
-    ),
-    (
-      id: 'default-income-freelance',
-      name: 'Freelance',
-      type: CategoryType.income,
-      iconKey: 'freelance',
-    ),
-    (
-      id: 'default-income-bonus',
-      name: 'Bonus',
-      type: CategoryType.income,
-      iconKey: 'bonus',
-    ),
-    (
-      id: 'default-income-other',
-      name: 'Other Income',
-      type: CategoryType.income,
-      iconKey: 'other_income',
-    ),
-  ];
-
   Future<AppSession> bootstrap({
     required String userId,
     required String email,
@@ -154,9 +67,12 @@ class SessionBootstrap {
       );
     }
 
-    await _seedDefaultCategories(
+    final cloudCategories = await _firestoreRepository.getCategories(
       householdId: household.id,
-      userId: user.id,
+    );
+
+    await _syncCategories(
+      cloudCategories: cloudCategories,
     );
 
     return AppSession(
@@ -293,40 +209,78 @@ class SessionBootstrap {
     }
   }
 
-  Future<void> _seedDefaultCategories({
-    required String householdId,
-    required String userId,
+  Future<void> _syncCategories({
+    required List<Map<String, dynamic>> cloudCategories,
   }) async {
-    final existingCategories = await (_database.select(_database.categories)
-          ..where(
-            (category) => category.householdId.equals(householdId),
-          ))
-        .get();
+    for (final category in cloudCategories) {
+      await _resolveLocalCategory(
+        id: category['id'] as String,
+        householdId: category['householdId'] as String,
+        name: category['name'] as String,
+        type: CategoryType.values.byName(
+          category['type'] as String,
+        ),
+        iconKey: category['iconKey'] as String,
+        isDefault: category['isDefault'] as bool,
+        isArchived: category['isArchived'] as bool,
+        createdBy: category['createdBy'] as String,
+        updatedBy: category['updatedBy'] as String,
+        createdAt: (category['createdAt'] as Timestamp).toDate(),
+        updatedAt: (category['updatedAt'] as Timestamp).toDate(),
+      );
+    }
+  }
 
-    final existingIds =
-        existingCategories.map((category) => category.id).toSet();
+  Future<void> _resolveLocalCategory({
+    required String id,
+    required String householdId,
+    required String name,
+    required CategoryType type,
+    required String iconKey,
+    required bool isDefault,
+    required bool isArchived,
+    required String createdBy,
+    required String updatedBy,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) async {
+    final existingCategory = await (_database.select(_database.categories)
+          ..where((category) => category.id.equals(id)))
+        .getSingleOrNull();
 
-    final now = DateTime.now();
-
-    for (final category in _defaultCategories) {
-      if (existingIds.contains(category.id)) {
-        continue;
-      }
-
+    if (existingCategory == null) {
       await _database.into(_database.categories).insert(
             CategoriesCompanion.insert(
-              id: category.id,
+              id: id,
               householdId: householdId,
-              name: category.name,
-              type: category.type,
-              iconKey: category.iconKey,
-              isDefault: const Value(true),
-              createdAt: now,
-              updatedAt: now,
-              createdBy: userId,
-              updatedBy: userId,
+              name: name,
+              type: type,
+              iconKey: iconKey,
+              isDefault: Value(isDefault),
+              isArchived: Value(isArchived),
+              createdAt: createdAt,
+              updatedAt: updatedAt,
+              createdBy: createdBy,
+              updatedBy: updatedBy,
             ),
           );
+    } else {
+      await (_database.update(_database.categories)
+            ..where((category) => category.id.equals(id)))
+          .write(
+        CategoriesCompanion(
+          householdId: Value(householdId),
+          name: Value(name),
+          type: Value(type),
+          iconKey: Value(iconKey),
+          isDefault: Value(isDefault),
+          isArchived: Value(isArchived),
+          createdAt: Value(createdAt),
+          updatedAt: Value(updatedAt),
+          createdBy: Value(createdBy),
+          updatedBy: Value(updatedBy),
+        ),
+      );
     }
   }
 }

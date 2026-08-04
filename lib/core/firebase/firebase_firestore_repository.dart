@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 
 import '../utils/invite_code_generator.dart';
+import '../constants/default_categories.dart';
 
 import '../../features/category/domain/category_type.dart';
 
@@ -64,6 +65,11 @@ class FirebaseFirestoreRepository implements FirestoreRepository {
       'isDeleted': false,
       'version': 1,
     });
+
+    await _createDefaultCategories(
+      householdId: householdId,
+      createdBy: ownerId,
+    );
 
     return householdId;
   }
@@ -166,6 +172,22 @@ class FirebaseFirestoreRepository implements FirestoreRepository {
       'createdBy': createdBy,
       'updatedBy': createdBy,
     });
+  }
+
+  Future<void> _createDefaultCategories({
+    required String householdId,
+    required String createdBy,
+  }) async {
+    for (final category in defaultCategories) {
+      await createCategory(
+        householdId: householdId,
+        name: category.name,
+        type: category.type,
+        iconKey: category.iconKey,
+        isDefault: true,
+        createdBy: createdBy,
+      );
+    }
   }
 
   @override

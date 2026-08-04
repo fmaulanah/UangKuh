@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'auth_provider.dart';
+import 'provisioning_provider.dart';
 
 import '../../../core/firebase/firestore_repository_provider.dart';
 
@@ -28,35 +29,41 @@ class AuthController {
     required String password,
     required String displayName,
   }) async {
-    final authRepository = _ref.read(authRepositoryProvider);
-    final firestoreRepository = _ref.read(firestoreRepositoryProvider);
+    try {
+      _ref.read(isProvisioningProvider.notifier).state = true;
 
-    final session = await authRepository.register(
-      email: email,
-      password: password,
-      displayName: displayName,
-    );
+      final authRepository = _ref.read(authRepositoryProvider);
+      final firestoreRepository = _ref.read(firestoreRepositoryProvider);
 
-    await firestoreRepository.createUser(
-      uid: session.userId,
-      email: session.email,
-      displayName: session.displayName,
-    );
+      final session = await authRepository.register(
+        email: email,
+        password: password,
+        displayName: displayName,
+      );
 
-    final householdId = await firestoreRepository.createHousehold(
-      ownerId: session.userId,
-      householdName: "${session.displayName}'s Household",
-    );
+      await firestoreRepository.createUser(
+        uid: session.userId,
+        email: session.email,
+        displayName: session.displayName,
+      );
 
-    await firestoreRepository.createHouseholdMember(
-      householdId: householdId,
-      userId: session.userId,
-    );
+      final householdId = await firestoreRepository.createHousehold(
+        ownerId: session.userId,
+        householdName: "${session.displayName}'s Household",
+      );
 
-    await firestoreRepository.updateDefaultHousehold(
-      uid: session.userId,
-      householdId: householdId,
-    );
+      await firestoreRepository.createHouseholdMember(
+        householdId: householdId,
+        userId: session.userId,
+      );
+
+      await firestoreRepository.updateDefaultHousehold(
+        uid: session.userId,
+        householdId: householdId,
+      );
+    } finally {
+      _ref.read(isProvisioningProvider.notifier).state = false;
+    }
   }
 
   Future<void> signOut() {
