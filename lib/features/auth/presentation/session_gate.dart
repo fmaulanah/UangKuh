@@ -56,7 +56,7 @@ class _SessionGateState extends ConsumerState<SessionGate> {
       _initialized = true;
 
       try {
-        final bootstrap = ref.read(localSessionBootstrapProvider);
+        final bootstrap = ref.read(sessionBootstrapProvider);
 
         final session = await bootstrap.bootstrap(
           userId: firebaseSession.userId,

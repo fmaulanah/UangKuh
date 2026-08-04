@@ -1,3 +1,5 @@
+import '../../features/category/domain/category_type.dart';
+
 abstract class FirestoreRepository {
   Future<void> createUser({
     required String uid,
@@ -29,6 +31,19 @@ abstract class FirestoreRepository {
   });
 
   Future<List<Map<String, dynamic>>> getHouseholdMembers({
+    required String householdId,
+  });
+
+  Future<void> createCategory({
+    required String householdId,
+    required String name,
+    required CategoryType type,
+    required String iconKey,
+    required bool isDefault,
+    required String createdBy,
+  });
+
+  Future<List<Map<String, dynamic>>> getCategories({
     required String householdId,
   });
 }

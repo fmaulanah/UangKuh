@@ -8,8 +8,8 @@ import '../domain/app_session.dart';
 import '../../household/domain/household_role.dart';
 import '../../category/domain/category_type.dart';
 
-class LocalSessionBootstrap {
-  LocalSessionBootstrap(
+class SessionBootstrap {
+  SessionBootstrap(
     this._database,
     this._firestoreRepository,
   );

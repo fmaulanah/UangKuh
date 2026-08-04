@@ -3,6 +3,8 @@ import 'package:uuid/uuid.dart';
 
 import '../utils/invite_code_generator.dart';
 
+import '../../features/category/domain/category_type.dart';
+
 import 'firestore_repository.dart';
 
 class FirebaseFirestoreRepository implements FirestoreRepository {
@@ -129,6 +131,51 @@ class FirebaseFirestoreRepository implements FirestoreRepository {
     final snapshot = await _firestore
         .collection('household_members')
         .where('householdId', isEqualTo: householdId)
+        .get();
+
+    return snapshot.docs.map((doc) => doc.data()).toList();
+  }
+
+  @override
+  Future<void> createCategory({
+    required String householdId,
+    required String name,
+    required CategoryType type,
+    required String iconKey,
+    required bool isDefault,
+    required String createdBy,
+  }) async {
+    final doc = _firestore
+        .collection('households')
+        .doc(householdId)
+        .collection('categories')
+        .doc();
+
+    final now = FieldValue.serverTimestamp();
+
+    await doc.set({
+      'id': doc.id,
+      'householdId': householdId,
+      'name': name,
+      'type': type.name,
+      'iconKey': iconKey,
+      'isDefault': isDefault,
+      'isArchived': false,
+      'createdAt': now,
+      'updatedAt': now,
+      'createdBy': createdBy,
+      'updatedBy': createdBy,
+    });
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getCategories({
+    required String householdId,
+  }) async {
+    final snapshot = await _firestore
+        .collection('households')
+        .doc(householdId)
+        .collection('categories')
         .get();
 
     return snapshot.docs.map((doc) => doc.data()).toList();
