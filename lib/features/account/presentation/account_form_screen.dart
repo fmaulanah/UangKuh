@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/extensions/context_extension.dart';
+import '../../../core/sync/sync_repository_provider.dart';
 import '../../../app/theme.dart';
 
 import '../../auth/providers/app_session_provider.dart';
@@ -278,6 +279,8 @@ class _AccountFormScreenState extends ConsumerState<AccountFormScreen> {
           userId: session.userId,
         );
       }
+
+      await ref.read(syncRepositoryProvider).uploadAccounts();
 
       ref.invalidate(accountListProvider);
 

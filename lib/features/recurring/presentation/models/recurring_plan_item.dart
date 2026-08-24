@@ -1,4 +1,5 @@
 import '../../../../core/database/app_database.dart';
+import '../../domain/recurring_payment_status.dart';
 
 class RecurringPlanItem {
   const RecurringPlanItem({
@@ -9,5 +10,6 @@ class RecurringPlanItem {
   final RecurringExpense recurringExpense;
   final RecurringPayment? payment;
 
-  bool get isPaid => payment != null;
+  bool get isPaid => payment?.status == RecurringPaymentStatus.paid;
 }
+

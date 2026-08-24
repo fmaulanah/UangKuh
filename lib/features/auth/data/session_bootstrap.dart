@@ -12,6 +12,7 @@ import '../../account/domain/account_purpose.dart';
 import '../../transaction/domain/expense_type.dart';
 import '../../transaction/domain/sync_status.dart';
 import '../../transaction/domain/transaction_type.dart';
+import '../../recurring/domain/recurring_payment_status.dart';
 
 class SessionBootstrap {
   SessionBootstrap(
@@ -94,6 +95,24 @@ class SessionBootstrap {
 
     await _syncTransactions(
       cloudTransactions: cloudTransactions,
+    );
+
+    final cloudRecurringExpenses =
+        await _firestoreRepository.getRecurringExpenses(
+      householdId: household.id,
+    );
+
+    await _syncRecurringExpenses(
+      cloudRecurringExpenses: cloudRecurringExpenses,
+    );
+
+    final cloudRecurringPayments =
+        await _firestoreRepository.getRecurringPayments(
+      householdId: household.id,
+    );
+
+    await _syncRecurringPayments(
+      cloudRecurringPayments: cloudRecurringPayments,
     );
 
     return AppSession(
@@ -403,6 +422,160 @@ class SessionBootstrap {
           transaction['syncStatus'] as String,
         ),
         isDeleted: transaction['isDeleted'] as bool,
+      );
+    }
+  }
+
+  Future<void> _syncRecurringExpenses({
+    required List<Map<String, dynamic>> cloudRecurringExpenses,
+  }) async {
+    for (final recurringExpense in cloudRecurringExpenses) {
+      await _resolveLocalRecurringExpense(
+        id: recurringExpense['id'] as String,
+        householdId: recurringExpense['householdId'] as String,
+        name: recurringExpense['name'] as String,
+        defaultAmount: (recurringExpense['defaultAmount'] as num).toInt(),
+        categoryId: recurringExpense['categoryId'] as String,
+        defaultAccountId: recurringExpense['defaultAccountId'] as String?,
+        dueDay: (recurringExpense['dueDay'] as num?)?.toInt(),
+        isActive: recurringExpense['isActive'] as bool,
+        createdAt: (recurringExpense['createdAt'] as Timestamp).toDate(),
+        updatedAt: (recurringExpense['updatedAt'] as Timestamp).toDate(),
+        createdBy: recurringExpense['createdBy'] as String,
+        updatedBy: recurringExpense['updatedBy'] as String,
+      );
+    }
+  }
+
+  Future<void> _resolveLocalRecurringExpense({
+    required String id,
+    required String householdId,
+    required String name,
+    required int defaultAmount,
+    required String categoryId,
+    required String? defaultAccountId,
+    required int? dueDay,
+    required bool isActive,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required String createdBy,
+    required String updatedBy,
+  }) async {
+    final existingRecurringExpense =
+        await (_database.select(_database.recurringExpenses)
+              ..where((row) => row.id.equals(id)))
+            .getSingleOrNull();
+
+    if (existingRecurringExpense == null) {
+      await _database.into(_database.recurringExpenses).insert(
+            RecurringExpensesCompanion.insert(
+              id: id,
+              householdId: householdId,
+              name: name,
+              defaultAmount: defaultAmount,
+              categoryId: categoryId,
+              defaultAccountId: Value(defaultAccountId),
+              dueDay: Value(dueDay),
+              isActive: Value(isActive),
+              createdAt: createdAt,
+              updatedAt: updatedAt,
+              createdBy: createdBy,
+              updatedBy: updatedBy,
+            ),
+          );
+    } else {
+      await (_database.update(_database.recurringExpenses)
+            ..where((row) => row.id.equals(id)))
+          .write(
+        RecurringExpensesCompanion(
+          householdId: Value(householdId),
+          name: Value(name),
+          defaultAmount: Value(defaultAmount),
+          categoryId: Value(categoryId),
+          defaultAccountId: Value(defaultAccountId),
+          dueDay: Value(dueDay),
+          isActive: Value(isActive),
+          createdAt: Value(createdAt),
+          updatedAt: Value(updatedAt),
+          createdBy: Value(createdBy),
+          updatedBy: Value(updatedBy),
+        ),
+      );
+    }
+  }
+
+  Future<void> _syncRecurringPayments({
+    required List<Map<String, dynamic>> cloudRecurringPayments,
+  }) async {
+    for (final recurringPayment in cloudRecurringPayments) {
+      await _resolveLocalRecurringPayment(
+        id: recurringPayment['id'] as String,
+        householdId: recurringPayment['householdId'] as String,
+        recurringExpenseId: recurringPayment['recurringExpenseId'] as String,
+        periodYear: (recurringPayment['periodYear'] as num).toInt(),
+        periodMonth: (recurringPayment['periodMonth'] as num).toInt(),
+        status: RecurringPaymentStatus.values.byName(
+          recurringPayment['status'] as String,
+        ),
+        transactionId: recurringPayment['transactionId'] as String?,
+        createdAt: (recurringPayment['createdAt'] as Timestamp).toDate(),
+        updatedAt: (recurringPayment['updatedAt'] as Timestamp).toDate(),
+        createdBy: recurringPayment['createdBy'] as String,
+        updatedBy: recurringPayment['updatedBy'] as String,
+      );
+    }
+  }
+
+  Future<void> _resolveLocalRecurringPayment({
+    required String id,
+    required String householdId,
+    required String recurringExpenseId,
+    required int periodYear,
+    required int periodMonth,
+    required RecurringPaymentStatus status,
+    required String? transactionId,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required String createdBy,
+    required String updatedBy,
+  }) async {
+    final existingRecurringPayment =
+        await (_database.select(_database.recurringPayments)
+              ..where((row) => row.id.equals(id)))
+            .getSingleOrNull();
+
+    if (existingRecurringPayment == null) {
+      await _database.into(_database.recurringPayments).insert(
+            RecurringPaymentsCompanion.insert(
+              id: id,
+              householdId: householdId,
+              recurringExpenseId: recurringExpenseId,
+              periodYear: periodYear,
+              periodMonth: periodMonth,
+              status: status,
+              transactionId: Value(transactionId),
+              createdAt: createdAt,
+              updatedAt: updatedAt,
+              createdBy: createdBy,
+              updatedBy: updatedBy,
+            ),
+          );
+    } else {
+      await (_database.update(_database.recurringPayments)
+            ..where((row) => row.id.equals(id)))
+          .write(
+        RecurringPaymentsCompanion(
+          householdId: Value(householdId),
+          recurringExpenseId: Value(recurringExpenseId),
+          periodYear: Value(periodYear),
+          periodMonth: Value(periodMonth),
+          status: Value(status),
+          transactionId: Value(transactionId),
+          createdAt: Value(createdAt),
+          updatedAt: Value(updatedAt),
+          createdBy: Value(createdBy),
+          updatedBy: Value(updatedBy),
+        ),
       );
     }
   }

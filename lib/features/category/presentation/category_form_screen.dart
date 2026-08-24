@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../auth/providers/app_session_provider.dart';
+import '../../../core/sync/sync_repository_provider.dart';
 import '../domain/category_type.dart';
 import '../providers/category_list_provider.dart';
 import '../providers/category_repository_provider.dart';
@@ -200,6 +201,8 @@ class _CategoryFormScreenState extends ConsumerState<CategoryFormScreen> {
         );
       }
 
+      await ref.read(syncRepositoryProvider).uploadCategories();
+
       ref.invalidate(categoryListProvider);
 
       if (!mounted) {
@@ -317,3 +320,4 @@ const _icons = [
     icon: Icons.business_center_outlined,
   ),
 ];
+

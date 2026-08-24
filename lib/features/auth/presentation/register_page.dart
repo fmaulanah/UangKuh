@@ -20,8 +20,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _inviteCodeController = TextEditingController();
 
   bool _loading = false;
+  bool _joinExistingHousehold = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
@@ -31,6 +33,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _inviteCodeController.dispose();
     super.dispose();
   }
 
@@ -145,6 +148,52 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                             return null;
                           },
                         ),
+                        const SizedBox(height: AppTheme.spaceMd),
+                        const Text('Household'),
+                        RadioListTile<bool>(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Create a new household'),
+                          value: false,
+                          groupValue: _joinExistingHousehold,
+                          onChanged: _loading
+                              ? null
+                              : (value) {
+                                  setState(() {
+                                    _joinExistingHousehold = value ?? false;
+                                  });
+                                },
+                        ),
+                        RadioListTile<bool>(
+                          contentPadding: EdgeInsets.zero,
+                          title: const Text('Join an existing household'),
+                          value: true,
+                          groupValue: _joinExistingHousehold,
+                          onChanged: _loading
+                              ? null
+                              : (value) {
+                                  setState(() {
+                                    _joinExistingHousehold = value ?? false;
+                                  });
+                                },
+                        ),
+                        if (_joinExistingHousehold) ...[
+                          const SizedBox(height: AppTheme.spaceSm),
+                          TextFormField(
+                            controller: _inviteCodeController,
+                            textCapitalization: TextCapitalization.characters,
+                            decoration: const InputDecoration(
+                              labelText: 'Invite Code',
+                              prefixIcon: Icon(Icons.vpn_key_outlined),
+                            ),
+                            validator: (value) {
+                              if (_joinExistingHousehold &&
+                                  (value == null || value.trim().isEmpty)) {
+                                return 'Invite Code is required';
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
                         const SizedBox(height: AppTheme.spaceLg),
                         FilledButton(
                           onPressed: _loading ? null : _register,
@@ -157,7 +206,11 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                                     color: Colors.white,
                                   ),
                                 )
-                              : const Text('Create Account'),
+                              : Text(
+                                  _joinExistingHousehold
+                                      ? 'Join Household'
+                                      : 'Create Account',
+                                ),
                         ),
                       ],
                     ),
@@ -185,6 +238,10 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             email: _emailController.text.trim(),
             password: _passwordController.text,
             displayName: _displayNameController.text.trim(),
+            joinExistingHousehold: _joinExistingHousehold,
+            inviteCode: _joinExistingHousehold
+                ? _inviteCodeController.text.trim()
+                : null,
           );
 
       if (!mounted) {
@@ -206,6 +263,16 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(_getFirebaseErrorMessage(e)),
+        ),
+      );
+    } on StateError catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.message),
         ),
       );
     } catch (_) {

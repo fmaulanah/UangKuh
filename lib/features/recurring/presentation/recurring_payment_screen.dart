@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/theme.dart';
+import '../../../core/sync/sync_repository_provider.dart';
 
 import '../providers/recurring_plan_provider.dart';
 import '../providers/recurring_repository_provider.dart';
@@ -323,6 +324,8 @@ class _RecurringPaymentScreenState
         transactionDate: _transactionDate,
         userId: session.userId,
       );
+
+      await ref.read(syncRepositoryProvider).uploadRecurringPayments();
 
       // Payment status berubah.
       ref.invalidate(recurringPlanProvider);

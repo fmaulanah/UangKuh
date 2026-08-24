@@ -20,6 +20,15 @@ abstract class FirestoreRepository {
     required String userId,
   });
 
+  Future<Map<String, dynamic>?> getHouseholdByInviteCode({
+    required String inviteCode,
+  });
+
+  Future<void> createMember({
+    required String householdId,
+    required String userId,
+  });
+
   Future<void> updateDefaultHousehold({
     required String uid,
     required String householdId,
@@ -46,6 +55,11 @@ abstract class FirestoreRepository {
     required String createdBy,
   });
 
+  Future<void> upsertCategory({
+    required String id,
+    required Map<String, dynamic> category,
+  });
+
   Future<List<Map<String, dynamic>>> getCategories({
     required String householdId,
   });
@@ -62,7 +76,30 @@ abstract class FirestoreRepository {
     required String createdBy,
   });
 
+  Future<void> upsertAccount({
+    required String id,
+    required Map<String, dynamic> account,
+  });
+
   Future<List<Map<String, dynamic>>> getAccounts({
+    required String householdId,
+  });
+
+  Future<void> upsertRecurringExpense({
+    required String id,
+    required Map<String, dynamic> recurringExpense,
+  });
+
+  Future<void> upsertRecurringPayment({
+    required String id,
+    required Map<String, dynamic> recurringPayment,
+  });
+
+  Future<List<Map<String, dynamic>>> getRecurringExpenses({
+    required String householdId,
+  });
+
+  Future<List<Map<String, dynamic>>> getRecurringPayments({
     required String householdId,
   });
 
@@ -74,3 +111,4 @@ abstract class FirestoreRepository {
     required String householdId,
   });
 }
+

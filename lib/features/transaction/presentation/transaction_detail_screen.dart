@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/extensions/context_extension.dart';
+import '../../../core/sync/sync_repository_provider.dart';
 
 import '../../recurring/providers/recurring_plan_provider.dart';
 import '../../account/providers/account_list_provider.dart';
@@ -207,6 +208,8 @@ class _TransactionDetailScreenState
         userId: session.userId,
       );
 
+      await ref.read(syncRepositoryProvider).syncAll();
+
       ref.invalidate(transactionHistoryProvider);
       ref.invalidate(transactionListProvider);
       ref.invalidate(accountListProvider);
@@ -383,3 +386,4 @@ String _formatDate(DateTime date) {
 
   return '$day ${months[date.month - 1]} ${date.year}';
 }
+

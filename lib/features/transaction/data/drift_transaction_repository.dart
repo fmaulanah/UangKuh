@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 
 import '../../../core/database/app_database.dart';
 import '../../category/domain/category_type.dart';
+import '../../recurring/domain/recurring_payment_status.dart';
 import '../domain/expense_type.dart';
 import '../domain/sync_status.dart';
 import '../domain/transaction_repository.dart';
@@ -60,13 +61,26 @@ class DriftTransactionRepository implements TransactionRepository {
     final now = DateTime.now();
 
     await _database.transaction(() async {
-      // Kalau transaction berasal dari recurring payment,
-      // hapus payment marker-nya juga.
-      await (_database.delete(_database.recurringPayments)
+      final recurringPayment = await (_database.select(_database.recurringPayments)
             ..where(
               (row) => row.transactionId.equals(id),
             ))
-          .go();
+          .getSingleOrNull();
+
+      if (recurringPayment != null) {
+        await (_database.update(_database.recurringPayments)
+              ..where(
+                (row) => row.id.equals(recurringPayment.id),
+              ))
+            .write(
+          RecurringPaymentsCompanion(
+            status: const Value(RecurringPaymentStatus.unpaid),
+            transactionId: const Value(null),
+            updatedAt: Value(now),
+            updatedBy: Value(userId),
+          ),
+        );
+      }
 
       // Transaction tetap soft-delete agar audit/history semantics
       // yang sudah ada tidak berubah.
@@ -79,6 +93,7 @@ class DriftTransactionRepository implements TransactionRepository {
           isDeleted: const Value(true),
           updatedAt: Value(now),
           updatedBy: Value(userId),
+          syncStatus: const Value(SyncStatus.pending),
         ),
       );
     });
@@ -355,3 +370,5 @@ class DriftTransactionRepository implements TransactionRepository {
     return value;
   }
 }
+
+

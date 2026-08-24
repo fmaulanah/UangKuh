@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/extensions/context_extension.dart';
+import '../../../core/sync/sync_repository_provider.dart';
 import '../../../app/theme.dart';
 import '../../../app/widgets/app_surface_card.dart';
 
@@ -430,6 +431,8 @@ class _TransferFormScreenState extends ConsumerState<TransferFormScreen> {
         transactionDate: _transactionDate,
         userId: session.userId,
       );
+
+      await ref.read(syncRepositoryProvider).uploadPendingTransactions();
 
       ref.invalidate(
         accountListProvider,

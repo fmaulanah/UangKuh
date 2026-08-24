@@ -215,6 +215,21 @@ class FirebaseFirestoreRepository implements FirestoreRepository {
   }
 
   @override
+  Future<void> upsertCategory({
+    required String id,
+    required Map<String, dynamic> category,
+  }) async {
+    final householdId = category['householdId'] as String;
+
+    await _firestore
+        .collection('households')
+        .doc(householdId)
+        .collection('categories')
+        .doc(id)
+        .set(category);
+  }
+
+  @override
   Future<List<Map<String, dynamic>>> getCategories({
     required String householdId,
   }) async {
@@ -267,6 +282,68 @@ class FirebaseFirestoreRepository implements FirestoreRepository {
   }
 
   @override
+  Future<Map<String, dynamic>?> getHouseholdByInviteCode({
+    required String inviteCode,
+  }) async {
+    final normalizedInviteCode = inviteCode.trim();
+
+    if (normalizedInviteCode.isEmpty) {
+      return null;
+    }
+
+    final snapshot = await _firestore
+        .collection('households')
+        .where('inviteCode', isEqualTo: normalizedInviteCode)
+        .limit(1)
+        .get();
+
+    if (snapshot.docs.isEmpty) {
+      return null;
+    }
+
+    return snapshot.docs.first.data();
+  }
+
+  @override
+  Future<void> createMember({
+    required String householdId,
+    required String userId,
+  }) async {
+    final memberId = const Uuid().v4();
+    final now = FieldValue.serverTimestamp();
+
+    await _firestore.collection('household_members').doc(memberId).set({
+      'id': memberId,
+      'householdId': householdId,
+      'userId': userId,
+      'role': 'member',
+      'joinedAt': now,
+      'createdAt': now,
+      'updatedAt': now,
+      'createdBy': userId,
+      'updatedBy': userId,
+      'isDeleted': false,
+      'version': 1,
+    });
+  }
+
+  @override
+  Future<void> upsertAccount({
+    required String id,
+    required Map<String, dynamic> account,
+  }) async {
+    final householdId = account['householdId'] as String;
+
+    final doc = _firestore
+        .collection('households')
+        .doc(householdId)
+        .collection('accounts')
+        .doc(id);
+
+    await doc.set(account);
+  }
+
+  @override
   Future<List<Map<String, dynamic>>> getAccounts({
     required String householdId,
   }) async {
@@ -274,6 +351,64 @@ class FirebaseFirestoreRepository implements FirestoreRepository {
         .collection('households')
         .doc(householdId)
         .collection('accounts')
+        .get();
+
+    return snapshot.docs.map((doc) => doc.data()).toList();
+  }
+
+  @override
+  Future<void> upsertRecurringExpense({
+    required String id,
+    required Map<String, dynamic> recurringExpense,
+  }) async {
+    final householdId = recurringExpense['householdId'] as String;
+
+    final doc = _firestore
+        .collection('households')
+        .doc(householdId)
+        .collection('recurring_expenses')
+        .doc(id);
+
+    await doc.set(recurringExpense);
+  }
+
+  @override
+  Future<void> upsertRecurringPayment({
+    required String id,
+    required Map<String, dynamic> recurringPayment,
+  }) async {
+    final householdId = recurringPayment['householdId'] as String;
+
+    final doc = _firestore
+        .collection('households')
+        .doc(householdId)
+        .collection('recurring_payments')
+        .doc(id);
+
+    await doc.set(recurringPayment);
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getRecurringExpenses({
+    required String householdId,
+  }) async {
+    final snapshot = await _firestore
+        .collection('households')
+        .doc(householdId)
+        .collection('recurring_expenses')
+        .get();
+
+    return snapshot.docs.map((doc) => doc.data()).toList();
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getRecurringPayments({
+    required String householdId,
+  }) async {
+    final snapshot = await _firestore
+        .collection('households')
+        .doc(householdId)
+        .collection('recurring_payments')
         .get();
 
     return snapshot.docs.map((doc) => doc.data()).toList();
@@ -307,3 +442,5 @@ class FirebaseFirestoreRepository implements FirestoreRepository {
     return snapshot.docs.map((doc) => doc.data()).toList();
   }
 }
+
+

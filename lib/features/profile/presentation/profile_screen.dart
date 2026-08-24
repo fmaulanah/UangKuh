@@ -4,15 +4,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/locale_provider.dart';
 import '../../auth/providers/auth_controller.dart';
+import '../../../core/sync/sync_repository_provider.dart';
+import '../../../core/sync/sync_state_provider.dart';
 
-class ProfileScreen extends ConsumerWidget {
+class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   @override
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  @override
   Widget build(
     BuildContext context,
-    WidgetRef ref,
   ) {
+    final syncState = ref.watch(syncStateProvider);
+    final isSyncing = syncState.status == SyncStateStatus.syncing;
+
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -64,6 +73,44 @@ class ProfileScreen extends ConsumerWidget {
         const Divider(),
         ListTile(
           leading: const Icon(
+            Icons.sync,
+          ),
+          title: const Text('Sync Now'),
+          subtitle: const Text('Upload and refresh your data'),
+          trailing: isSyncing
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                  ),
+                )
+              : const Icon(Icons.chevron_right),
+          onTap: isSyncing ? null : _syncNow,
+        ),
+        if (syncState.status == SyncStateStatus.success)
+          ListTile(
+            leading: const Icon(
+              Icons.check_circle_outline,
+              color: Colors.green,
+            ),
+            title: const Text('Sync successful'),
+            subtitle: Text(
+              'Last sync: ${_formatSyncTime(syncState.lastSuccessfulSync)}',
+            ),
+          ),
+        if (syncState.status == SyncStateStatus.error)
+          ListTile(
+            leading: const Icon(
+              Icons.error_outline,
+              color: Colors.red,
+            ),
+            title: const Text('Sync failed'),
+            subtitle: Text(syncState.errorMessage ?? 'Unknown sync error.'),
+          ),
+        const Divider(),
+        ListTile(
+          leading: const Icon(
             Icons.logout_rounded,
             color: Colors.red,
           ),
@@ -103,6 +150,76 @@ class ProfileScreen extends ConsumerWidget {
         ),
       ],
     );
+  }
+
+  Future<void> _syncNow() async {
+    final currentState = ref.read(syncStateProvider);
+
+    if (currentState.status == SyncStateStatus.syncing) {
+      return;
+    }
+
+    ref.read(syncStateProvider.notifier).state = SyncState(
+      status: SyncStateStatus.syncing,
+      lastSuccessfulSync: currentState.lastSuccessfulSync,
+    );
+
+    try {
+      await ref.read(syncRepositoryProvider).syncAll();
+
+      final syncedAt = DateTime.now();
+
+      ref.read(syncStateProvider.notifier).state = SyncState(
+        status: SyncStateStatus.success,
+        lastSuccessfulSync: syncedAt,
+      );
+
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Sync completed successfully.'),
+        ),
+      );
+    } catch (error) {
+      ref.read(syncStateProvider.notifier).state = SyncState(
+        status: SyncStateStatus.error,
+        lastSuccessfulSync: currentState.lastSuccessfulSync,
+        errorMessage: error.toString(),
+      );
+
+      if (!mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Sync failed: $error'),
+        ),
+      );
+    } finally {
+      final finalState = ref.read(syncStateProvider);
+
+      if (finalState.status == SyncStateStatus.syncing) {
+        ref.read(syncStateProvider.notifier).state = SyncState(
+          status: SyncStateStatus.idle,
+          lastSuccessfulSync: finalState.lastSuccessfulSync,
+        );
+      }
+    }
+  }
+
+  String _formatSyncTime(DateTime? value) {
+    if (value == null) {
+      return 'Not available';
+    }
+
+    final hour = value.hour.toString().padLeft(2, '0');
+    final minute = value.minute.toString().padLeft(2, '0');
+
+    return '${value.day}/${value.month}/${value.year} $hour:$minute';
   }
 
   void _showLanguageDialog(

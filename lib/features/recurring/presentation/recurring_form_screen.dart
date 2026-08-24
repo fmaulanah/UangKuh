@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/extensions/context_extension.dart';
+import '../../../core/sync/sync_repository_provider.dart';
 import '../../../app/theme.dart';
 
 import '../providers/recurring_list_provider.dart';
@@ -461,6 +462,8 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
         );
       }
 
+      await ref.read(syncRepositoryProvider).uploadRecurringExpenses();
+
       ref.invalidate(recurringListProvider);
 
       if (!mounted) {
@@ -617,6 +620,8 @@ class _RecurringFormScreenState extends ConsumerState<RecurringFormScreen> {
         id: recurringId,
         userId: session.userId,
       );
+
+      await ref.read(syncRepositoryProvider).uploadRecurringExpenses();
 
       ref.invalidate(recurringListProvider);
 

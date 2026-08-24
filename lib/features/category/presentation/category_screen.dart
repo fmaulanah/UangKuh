@@ -7,6 +7,7 @@ import '../providers/category_list_provider.dart';
 
 import '../../../core/database/app_database.dart';
 import '../../auth/providers/app_session_provider.dart';
+import '../../../core/sync/sync_repository_provider.dart';
 import '../providers/category_repository_provider.dart';
 
 class CategoryScreen extends ConsumerWidget {
@@ -54,7 +55,6 @@ class CategoryScreen extends ConsumerWidget {
           return RefreshIndicator(
             onRefresh: () async {
               ref.invalidate(categoryListProvider);
-
               await ref.read(categoryListProvider.future);
             },
             child: ListView(
@@ -145,6 +145,8 @@ class CategoryScreen extends ConsumerWidget {
         id: category.id,
         userId: session.userId,
       );
+
+      await ref.read(syncRepositoryProvider).uploadCategories();
 
       ref.invalidate(categoryListProvider);
     } catch (error) {
@@ -296,3 +298,5 @@ IconData _categoryIcon(String iconKey) {
     _ => Icons.category_outlined,
   };
 }
+
+
