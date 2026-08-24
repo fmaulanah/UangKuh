@@ -1,5 +1,8 @@
 import '../../features/category/domain/category_type.dart';
 
+import '../../features/account/domain/account_type.dart';
+import '../../features/account/domain/account_purpose.dart';
+
 abstract class FirestoreRepository {
   Future<void> createUser({
     required String uid,
@@ -44,6 +47,30 @@ abstract class FirestoreRepository {
   });
 
   Future<List<Map<String, dynamic>>> getCategories({
+    required String householdId,
+  });
+
+  Future<void> createAccount({
+    required String householdId,
+    required String name,
+    required AccountType type,
+    required AccountPurpose purpose,
+    required double initialBalance,
+    required String iconKey,
+    required String color,
+    required bool isDefault,
+    required String createdBy,
+  });
+
+  Future<List<Map<String, dynamic>>> getAccounts({
+    required String householdId,
+  });
+
+  Future<void> createTransaction({
+    required Map<String, dynamic> transaction,
+  });
+
+  Future<List<Map<String, dynamic>>> getTransactions({
     required String householdId,
   });
 }

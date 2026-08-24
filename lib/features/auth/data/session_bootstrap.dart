@@ -7,6 +7,11 @@ import '../domain/app_session.dart';
 
 import '../../household/domain/household_role.dart';
 import '../../category/domain/category_type.dart';
+import '../../account/domain/account_type.dart';
+import '../../account/domain/account_purpose.dart';
+import '../../transaction/domain/expense_type.dart';
+import '../../transaction/domain/sync_status.dart';
+import '../../transaction/domain/transaction_type.dart';
 
 class SessionBootstrap {
   SessionBootstrap(
@@ -73,6 +78,22 @@ class SessionBootstrap {
 
     await _syncCategories(
       cloudCategories: cloudCategories,
+    );
+
+    final cloudAccounts = await _firestoreRepository.getAccounts(
+      householdId: household.id,
+    );
+
+    await _syncAccounts(
+      cloudAccounts: cloudAccounts,
+    );
+
+    final cloudTransactions = await _firestoreRepository.getTransactions(
+      householdId: household.id,
+    );
+
+    await _syncTransactions(
+      cloudTransactions: cloudTransactions,
     );
 
     return AppSession(
@@ -157,14 +178,6 @@ class SessionBootstrap {
             ))
           .getSingle();
     }
-
-    // await _resolveLocalMembership(
-    //   memberId: _localMemberId,
-    //   householdId: household.id,
-    //   userId: createdBy,
-    //   role: HouseholdRole.owner,
-    //   joinedAt: DateTime.now(),
-    // );
 
     return household;
   }
@@ -279,6 +292,184 @@ class SessionBootstrap {
           updatedAt: Value(updatedAt),
           createdBy: Value(createdBy),
           updatedBy: Value(updatedBy),
+        ),
+      );
+    }
+  }
+
+  Future<void> _syncAccounts({
+    required List<Map<String, dynamic>> cloudAccounts,
+  }) async {
+    for (final account in cloudAccounts) {
+      await _resolveLocalAccount(
+        id: account['id'] as String,
+        householdId: account['householdId'] as String,
+        name: account['name'] as String,
+        type: AccountType.values.byName(
+          account['type'] as String,
+        ),
+        purpose: AccountPurpose.values.byName(
+          account['purpose'] as String,
+        ),
+        initialBalance: (account['initialBalance'] as num).toInt(),
+        isArchived: account['isArchived'] as bool,
+        createdAt: (account['createdAt'] as Timestamp).toDate(),
+        updatedAt: (account['updatedAt'] as Timestamp).toDate(),
+        createdBy: account['createdBy'] as String,
+        updatedBy: account['updatedBy'] as String,
+      );
+    }
+  }
+
+  Future<void> _resolveLocalAccount({
+    required String id,
+    required String householdId,
+    required String name,
+    required AccountType type,
+    required AccountPurpose purpose,
+    required int initialBalance,
+    required bool isArchived,
+    required String createdBy,
+    required String updatedBy,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) async {
+    final existingAccount = await (_database.select(_database.accounts)
+          ..where((account) => account.id.equals(id)))
+        .getSingleOrNull();
+
+    if (existingAccount == null) {
+      await _database.into(_database.accounts).insert(
+            AccountsCompanion.insert(
+              id: id,
+              householdId: householdId,
+              name: name,
+              type: type,
+              purpose: purpose,
+              initialBalance: initialBalance,
+              isArchived: Value(isArchived),
+              createdAt: createdAt,
+              updatedAt: updatedAt,
+              createdBy: createdBy,
+              updatedBy: updatedBy,
+            ),
+          );
+    } else {
+      await (_database.update(_database.accounts)
+            ..where((account) => account.id.equals(id)))
+          .write(
+        AccountsCompanion(
+          householdId: Value(householdId),
+          name: Value(name),
+          type: Value(type),
+          purpose: Value(purpose),
+          initialBalance: Value(initialBalance),
+          isArchived: Value(isArchived),
+          createdAt: Value(createdAt),
+          updatedAt: Value(updatedAt),
+          createdBy: Value(createdBy),
+          updatedBy: Value(updatedBy),
+        ),
+      );
+    }
+  }
+
+  Future<void> _syncTransactions({
+    required List<Map<String, dynamic>> cloudTransactions,
+  }) async {
+    for (final transaction in cloudTransactions) {
+      await _resolveLocalTransaction(
+        id: transaction['id'] as String,
+        householdId: transaction['householdId'] as String,
+        type: TransactionType.values.byName(
+          transaction['type'] as String,
+        ),
+        expenseType: transaction['expenseType'] != null
+            ? ExpenseType.values.byName(
+                transaction['expenseType'] as String,
+              )
+            : null,
+        amount: (transaction['amount'] as num).toInt(),
+        sourceAccountId: transaction['sourceAccountId'] as String?,
+        destinationAccountId: transaction['destinationAccountId'] as String?,
+        categoryId: transaction['categoryId'] as String?,
+        description: transaction['description'] as String?,
+        transactionDate: (transaction['transactionDate'] as Timestamp).toDate(),
+        createdBy: transaction['createdBy'] as String,
+        updatedBy: transaction['updatedBy'] as String,
+        createdAt: (transaction['createdAt'] as Timestamp).toDate(),
+        updatedAt: (transaction['updatedAt'] as Timestamp).toDate(),
+        syncStatus: SyncStatus.values.byName(
+          transaction['syncStatus'] as String,
+        ),
+        isDeleted: transaction['isDeleted'] as bool,
+      );
+    }
+  }
+
+  Future<void> _resolveLocalTransaction({
+    required String id,
+    required String householdId,
+    required TransactionType type,
+    required ExpenseType? expenseType,
+    required int amount,
+    required String? sourceAccountId,
+    required String? destinationAccountId,
+    required String? categoryId,
+    required String? description,
+    required DateTime transactionDate,
+    required String createdBy,
+    required String updatedBy,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required SyncStatus syncStatus,
+    required bool isDeleted,
+  }) async {
+    final existingTransaction = await (_database.select(_database.transactions)
+          ..where((transaction) => transaction.id.equals(id)))
+        .getSingleOrNull();
+
+    if (existingTransaction == null) {
+      await _database.into(_database.transactions).insert(
+            TransactionsCompanion.insert(
+              id: id,
+              householdId: householdId,
+              type: type,
+              expenseType: Value(expenseType),
+              amount: amount,
+              sourceAccountId: Value(sourceAccountId),
+              destinationAccountId: Value(destinationAccountId),
+              categoryId: Value(categoryId),
+              description: Value(description),
+              transactionDate: transactionDate,
+              createdBy: createdBy,
+              updatedBy: updatedBy,
+              createdAt: createdAt,
+              updatedAt: updatedAt,
+              syncStatus: syncStatus,
+              isDeleted: Value(isDeleted),
+            ),
+          );
+    } else {
+      await (_database.update(_database.transactions)
+            ..where((transaction) => transaction.id.equals(id)))
+          .write(
+        TransactionsCompanion(
+          householdId: Value(householdId),
+          type: Value(type),
+          expenseType: Value(expenseType),
+          amount: Value(amount),
+          sourceAccountId: Value(sourceAccountId),
+          destinationAccountId: Value(destinationAccountId),
+          categoryId: Value(categoryId),
+          description: Value(description),
+          transactionDate: Value(transactionDate),
+          createdBy: Value(createdBy),
+          updatedBy: Value(updatedBy),
+          createdAt: Value(createdAt),
+          updatedAt: Value(updatedAt),
+          syncStatus: Value(syncStatus),
+          isDeleted: Value(isDeleted),
         ),
       );
     }

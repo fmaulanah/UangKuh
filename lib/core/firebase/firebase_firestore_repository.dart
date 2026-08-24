@@ -5,6 +5,8 @@ import '../utils/invite_code_generator.dart';
 import '../constants/default_categories.dart';
 
 import '../../features/category/domain/category_type.dart';
+import '../../features/account/domain/account_type.dart';
+import '../../features/account/domain/account_purpose.dart';
 
 import 'firestore_repository.dart';
 
@@ -67,6 +69,11 @@ class FirebaseFirestoreRepository implements FirestoreRepository {
     });
 
     await _createDefaultCategories(
+      householdId: householdId,
+      createdBy: ownerId,
+    );
+
+    await _createDefaultAccount(
       householdId: householdId,
       createdBy: ownerId,
     );
@@ -190,6 +197,23 @@ class FirebaseFirestoreRepository implements FirestoreRepository {
     }
   }
 
+  Future<void> _createDefaultAccount({
+    required String householdId,
+    required String createdBy,
+  }) async {
+    await createAccount(
+      householdId: householdId,
+      name: 'Cash',
+      type: AccountType.cash,
+      purpose: AccountPurpose.spending,
+      initialBalance: 0,
+      iconKey: 'cash',
+      color: '#4CAF50',
+      isDefault: true,
+      createdBy: createdBy,
+    );
+  }
+
   @override
   Future<List<Map<String, dynamic>>> getCategories({
     required String householdId,
@@ -198,6 +222,86 @@ class FirebaseFirestoreRepository implements FirestoreRepository {
         .collection('households')
         .doc(householdId)
         .collection('categories')
+        .get();
+
+    return snapshot.docs.map((doc) => doc.data()).toList();
+  }
+
+  @override
+  Future<void> createAccount({
+    required String householdId,
+    required String name,
+    required AccountType type,
+    required AccountPurpose purpose,
+    required double initialBalance,
+    required String iconKey,
+    required String color,
+    required bool isDefault,
+    required String createdBy,
+  }) async {
+    final doc = _firestore
+        .collection('households')
+        .doc(householdId)
+        .collection('accounts')
+        .doc();
+
+    final now = FieldValue.serverTimestamp();
+
+    await doc.set({
+      'id': doc.id,
+      'householdId': householdId,
+      'name': name,
+      'type': type.name,
+      'purpose': purpose.name,
+      'initialBalance': initialBalance,
+      'currentBalance': initialBalance,
+      'iconKey': iconKey,
+      'color': color,
+      'isDefault': isDefault,
+      'isArchived': false,
+      'createdAt': now,
+      'updatedAt': now,
+      'createdBy': createdBy,
+      'updatedBy': createdBy,
+    });
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getAccounts({
+    required String householdId,
+  }) async {
+    final snapshot = await _firestore
+        .collection('households')
+        .doc(householdId)
+        .collection('accounts')
+        .get();
+
+    return snapshot.docs.map((doc) => doc.data()).toList();
+  }
+
+  @override
+  Future<void> createTransaction({
+    required Map<String, dynamic> transaction,
+  }) async {
+    final householdId = transaction['householdId'] as String;
+
+    final doc = _firestore
+        .collection('households')
+        .doc(householdId)
+        .collection('transactions')
+        .doc(transaction['id'] as String);
+
+    await doc.set(transaction);
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getTransactions({
+    required String householdId,
+  }) async {
+    final snapshot = await _firestore
+        .collection('households')
+        .doc(householdId)
+        .collection('transactions')
         .get();
 
     return snapshot.docs.map((doc) => doc.data()).toList();
