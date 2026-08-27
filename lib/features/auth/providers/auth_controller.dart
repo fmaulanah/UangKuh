@@ -38,28 +38,9 @@ class AuthController {
       final authRepository = _ref.read(authRepositoryProvider);
       final firestoreRepository = _ref.read(firestoreRepositoryProvider);
 
-      String? joinedHouseholdId;
-
-      if (joinExistingHousehold) {
-        final normalizedInviteCode = inviteCode?.trim() ?? '';
-
-        if (normalizedInviteCode.isEmpty) {
-          throw StateError('Invalid invite code.');
-        }
-
-        final household = await firestoreRepository.getHouseholdByInviteCode(
-          inviteCode: normalizedInviteCode,
-        );
-
-        if (household == null) {
-          throw StateError('Invalid invite code.');
-        }
-
-        joinedHouseholdId = household['id'] as String?;
-
-        if (joinedHouseholdId == null || joinedHouseholdId.isEmpty) {
-          throw StateError('Invalid household data.');
-        }
+      final normalizedInviteCode = inviteCode?.trim() ?? '';
+      if (joinExistingHousehold && normalizedInviteCode.isEmpty) {
+        throw StateError('Invalid invite code.');
       }
 
       final session = await authRepository.register(
@@ -75,9 +56,23 @@ class AuthController {
       );
 
       if (joinExistingHousehold) {
+        final household = await firestoreRepository.getHouseholdByInviteCode(
+          inviteCode: normalizedInviteCode,
+        );
+
+        if (household == null) {
+          throw StateError('Invalid invite code.');
+        }
+
+        final joinedHouseholdId = household['id'] as String?;
+        if (joinedHouseholdId == null || joinedHouseholdId.isEmpty) {
+          throw StateError('Invalid household data.');
+        }
+
         await firestoreRepository.createMember(
-          householdId: joinedHouseholdId!,
+          householdId: joinedHouseholdId,
           userId: session.userId,
+          inviteCode: normalizedInviteCode,
         );
 
         await firestoreRepository.updateDefaultHousehold(
@@ -145,6 +140,7 @@ class AuthController {
     await firestoreRepository.createMember(
       householdId: householdId,
       userId: userId,
+      inviteCode: normalizedInviteCode,
     );
 
     await firestoreRepository.updateDefaultHousehold(

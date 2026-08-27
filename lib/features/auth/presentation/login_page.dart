@@ -33,38 +33,72 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary;
 
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppTheme.spaceLg),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppTheme.spaceLg,
+              vertical: AppTheme.spaceXl,
+            ),
             child: ConstrainedBox(
               constraints: const BoxConstraints(
-                maxWidth: 420,
+                maxWidth: 440,
               ),
               child: Card(
+                elevation: 4,
+                shadowColor: primaryColor.withValues(alpha: 0.12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(AppTheme.radiusXl),
+                  side: BorderSide(
+                    color: primaryColor.withValues(alpha: 0.08),
+                  ),
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.all(AppTheme.spaceLg),
+                  padding: const EdgeInsets.all(AppTheme.spaceXl),
                   child: Form(
                     key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Icon(
-                          Icons.account_balance_wallet_rounded,
-                          size: 72,
-                          color: AppTheme.primary,
+                        Center(
+                          child: Container(
+                            width: 88,
+                            height: 88,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: primaryColor.withValues(alpha: 0.15),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
+                            ),
+                            padding: const EdgeInsets.all(12),
+                            child: ClipOval(
+                              child: Image.asset(
+                                'assets/images/logo.png',
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
                         ),
                         const SizedBox(height: AppTheme.spaceLg),
                         Text(
                           'Welcome Back',
                           textAlign: TextAlign.center,
-                          style: theme.textTheme.headlineMedium,
+                          style: theme.textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: -0.5,
+                          ),
                         ),
-                        const SizedBox(height: AppTheme.spaceSm),
+                        const SizedBox(height: AppTheme.spaceXs),
                         Text(
-                          'Sign in to continue using UangKuh',
+                          'Sign in to manage your household budget',
                           textAlign: TextAlign.center,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: AppTheme.textSecondary,
@@ -83,6 +117,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           },
                           decoration: const InputDecoration(
                             labelText: 'Email',
+                            hintText: 'name@example.com',
                             prefixIcon: Icon(Icons.email_outlined),
                           ),
                         ),
@@ -114,30 +149,55 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: AppTheme.spaceLg),
+                        const SizedBox(height: AppTheme.spaceXl),
                         FilledButton(
                           onPressed: _loading ? null : _login,
+                          style: FilledButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 16,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(AppTheme.radiusLg),
+                            ),
+                          ),
                           child: _loading
                               ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
+                                  width: 22,
+                                  height: 22,
                                   child: CircularProgressIndicator(
-                                    strokeWidth: 2,
+                                    strokeWidth: 2.5,
                                     color: Colors.white,
                                   ),
                                 )
-                              : const Text('Sign In'),
+                              : const Text(
+                                  'Sign In',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                         ),
-                        const SizedBox(height: AppTheme.spaceMd),
+                        const SizedBox(height: AppTheme.spaceLg),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text("Don't have an account?"),
+                            Text(
+                              "Don't have an account?",
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: AppTheme.textSecondary,
+                              ),
+                            ),
                             TextButton(
                               onPressed: () {
                                 context.push(AppRouter.registerPath);
                               },
-                              child: const Text('Create Account'),
+                              child: const Text(
+                                'Create Account',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ],
                         ),

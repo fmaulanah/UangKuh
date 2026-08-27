@@ -24,6 +24,7 @@ import '../../transaction/providers/transaction_history_provider.dart';
 import '../domain/monthly_summary.dart';
 import '../providers/dashboard_monthly_summary_provider.dart';
 import '../providers/dashboard_total_balance_provider.dart';
+import '../../auth/providers/app_session_provider.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -200,9 +201,15 @@ class DashboardScreen extends ConsumerWidget {
 // Header
 // -----------------------------------------------------------------------------
 
-class _DashboardHeader extends StatelessWidget {
+class _DashboardHeader extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final session = ref.watch(appSessionProvider);
+    final displayName = session?.displayName.trim();
+    final nameToDisplay = (displayName != null && displayName.isNotEmpty)
+        ? displayName
+        : 'User';
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -211,7 +218,7 @@ class _DashboardHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _greeting(context),
+                '${_greeting(context)}, $nameToDisplay 👋',
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(

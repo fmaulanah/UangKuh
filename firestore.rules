@@ -1,0 +1,97 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isUser(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function getHousehold(householdId) {
+      return get(/databases/$(database)/documents/households/$(householdId)).data;
+    }
+
+    function isHouseholdOwner(householdId) {
+      return isSignedIn() && (
+        getHousehold(householdId).ownerId == request.auth.uid
+      );
+    }
+
+    function isHouseholdMember(householdId) {
+      return isSignedIn() && (
+        isHouseholdOwner(householdId) ||
+        exists(/databases/$(database)/documents/households/$(householdId)/members/$(request.auth.uid))
+      );
+    }
+
+    // 1. Users collection: strictly isolated per UID
+    match /users/{uid} {
+      allow read, write: if isUser(uid);
+    }
+
+    // 2. Invite codes: deterministic lookup only, list enumeration forbidden
+    match /invite_codes/{inviteCode} {
+      allow get: if isSignedIn();
+      allow list: if false;
+      allow create: if isSignedIn() &&
+                    request.resource.data.householdId is string &&
+                    isHouseholdOwner(request.resource.data.householdId);
+      allow update, delete: if false;
+    }
+
+    // 3. Households collection
+    match /households/{householdId} {
+      allow get: if isHouseholdMember(householdId);
+      allow list: if false;
+      allow create: if isSignedIn() &&
+                    request.resource.data.ownerId == request.auth.uid &&
+                    request.resource.data.id == householdId;
+      allow update: if isHouseholdOwner(householdId);
+      allow delete: if false;
+
+      // Deterministic membership subcollection (/households/{householdId}/members/{memberUid})
+      match /members/{memberUid} {
+        allow read: if isHouseholdMember(householdId);
+        // Owner provisioning themselves or member joining with valid invite code
+        allow create: if isSignedIn() && memberUid == request.auth.uid && (
+          isHouseholdOwner(householdId) ||
+          (
+            request.resource.data.inviteCode is string &&
+            request.resource.data.inviteCode == getHousehold(householdId).inviteCode
+          )
+        );
+        allow update, delete: if isHouseholdOwner(householdId);
+      }
+
+      // Subcollections: strictly authorized via deterministic isHouseholdMember()
+      match /categories/{categoryId} {
+        allow read, write: if isHouseholdMember(householdId);
+      }
+
+      match /accounts/{accountId} {
+        allow read, write: if isHouseholdMember(householdId);
+      }
+
+      match /transactions/{transactionId} {
+        allow read, write: if isHouseholdMember(householdId);
+      }
+
+      match /recurring_expenses/{recurringExpenseId} {
+        allow read, write: if isHouseholdMember(householdId);
+      }
+
+      match /recurring_payments/{recurringPaymentId} {
+        allow read, write: if isHouseholdMember(householdId);
+      }
+    }
+
+    // Legacy top-level collection closed / denied
+    match /household_members/{memberId} {
+      allow read, write: if false;
+    }
+  }
+}

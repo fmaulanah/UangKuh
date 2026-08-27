@@ -27,6 +27,7 @@ abstract class FirestoreRepository {
   Future<void> createMember({
     required String householdId,
     required String userId,
+    required String inviteCode,
   });
 
   Future<void> updateDefaultHousehold({

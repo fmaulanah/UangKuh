@@ -68,6 +68,13 @@ class FirebaseFirestoreRepository implements FirestoreRepository {
       'version': 1,
     });
 
+    await _firestore.collection('invite_codes').doc(inviteCode).set({
+      'inviteCode': inviteCode,
+      'householdId': householdId,
+      'createdBy': ownerId,
+      'createdAt': now,
+    });
+
     await _createDefaultCategories(
       householdId: householdId,
       createdBy: ownerId,
@@ -86,12 +93,15 @@ class FirebaseFirestoreRepository implements FirestoreRepository {
     required String householdId,
     required String userId,
   }) async {
-    final memberId = const Uuid().v4();
-
     final now = FieldValue.serverTimestamp();
 
-    await _firestore.collection('household_members').doc(memberId).set({
-      'id': memberId,
+    await _firestore
+        .collection('households')
+        .doc(householdId)
+        .collection('members')
+        .doc(userId)
+        .set({
+      'id': userId,
       'householdId': householdId,
       'userId': userId,
       'role': 'owner',
@@ -142,8 +152,9 @@ class FirebaseFirestoreRepository implements FirestoreRepository {
     required String householdId,
   }) async {
     final snapshot = await _firestore
-        .collection('household_members')
-        .where('householdId', isEqualTo: householdId)
+        .collection('households')
+        .doc(householdId)
+        .collection('members')
         .get();
 
     return snapshot.docs.map((doc) => doc.data()).toList();
@@ -291,31 +302,45 @@ class FirebaseFirestoreRepository implements FirestoreRepository {
       return null;
     }
 
-    final snapshot = await _firestore
-        .collection('households')
-        .where('inviteCode', isEqualTo: normalizedInviteCode)
-        .limit(1)
+    final inviteDoc = await _firestore
+        .collection('invite_codes')
+        .doc(normalizedInviteCode)
         .get();
 
-    if (snapshot.docs.isEmpty) {
+    final inviteData = inviteDoc.data();
+    if (inviteData == null) {
       return null;
     }
 
-    return snapshot.docs.first.data();
+    final householdId = inviteData['householdId'] as String?;
+    if (householdId == null || householdId.isEmpty) {
+      return null;
+    }
+
+    return {
+      'id': householdId,
+      'inviteCode': normalizedInviteCode,
+    };
   }
 
   @override
   Future<void> createMember({
     required String householdId,
     required String userId,
+    required String inviteCode,
   }) async {
-    final memberId = const Uuid().v4();
     final now = FieldValue.serverTimestamp();
 
-    await _firestore.collection('household_members').doc(memberId).set({
-      'id': memberId,
+    await _firestore
+        .collection('households')
+        .doc(householdId)
+        .collection('members')
+        .doc(userId)
+        .set({
+      'id': userId,
       'householdId': householdId,
       'userId': userId,
+      'inviteCode': inviteCode.trim(),
       'role': 'member',
       'joinedAt': now,
       'createdAt': now,

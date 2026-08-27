@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/locale_provider.dart';
 import '../../auth/providers/auth_controller.dart';
+import '../../household/providers/household_profile_provider.dart';
 import '../../../core/sync/sync_repository_provider.dart';
 import '../../../core/sync/sync_state_provider.dart';
+import '../../../app/widgets/app_surface_card.dart';
+import '../../../app/theme.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -21,6 +25,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   ) {
     final syncState = ref.watch(syncStateProvider);
     final isSyncing = syncState.status == SyncStateStatus.syncing;
+    final householdProfileAsync = ref.watch(householdProfileProvider);
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -31,7 +36,121 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 fontWeight: FontWeight.bold,
               ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 16),
+        householdProfileAsync.when(
+          loading: () => const AppSurfaceCard(
+            child: SizedBox(
+              height: 48,
+              child: Center(
+                child: CircularProgressIndicator(strokeWidth: 2),
+              ),
+            ),
+          ),
+          error: (_, __) => const SizedBox.shrink(),
+          data: (household) {
+            if (household == null) return const SizedBox.shrink();
+
+            return AppSurfaceCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 38,
+                        height: 38,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withValues(alpha: 0.1),
+                          borderRadius:
+                              BorderRadius.circular(AppTheme.radiusMd),
+                        ),
+                        child: Icon(
+                          Icons.home_outlined,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Household',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(
+                                    color: AppTheme.textSecondary,
+                                  ),
+                            ),
+                            Text(
+                              household.name,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (household.isOwner && household.inviteCode != null) ...[
+                    const Divider(height: 24),
+                    Text(
+                      'Invite Code',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: AppTheme.textSecondary,
+                          ),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SelectableText(
+                            household.inviteCode!,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 2,
+                                  color:
+                                      Theme.of(context).colorScheme.primary,
+                                ),
+                          ),
+                        ),
+                        OutlinedButton.icon(
+                          onPressed: () async {
+                            await Clipboard.setData(
+                              ClipboardData(text: household.inviteCode!),
+                            );
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Invite code copied'),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            }
+                          },
+                          icon: const Icon(Icons.copy_rounded, size: 16),
+                          label: const Text('Copy'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 16),
         ListTile(
           leading: const Icon(
             Icons.account_balance_wallet_outlined,
