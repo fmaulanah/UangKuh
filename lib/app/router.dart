@@ -28,6 +28,8 @@ import '../features/transaction/presentation/transaction_detail_screen.dart';
 import '../features/transaction/presentation/models/transaction_list_item.dart';
 import '../features/transaction/presentation/adjustment_form_screen.dart';
 
+import '../features/receipt_scanner/presentation/receipt_scanner_screen.dart';
+
 import 'app_shell.dart';
 
 class AppRouter {
@@ -112,6 +114,12 @@ class AppRouter {
                     path: 'adjustment/new',
                     builder: (context, state) {
                       return const AdjustmentFormScreen();
+                    },
+                  ),
+                  GoRoute(
+                    path: 'receipt/scan',
+                    builder: (context, state) {
+                      return const ReceiptScannerScreen();
                     },
                   ),
                 ],

@@ -368,55 +368,79 @@ class _DashboardBalanceCard extends StatelessWidget {
 class _QuickActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: _QuickActionButton(
-            icon: Icons.arrow_upward_rounded,
-            label: context.l10n.expense,
-            tone: _QuickActionTone.expense,
-            onPressed: () {
-              context.push('/expense/new');
-            },
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: _QuickActionButton(
+                icon: Icons.arrow_upward_rounded,
+                label: context.l10n.expense,
+                tone: _QuickActionTone.expense,
+                onPressed: () {
+                  context.push('/expense/new');
+                },
+              ),
+            ),
+            const SizedBox(
+              width: AppTheme.spaceSm,
+            ),
+            Expanded(
+              child: _QuickActionButton(
+                icon: Icons.arrow_downward_rounded,
+                label: context.l10n.income,
+                tone: _QuickActionTone.income,
+                onPressed: () {
+                  context.push('/income/new');
+                },
+              ),
+            ),
+            const SizedBox(
+              width: AppTheme.spaceSm,
+            ),
+            Expanded(
+              child: _QuickActionButton(
+                icon: Icons.swap_horiz_rounded,
+                label: context.l10n.transfer,
+                tone: _QuickActionTone.normal,
+                onPressed: () {
+                  context.push('/transfer/new');
+                },
+              ),
+            ),
+            const SizedBox(
+              width: AppTheme.spaceSm,
+            ),
+            Expanded(
+              child: _QuickActionButton(
+                icon: Icons.tune_rounded,
+                label: context.l10n.adjust,
+                tone: _QuickActionTone.normal,
+                onPressed: () {
+                  context.push('/adjustment/new');
+                },
+              ),
+            ),
+          ],
         ),
         const SizedBox(
-          width: AppTheme.spaceSm,
+          height: AppTheme.spaceSm,
         ),
-        Expanded(
-          child: _QuickActionButton(
-            icon: Icons.arrow_downward_rounded,
-            label: context.l10n.income,
-            tone: _QuickActionTone.income,
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton.icon(
             onPressed: () {
-              context.push('/income/new');
+              context.push('/receipt/scan');
             },
-          ),
-        ),
-        const SizedBox(
-          width: AppTheme.spaceSm,
-        ),
-        Expanded(
-          child: _QuickActionButton(
-            icon: Icons.swap_horiz_rounded,
-            label: context.l10n.transfer,
-            tone: _QuickActionTone.normal,
-            onPressed: () {
-              context.push('/transfer/new');
-            },
-          ),
-        ),
-        const SizedBox(
-          width: AppTheme.spaceSm,
-        ),
-        Expanded(
-          child: _QuickActionButton(
-            icon: Icons.tune_rounded,
-            label: context.l10n.adjust,
-            tone: _QuickActionTone.normal,
-            onPressed: () {
-              context.push('/adjustment/new');
-            },
+            icon: const Icon(Icons.receipt_long_rounded),
+            label: const Text('Scan Receipt'),
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size(double.infinity, 48),
+              side: const BorderSide(color: AppTheme.border),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppTheme.radiusMd),
+              ),
+            ),
           ),
         ),
       ],

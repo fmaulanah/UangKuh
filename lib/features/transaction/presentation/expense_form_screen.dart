@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/extensions/context_extension.dart';
 import '../../../core/sync/sync_repository_provider.dart';
@@ -129,6 +130,15 @@ class _ExpenseFormScreenState extends ConsumerState<ExpenseFormScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.l10n.addExpense),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.receipt_long_rounded),
+            tooltip: 'Scan Receipt',
+            onPressed: () {
+              context.push('/receipt/scan');
+            },
+          ),
+        ],
       ),
       body: _buildBody(),
     );
